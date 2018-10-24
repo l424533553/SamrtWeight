@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="500dp"
+    android:orientation="vertical"
+    android:paddingTop="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="0dp"
+        android:background="#4499ff">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:text="智能称App远程更新" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="30dp"
+        android:paddingRight="20dp">
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_MarketId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="市场编号：3" />
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更新日期：2018-3-1" />
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更新内容:测试 " />
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_Version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新版本:5.3" />
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_Path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="路径:http://weight.apk" />
+
+        <TextView
+            android:id="@+id/tvDownload_Apk_Progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更新进度" />
+
+        <ProgressBar
+            android:id="@+id/pbDownload_Apk_Progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+</LinearLayout>

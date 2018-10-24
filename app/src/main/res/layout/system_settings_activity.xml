@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@color/green_3CB371">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_weight_display_bg"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="默认登陆类型："
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/system_settings_login_type_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_login_type_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_green_bg"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="打印机配置："
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_printer_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_printer_btn"
+                        android:layout_width="wrap_content"
+                        android:enabled="false"
+                        android:background="@drawable/green_btn_selector"
+                        android:layout_height="match_parent"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="默认买方编号："
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_default_buyer_number_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/shape_white_btn_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:textSize="20sp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|right"
+                        android:text="余额取整："
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_balance_rounding_tv"
+                        android:layout_width="0dp"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_balance_rounding_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/green_btn_selector"
+                        android:enabled="false"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="默认计价模式："
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_default_priceing_method_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_default_priceing_method_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_green_bg"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="重量取整："
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_weight_rounding_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_weight_rounding_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_green_bg"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|left"
+                        android:text="默认卖方编号："
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_default_seller_number_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:background="@drawable/shape_white_btn_bg"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:textSize="20sp"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|right"
+                        android:text="计重单位："
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/system_settings_weight_unit_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:drawableBottom="@drawable/shape_black_line"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/system_settings_weight_unit_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:enabled="false"
+                        android:background="@drawable/green_btn_selector"
+                        android:text="@string/string_choose"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="30dp">
+
+            <CheckedTextView
+                android:id="@+id/system_settings_not_clear_price_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="保存后不清空价格"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_save_weight_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="重量稳定后才能确认保存"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_auto_obtain_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="默认自动获取买卖方"
+                android:textColor="@color/gray_ccc"
+                android:enabled="false"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_cash_ettlement_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="联机结算(现金结算)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_distinguish_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="客户开秤后不区分买卖方"
+                android:textColor="@color/gray_ccc"
+                android:enabled="false"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp">
+
+            <CheckedTextView
+                android:id="@+id/system_settings_ic_card_settlement_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="IC卡结算时再刷卡"
+                android:textColor="@color/gray_ccc"
+                android:enabled="false"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_stop_print_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="停用打印功能"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_no_patch_settlement_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="允许无批次结算"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_auto_prev_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="自动取上一笔单价"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_cash_rounding_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="现金找零四舍五入"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp">
+
+            <CheckedTextView
+                android:id="@+id/system_settings_stop_cash_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="停用现金模式"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_stop_alipay_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="停用支付宝模式"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <CheckedTextView
+                android:id="@+id/system_settings_stop_weichatpay_ctv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                android:gravity="center"
+                android:text="停用微信模式"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/system_settings_save_btn"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="80dp"
+                android:background="@drawable/shape_weight_display_bg"
+                android:text="@string/save_txt"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/system_settings_back_btn"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:background="@drawable/shape_weight_display_bg"
+                android:text="@string/string_settings_back_txt"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

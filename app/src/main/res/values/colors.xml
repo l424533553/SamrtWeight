@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#218868</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#009966</color>
+
+    <color name="title_bar_black_dark">#DF4213</color>
+    <color name="default_bg">#F1F1F1</color>
+    <color name="green_218868">#218868</color>
+    <color name="green_3CB371">#009966</color>
+    <color name="green_008B00">#008B00</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000</color>
+    <color name="gray_ccc">#CCCCCC</color>
+    <color name="gray_555">#555555</color>
+    <color name="gray_e3">#E3E3E3</color>
+    <color name="transparent">#01000000</color>
+    <color name="red_000">#FF0000</color>
+    <color name="gray_ae">#AEAEAE</color>
+    <color name="progress_forecolor">#1985EC</color>
+
+    <color name="color_anxinbao_green_light">#469b24</color>
+    <color name="color_black_text">#000223</color>
+    <color name="color_black">#000000</color>
+    <color name="color_red">#E72816</color>
+    <color name="color_gray">#BCBCBC</color>
+    <color name="color_gray_text">#8F8F8F</color>
+    <color name="color_gray2_text">#999999</color>
+    <color name="color_white">#ffffff</color>
+    <color name="color_pink">#ff00ff</color>
+
+</resources>

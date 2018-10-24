@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="580dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_weight_display_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="键盘操作"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/black" />
+
+        <TextView
+            android:id="@+id/soft_keybroad_input_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:gravity="center_vertical"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_white_btn_bg" />
+
+        <GridView
+            android:id="@+id/soft_keyboard_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:horizontalSpacing="1dp"
+            android:numColumns="3"
+            android:verticalSpacing="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/soft_keyboard_confirm_btn"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="1dp"
+                android:layout_weight="2"
+                android:background="@drawable/shape_weight_display_bg"
+                android:text="@string/string_confirm"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/soft_keyboard_cancel_btn"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_weight_display_bg"
+                android:text="@string/string_cancel_txt"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

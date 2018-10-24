@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_weight_display_bg"
+    android:layout_margin="10dp"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/tvGoodsName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:text="萝卜"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+</FrameLayout>

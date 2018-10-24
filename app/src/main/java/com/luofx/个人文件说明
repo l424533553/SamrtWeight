@@ -1,0 +1,4 @@
+更新与于20180830
+
+1.二维码需要远程依赖
+implementation 'com.google.zxing:core:3.3.3'
