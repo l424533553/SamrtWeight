@@ -54,6 +54,8 @@ public class OrderInfo implements Cloneable{
     @DatabaseField
     private String totalweight;  // 总重量
 
+    private String marketName;
+
     /**
      * 这里需要注意的是：属性类型只能是ForeignCollection<T>或者Collection<T>
      * 如果需要懒加载（延迟加载）可以在@ForeignCollectionField加上参数eager=false
@@ -72,6 +74,15 @@ public class OrderInfo implements Cloneable{
     }
 
     public OrderInfo() {
+    }
+
+
+    public String getMarketName() {
+        return marketName;
+    }
+
+    public void setMarketName(String marketName) {
+        this.marketName = marketName;
     }
 
     public int getId() {

@@ -175,10 +175,10 @@ public class MainBaseActivity extends Activity implements VolleyListener {
 
     public void showLoading(String titleText, String confirmText) {
         if (mSweetAlertDialog != null) {
-            if(mSweetAlertDialog.isShowing()){
+            if (mSweetAlertDialog.isShowing()) {
                 mSweetAlertDialog.dismiss();
             }
-            mSweetAlertDialog=null;
+            mSweetAlertDialog = null;
         }
         mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
         mSweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
@@ -189,7 +189,13 @@ public class MainBaseActivity extends Activity implements VolleyListener {
         mSweetAlertDialog.show();
     }
 
-    public void showLoading(String titleText, String confirmText, long times) {
+    public void showLoading(String title, String confirmText, long times) {
+        String titleText;
+        if ("0".equals(title)) {
+            titleText = "支付成功";
+        } else {
+            titleText = "待支付";
+        }
 
         showLoading(titleText, confirmText);
         UIUtils.getMainThreadHandler().postDelayed(new Runnable() {

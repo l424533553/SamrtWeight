@@ -130,7 +130,7 @@
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.StaffMemberLoginActivity"
+            android:name="com.axecom.smartweight.ui.activity.SystemLoginActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity android:name="com.axecom.smartweight.ui.activity.LocalSettingsActivity" />

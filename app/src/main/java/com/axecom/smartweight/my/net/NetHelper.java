@@ -73,7 +73,7 @@ public class NetHelper implements IConstants_ST {
      * @param flag 请求浮标
      */
     public void getUserInfo(String mac, int flag) {
-        String url = BASE_IP_ST + "api/smart/getinfobymac?mac=" + mac;
+        String url = BASE_IP_ST + "/api/smart/getinfobymac?mac=" + mac;
         application.volleyGet(url, volleyListener, flag);
     }
 

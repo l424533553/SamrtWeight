@@ -33,16 +33,16 @@ public class OrderAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public OrderAdapter(Context context,boolean isSecondLayout) {
+    public OrderAdapter(Context context, boolean isSecondLayout) {
         this.context = context;
-        this.isSecondLayout=isSecondLayout;
+        this.isSecondLayout = isSecondLayout;
     }
 
     public void setDatas(List<OrderBean> list) {
         this.list = list;
-        if (list != null && list.size() > 0) {
-            notifyDataSetChanged();
-        }
+
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -64,9 +64,9 @@ public class OrderAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            if(isSecondLayout){
+            if (isSecondLayout) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.commodity_second_item, null);
-            }else {
+            } else {
                 convertView = LayoutInflater.from(context).inflate(R.layout.commodity_item, null);
             }
 

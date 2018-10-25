@@ -73,7 +73,7 @@ public class HeartBeatServcice extends Service implements VolleyListener {
             public void run() {
                 while (isLooper) {
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(120000);//2分钟
 //                        MyLog.bluelog("心跳信息1234567");
                         handler.sendEmptyMessage(NOTIFY);
 

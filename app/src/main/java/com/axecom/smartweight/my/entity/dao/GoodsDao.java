@@ -56,8 +56,11 @@ public class GoodsDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
         return -1;
     }
+
 
     // 删除数据
     public void delete(Goods data) {
@@ -66,6 +69,15 @@ public class GoodsDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    // 删除数据
+    public int deleteAll() {
+        try {
+          return   dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // 删除数据

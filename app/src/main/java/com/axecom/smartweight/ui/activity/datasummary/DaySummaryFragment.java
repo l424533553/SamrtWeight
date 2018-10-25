@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.activity.datasummary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import com.axecom.smartweight.bean.ReportResultBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.luofx.utils.DateUtils;
+import com.luofx.utils.match.MyMatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +71,13 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case 912:
                         dataAdapter.notifyDataSetChanged();
-                        tvTotalMoney.setText(totalMoney + "元");
+                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney)  + "元");
                         break;
                 }
 
@@ -263,9 +266,9 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
             ReportResultBean item = list.get(position);
             holder.timeTv.setText(item.getTimes());
             holder.countTv.setText(item.getAll_num() + "");
-            holder.incomeTv.setText(item.getTotal_amount() + "");
-            holder.grandTotalTv.setText(item.getTotal_amount() + "");
-            holder.weightTv.setText(item.getTotal_weight() + "");
+            holder.incomeTv.setText( MyMatch.accurate2(item.getTotal_amount())  );
+            holder.grandTotalTv.setText(MyMatch.accurate2(item.getTotal_amount()) );
+            holder.weightTv.setText(MyMatch.accurate3(item.getTotal_weight() ));
             return convertView;
         }
 

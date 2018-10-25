@@ -3,25 +3,54 @@
     android:id="@+id/llItem_search_adapter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/gray_ccc"
     android:orientation="horizontal"
     >
 
-        <TextView
-            android:id="@+id/tvOrderNo"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawablePadding="1dp"
-            android:text="合同号" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="1dp"
+        android:text="订单号：" />
 
-        <TextView
-            android:id="@+id/tvTotalAmount"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="HT345656646546654" />
+    <TextView
+        android:id="@+id/tvOrderNo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawablePadding="1dp"
+        android:text="合同号" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="1dp"
+        android:text="时间：" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="HT345656646546654" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="1dp"
+        android:text="总额：" />
+
+    <TextView
+        android:id="@+id/tvTotalAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="HT345656646546654" />
+
 
 </LinearLayout>

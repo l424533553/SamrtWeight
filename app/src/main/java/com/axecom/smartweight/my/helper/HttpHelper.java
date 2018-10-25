@@ -6,6 +6,7 @@ import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
+import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +20,7 @@ import static com.shangtongyin.tools.serialport.IConstants_ST.BASE_IP_ST;
  * email:424533553@qq.com
  * describe:
  */
-public class HttpHelper {
-    private static String IP = "http://119.23.43.64/";
+public class HttpHelper implements IConstants_ST {
     private VolleyListener listener;
     SysApplication application;
 
@@ -44,7 +44,7 @@ public class HttpHelper {
      * @param requestIndex 请求索引
      */
     public void upState(int marketid, int terid, int flag, int requestIndex) {
-        String url = IP + "api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
+        String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
         application.volleyGet(url, listener, requestIndex);
     }
 
@@ -56,7 +56,7 @@ public class HttpHelper {
      * @param flag      表示
      */
     public void commitDD(OrderInfo orderInfo, VolleyStringListener volleyStringListener, int flag) {
-        String url = IP + "api/smart/commitszex?";
+        String url = BASE_IP_ST + "/api/smart/commitszex?";
 
 
         Map<String, String> map = new HashMap<>();
@@ -82,7 +82,7 @@ public class HttpHelper {
 
 
     public void askOrder(String mchid, String orderno, VolleyListener volleyListener, int flag) {
-        String url = IP + "api/pay/check?mchid=" + mchid + "&orderno=" + orderno;
+        String url = BASE_IP_ST + "/api/pay/check?mchid=" + mchid + "&orderno=" + orderno;
         application.volleyGet(url, volleyListener, flag);
     }
 
@@ -91,7 +91,7 @@ public class HttpHelper {
      * 根据mac地址获得
      */
     private void getUserInfo(int flag) {
-        String url = IP + "api/smart/getinfobymac?";
+        String url = BASE_IP_ST + "/api/smart/getinfobymac?";
         application.volleyGet(url, listener, flag);
     }
 
@@ -102,7 +102,7 @@ public class HttpHelper {
      * @param flag 请求浮标
      */
     public void getUserInfo(VolleyListener volleyListener, String mac, int flag) {
-        String url = BASE_IP_ST + "api/smart/getinfobymac?mac=" + mac;
+        String url = BASE_IP_ST + "/api/smart/getinfobymac?mac=" + mac;
         application.volleyGet(url, volleyListener, flag);
     }
 }

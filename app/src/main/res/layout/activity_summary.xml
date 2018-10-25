@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context=".ui.activity.datasummary.SummaryActivity">
-
 
     <LinearLayout
         android:layout_width="0dp"
@@ -18,10 +16,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="报表"
+            android:text="报       表"
             android:gravity="center"
             android:textColor="@color/color_black"
             android:textSize="35sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/color_black"
+            />
 
         <RadioGroup
             android:id="@+id/raidoGroup"
@@ -36,9 +40,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:button="@null"
-                android:checked="false"
+                android:checked="true"
                 android:drawablePadding="1dp"
                 android:gravity="center_horizontal|center_vertical"
+                android:background="@drawable/selector_btn_radio_click"
                 android:text="日报表"
                 android:textSize="35sp"
                 android:layout_margin="10dp"
@@ -53,6 +58,7 @@
                 android:checked="false"
                 android:drawablePadding="1dp"
                 android:gravity="center_horizontal|center_vertical"
+                android:background="@drawable/selector_btn_radio_click"
                 android:text="月报表"
                 android:layout_margin="10dp"
                 android:textSize="35sp" />
@@ -65,6 +71,7 @@
                 android:checked="false"
                 android:drawablePadding="1dp"
                 android:gravity="center_horizontal|center_vertical"
+                android:background="@drawable/selector_btn_radio_click"
                 android:text="商品明细"
                 android:layout_margin="10dp"
                 android:textSize="35sp" />
@@ -77,9 +84,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="返回"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/color_black"
             android:textSize="35sp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/selector_btn_carsh_click"
             />
     </LinearLayout>
 

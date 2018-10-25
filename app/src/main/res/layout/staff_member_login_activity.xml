@@ -1,117 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:gravity="center"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center">
 
     <LinearLayout
-        android:layout_width="1000dp"
+        android:layout_width="450dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
         android:background="@drawable/shape_weight_display_bg"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="验证身份"
+            android:layout_margin="10dp"
+            android:text="管理员身份验证"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_margin="10dp"/>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"/>
+            android:textSize="15sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_marginLeft="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:text="司磅员名称："/>
+            android:layout_marginTop="10dp"
 
-            <EditText
-                android:id="@+id/staff_member_number_et"
-                android:hint="请刷司磅员卡"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="50dp"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingLeft="5dp"
-                android:background="@drawable/shape_white_btn_bg"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_marginLeft="40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:layout_marginLeft="20dp"
+                android:text="登陆密码："
                 android:textColor="@color/black"
-                android:text="IC卡密码："/>
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/staff_member_pwd_et"
-                android:hint="请输入IC卡密码"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="50dp"
                 android:layout_width="match_parent"
-                android:inputType="numberPassword"
                 android:layout_height="40dp"
-                android:paddingLeft="5dp"
-                android:background="@drawable/shape_white_btn_bg"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/shape_white_btn_bg"
+                android:hint="请输入超级密码"
+                android:inputType="numberPassword"
+                android:paddingLeft="5dp" />
+
         </LinearLayout>
-        <Button
-            android:id="@+id/login_out_btn"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="1dp"
-            android:background="@drawable/selector_btn_click"
-            android:text="@string/string_login_out"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_weight_display_bg"
-        android:layout_weight="1"
-        android:padding="40dp"
-        android:orientation="vertical">
+
         <com.axecom.smartweight.ui.view.SoftKey
             android:id="@+id/staff_member_softkey"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:padding="0dp"
-            android:listSelector="@null"
-            android:verticalSpacing="2dp"
             android:horizontalSpacing="2dp"
-            android:numColumns="3"/>
+            android:listSelector="@null"
+
+            android:numColumns="3"
+            android:padding="20dp"
+            android:verticalSpacing="2dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <Button
                 android:id="@+id/staff_member_done_btn"
@@ -135,5 +91,5 @@
                 android:textSize="20sp" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
 </LinearLayout>

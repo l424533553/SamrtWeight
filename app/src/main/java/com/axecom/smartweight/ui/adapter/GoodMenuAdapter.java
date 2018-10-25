@@ -31,6 +31,10 @@ public class GoodMenuAdapter extends BaseAdapter {
         this.context = context;
     }
 
+    public List<Goods> getList() {
+        return list;
+    }
+
     public  void setDatas(List<Goods> data){
         list=data;
         notifyDataSetChanged();

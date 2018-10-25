@@ -42,7 +42,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="重量(kg)/件数"
+                android:text="重量"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -256,6 +256,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_margin="15dp"
             android:padding="5dp">
 
             <Button

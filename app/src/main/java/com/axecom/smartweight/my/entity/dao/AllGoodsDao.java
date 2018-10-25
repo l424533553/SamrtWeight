@@ -59,6 +59,16 @@ public class AllGoodsDao {
     }
 
     // 删除数据
+    public int deleteAll() {
+        try {
+            return dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    // 删除数据
     public void delete(AllGoods data) {
         try {
             dao.delete(data);
@@ -126,7 +136,7 @@ public class AllGoodsDao {
     public AllGoods queryById(int id) {
         AllGoods article = null;
         try {
-            article =  dao.queryForId(id);
+            article = dao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

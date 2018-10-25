@@ -34,7 +34,7 @@ public interface IConstants_ST {
     int NOTIFY_EPAY_SUCCESS = 9666; //电子支付成功
 
 
-    String BASE_IP_ST = "http://119.23.43.64/";
+    String BASE_IP_ST = "http://119.23.43.64";
 
 
     /**
@@ -42,6 +42,7 @@ public interface IConstants_ST {
      */
     String MARKET_ID = "marketid";
     String MARKET_NAME = "marketname";
+    String STRING_TYPE = "type";
     /**
      * 秤编号id
      */
@@ -52,6 +53,7 @@ public interface IConstants_ST {
 
     String KEY = "key";
     String MCHID = "mchid";
+    String BASE_WEB_IP = "base_web_ip";
 
 
     String KET_SWITCH_SIMPLE_OR_COMPLEX = "key_switch_simple_or_complex";

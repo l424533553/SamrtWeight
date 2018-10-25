@@ -24,6 +24,7 @@ public class SummaryActivity extends FragmentActivity implements RadioGroup.OnCh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        findViewById(R.id.btnBack).setOnClickListener(this);
         initView();
         setData();
         setListener();

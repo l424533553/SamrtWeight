@@ -85,7 +85,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         sysApplication = (SysApplication) getApplication();
         context = this;
 
-
         setInitView();
 //        ActivityController.addActivity(this);
 
@@ -280,11 +279,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     public void setInitView() {
 
-
-//        classTitleLayout = findViewById(R.id.commodity_management_class_title_layout);
-//        allTitleTv = findViewById(R.id.commodity_management_class_titlte_all_tv);
-
-
         findViewById(R.id.btnSave).setOnClickListener(this);
 
         EditText searchEt = findViewById(R.id.commodity_management_search_et);
@@ -308,12 +302,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 //                Pattern pattern = Pattern.compile(s.toString());
 //                List<CommodityBean> result = new ArrayList<>();
 
-//                for (int i = 0; i < allGoodsList.size(); i++) {
-//                    Matcher matcher = pattern.matcher(allGoodsList.get(i).getAllGoods().name);
-//                    if (matcher.find()) {
-//                        result.add(allGoodsList.get(i));
-//                    }
-//                }
 
 //                setClassTitleTxtColor();
             }
@@ -336,26 +324,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         }
     }
 
-//    public void saveSelectedGoods(List<HotKeyBean> dataList) {
-//        SaveGoodsReqBean goodsReqBean = new SaveGoodsReqBean();
-//        List<SaveGoodsReqBean.Goods> goodsList = new ArrayList<>();
-//        SaveGoodsReqBean.Goods good;
-//        for (int i = 0; i < dataList.size(); i++) {
-//            good = new SaveGoodsReqBean.Goods();
-//            HotKeyBean bean = dataList.get(i);
-//            good.id = bean.id;
-//            good.cid = bean.cid;
-//            good.is_default = bean.is_default;
-//            good.name = bean.name;
-//            good.price = bean.price;
-//            good.traceable_code = bean.traceable_code;
-//            goodsList.add(good);
-//        }
-//        goodsReqBean.setToken(AccountManager.getInstance().getAdminToken());
-//        goodsReqBean.setMac(MacManager.getInstace(SysApplication.getContext()).getMac());
-//        goodsReqBean.setGoods(goodsList);
-//        storeGoodsData(goodsReqBean);
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -373,47 +341,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     }
 
 
-    public void storeGoodsData(SaveGoodsReqBean goodsReqBean) {
-//        List<HotKeyBean> list = new ArrayList<>();
-//        for (CommodityBean bean : hotKeyList) {
-//            list.add(bean.getHotKeyBean());
-//        }
-//        FileUtils.saveObject(GoodsSettingActivity.this, (Serializable) list, SelectedGoodsState.selectedGoods);
-//        if (!NetworkUtil.isConnected(GoodsSettingActivity.this)) {
-//            SPUtils.put(GoodsSettingActivity.this, SelectedGoodsState.NOT_PUSH_REMOTE, true);
-//            saveSelectedGoods("本地保存成功");
-//            return;
-//        }
-//        RetrofitFactory.getInstance().API()
-//                .storeGoodsData(goodsReqBean)
-//                .compose(this.<BaseEntity>setThread())
-//                .subscribe(new Observer<BaseEntity>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        showLoading();
-//                    }
-//
-//                    @Override
-//                    public void onNext(BaseEntity baseEntity) {
-//                        if (baseEntity.isSuccess()) {
-//                            saveSelectedGoods(baseEntity.getMsg());
-//                        } else {
-//                            showLoading(baseEntity.getMsg());
-//                            SPUtils.put(GoodsSettingActivity.this, SelectedGoodsState.NOT_PUSH_REMOTE, true);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        SPUtils.put(GoodsSettingActivity.this, SelectedGoodsState.NOT_PUSH_REMOTE, true);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        closeLoading();
-//                    }
-//                });
-    }
 
     private void saveSelectedGoods(String message) {
         EventBus.getDefault().post(new BusEvent(BusEvent.SAVE_COMMODITY_SUCCESS, true));
@@ -424,135 +351,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         rvGoods.setAdapter(goodsAdapter);
     }
 
-//    public void getGoodsData() {
-//
-//        boolean b = !NetworkUtil.isConnected(GoodsSettingActivity.this);
-//        if (b) {
-//            ScalesCategoryGoods goods = (ScalesCategoryGoods) FileUtils.readObject(GoodsSettingActivity.this, GOODSDATA);
-//            if (goods == null) return;
-//            processCategoryGoods(goods);
-//            return;
-//        }
-//
-//
-//        RetrofitFactory.getInstance().API()
-//                .getGoodsData(AccountManager.getInstance().getAdminToken(), MacManager.getInstace(this).getMac())
-//                .compose(this.<BaseEntity<ScalesCategoryGoods>>setThread())
-//                .subscribe(new Observer<BaseEntity<ScalesCategoryGoods>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        showLoading();
-//                    }
-//
-//                    @Override
-//                    public void onNext(final BaseEntity<ScalesCategoryGoods> scalesCategoryGoodsBaseEntity) {
-//                        if (scalesCategoryGoodsBaseEntity.isSuccess()) {
-//                            final ScalesCategoryGoods data = scalesCategoryGoodsBaseEntity.getData();
-//                            FileUtils.saveObject(GoodsSettingActivity.this, data, GOODSDATA);
-//                            processCategoryGoods(data);
-//                        } else {
-//                            showLoading(scalesCategoryGoodsBaseEntity.getMsg());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                        closeLoading();
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        closeLoading();
-//                    }
-//                });
-//    }
 
-//    private void processCategoryGoods(final ScalesCategoryGoods data) {
-//        List<HotKeyBean> hotKeyGoods = (List<HotKeyBean>) FileUtils.readObject(GoodsSettingActivity.this, GoodsSettingActivity.SelectedGoodsState.selectedGoods);
-//        CommodityBean commodityBean;
-//        List<HotKeyBean> hotKeyBeanList = data.hotKeyGoods;
-//        if (hotKeyGoods != null && hotKeyGoods.size() > 0) {
-//            hotKeyBeanList = hotKeyGoods;
-//        }
-//        for (int i = 0; i < hotKeyBeanList.size(); i++) {
-//            commodityBean = new CommodityBean();
-//            HotKeyBean hotKeyBean = hotKeyBeanList.get(i);
-//            commodityBean.setHotKeyBean(hotKeyBean);
-//            hotKeyList.add(commodityBean);
-//            String uid = hotKeyBean.getName() + hotKeyBean.getCid();
-//            hotKeyMap.put(uid, commodityBean);
-//        }
-//        CommodityBean allGoodsBean;
-//        for (int i = 0; i < data.allGoods.size(); i++) {
-//            allGoodsBean = new CommodityBean();
-//            allGoodsBean.setAllGoods(data.allGoods.get(i));
-//            allGoodsList.add(allGoodsBean);
-//        }
-//        CommodityBean categoryBean;
-//        for (int i = 0; i < data.categoryGoods.size(); i++) {
-//            categoryBean = new CommodityBean();
-//            categoryBean.setCategoryGoods(data.categoryGoods.get(i));
-//            categoryList.add(categoryBean);
-//            final TextView titleTv = new TextView(GoodsSettingActivity.this);
-//            titleTv.setText(categoryBean.getCategoryGoods().name);
-//            titleTv.setTextSize(25);
-//            titleTv.setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.black));
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            params.setMargins(UIUtils.dip2px(10f), 0, 0, 0);
-//            titleTv.setLayoutParams(params);
-//            titleTv.setGravity(Gravity.CENTER);
-//            titleTv.setTag((data.categoryGoods.get(i)).id);
-//
-//            final int finalI = i;
-//            final int finalI1 = i;
-//            titleTv.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    categoryChildList.clear();
-//                    CommodityBean clildBean;
-//                    List<CategoryGoods.child> child = (data.categoryGoods.get(finalI)).child;
-//                    if (child == null) {
-//                        ToastUtils.showToast(getBaseContext(), "该分类已停用！");
-//                        return;
-//                    }
-//                    for (int j = 0; j < child.size(); j++) {
-//                        if ((child.get(j)).cid ==
-//                                (data.categoryGoods.get(finalI1)).id) {
-//                            clildBean = new CommodityBean();
-//                            clildBean.setCategoryChilds(child.get(j));
-//                            categoryChildList.add(clildBean);
-//                            ClassAdapter adapter = new ClassAdapter(GoodsSettingActivity.this, categoryChildList);
-//                            gvGoodsSelect.setAdapter(adapter);
-//                            titleTv.setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.green_3CB371));
-//
-//
-////                            for (int i = 0; i < classTitleLayout.getChildCount(); i++) {
-////                                TextView tv = (TextView) classTitleLayout.getChildAt(i);
-////                                if (tv.getTag() == titleTv.getTag()) {
-////                                    tv.setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.green_3CB371));
-////                                } else {
-////                                    tv.setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.black));
-////                                }
-////                            }
-//
-//
-//                        }
-//                    }
-//                }
-//            });
-//        }
-////                            CommodityBean clildBean;
-////                            for (int i = 0; i < scalesCategoryGoodsBaseEntity.getData().categoryGoods.size(); i++) {
-////                                for (int j = 0; j < ((ScalesCategoryGoods.categoryGoods)scalesCategoryGoodsBaseEntity.getData().categoryGoods.get(i)).child.size(); j++) {
-////                                    clildBean = new CommodityBean();
-////                                    clildBean.setCategoryChilds((ScalesCategoryGoods.categoryGoods.child) ((ScalesCategoryGoods.categoryGoods)scalesCategoryGoodsBaseEntity.getData().categoryGoods.get(i)).child.get(j));
-////                                    categoryChildList.add(clildBean);
-////                                }
-////                            }
-//        goodsAdapter.notifyDataSetChanged();
-//
-//    }
 
     private SweetAlertDialog mSweetAlertDialog;
 

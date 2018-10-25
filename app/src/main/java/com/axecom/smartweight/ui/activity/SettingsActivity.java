@@ -1,6 +1,5 @@
 package com.axecom.smartweight.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.BaseDialog;
-import com.axecom.smartweight.base.BusEvent;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.bean.SettingsBean;
 import com.axecom.smartweight.manager.AccountManager;
@@ -42,13 +39,11 @@ import com.axecom.smartweight.my.net.NetHelper;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.ui.activity.datasummary.SummaryActivity;
 import com.axecom.smartweight.ui.activity.setting.GoodsSettingActivity;
-import com.axecom.smartweight.utils.SPUtils;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.common.MyToast;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -94,6 +89,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
     private UserInfoDao userInfoDao;
     private NetHelper netHelper;
     private BaseDialog baseDialog;
+    private int type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,12 +98,12 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         sysApplication = (SysApplication) getApplication();
 
         context = this;
+        type = getIntent().getIntExtra(STRING_TYPE, 0);
         userInfoDao = new UserInfoDao(context);
         goodsDao = new GoodsDao(context);
         goodsTypeDao = new GoodsTypeDao(context);
         allGoodsDao = new AllGoodsDao(context);
         baseDialog = new BaseDialog(context);
-
         netHelper = new NetHelper(sysApplication, SettingsActivity.this);
 
         initHandler();
@@ -169,6 +165,12 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         settngsList.add(settingsBean1);
         SettingsBean settingsBean2 = new SettingsBean(R.drawable.patch_setting, "数据汇总", POSITION_REPORTS);
         settngsList.add(settingsBean2);
+        SettingsBean settingsBean6 = new SettingsBean(R.drawable.commodity_setting, "商品设置", POSITION_COMMODITY);
+        settngsList.add(settingsBean6);
+        SettingsBean settingsBean7 = new SettingsBean(R.drawable.update_setting, "数据更新", POSITION_UPDATE);
+        settngsList.add(settingsBean7);
+
+
         SettingsBean settingsBean3 = new SettingsBean(R.drawable.server_setting, "服务器测试", POSITION_SERVER);
         settngsList.add(settingsBean3);
         SettingsBean settingsBean4 = new SettingsBean(R.drawable.invalid, "异常订单", POSITION_INVALID);
@@ -176,36 +178,26 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
         SettingsBean settingsBean5 = new SettingsBean(R.drawable.bd_setting, "订单作废", POSITION_BD);
         settngsList.add(settingsBean5);
-        SettingsBean settingsBean6 = new SettingsBean(R.drawable.commodity_setting, "商品设置", POSITION_COMMODITY);
-        settngsList.add(settingsBean6);
-        SettingsBean settingsBean7 = new SettingsBean(R.drawable.update_setting, "数据更新", POSITION_UPDATE);
-        settngsList.add(settingsBean7);
+
 
         SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
         settngsList.add(settingsBean8);
         SettingsBean settingsBean9 = new SettingsBean(R.drawable.wifi_setting, "WIFI设置", POSITION_WIFI);
         settngsList.add(settingsBean9);
-        SettingsBean settingsBean10 = new SettingsBean(R.drawable.local_setting, "本机设置", POSITION_LOCAL);
-        settngsList.add(settingsBean10);
+//        SettingsBean settingsBean10 = new SettingsBean(R.drawable.local_setting, "本机设置", POSITION_LOCAL);
+//        settngsList.add(settingsBean10);
         SettingsBean settingsBean11 = new SettingsBean(R.drawable.weight_setting, "标定管理", POSITION_WEIGHT);
         settngsList.add(settingsBean11);
         SettingsBean settingsBean12 = new SettingsBean(R.drawable.re_boot, "重启", POSITION_RE_BOOT);
         settngsList.add(settingsBean12);
-        SettingsBean settingsBean13 = new SettingsBean(R.drawable.system_setting, "系统设置", POSITION_SYSTEM);
-        settngsList.add(settingsBean13);
-
-
-        int userType = AccountManager.getInstance().getUserType();
-        if (userType == 1 || userType == 2) {
-            settngsList.remove(15);
-            settngsList.remove(14);
-            settngsList.remove(13);
+        if(type==1){
+            SettingsBean settingsBean13 = new SettingsBean(R.drawable.system_setting, "系统设置", POSITION_SYSTEM);
+            settngsList.add(settingsBean13);
         }
+
         settingsAdapter = new SettingsAdapter(this, settngsList);
         settingsGV.setAdapter(settingsAdapter);
         settingsGV.setOnItemClickListener(settingsOnItemClickListener);
-
-
     }
 
 
@@ -238,7 +230,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                             if (userInfo != null) {
                                 userInfo.setId(1);
                                 boolean isSuccess = userInfoDao.updateOrInsert(userInfo);
-
                                 SharedPreferences sp = PreferenceUtils.getSp(context);
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putInt(MARKET_ID, userInfo.getMarketid());
@@ -249,6 +240,15 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                                 editor.putString(KEY, userInfo.getKey());
                                 editor.putString(MCHID, userInfo.getMchid());
                                 editor.apply();
+
+                                sysApplication.setMarketid(userInfo.getMarketid());
+                                sysApplication.setMarketname(userInfo.getMarketname());
+                                sysApplication.setTid(userInfo.getTid());
+                                sysApplication.setSellerid(userInfo.getSellerid());
+                                sysApplication.setSeller(userInfo.getSeller());
+                                sysApplication.setKey(userInfo.getKey());
+                                sysApplication.setMchid(userInfo.getMchid());
+
                                 Message message = handler.obtainMessage();
                                 message.arg1 = userInfo.getTid();
                                 message.what = NOTIFY_INITDAT;
@@ -257,7 +257,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                         } else {
                             MyToast.toastLong(context, "未获取到秤的配置信息");
                         }
-
                     } else {
                         MyToast.toastLong(context, "未获取到秤的配置信息");
                     }
@@ -269,17 +268,16 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                             @Override
                             public void run() {
                                 if (resultInfo.getStatus() == 0) {
+                                    goodsDao.deleteAll();
                                     List<Goods> goodsList = JSON.parseArray(resultInfo.getData(), Goods.class);
                                     if (goodsList != null && goodsList.size() > 0) {
                                         goodsDao.insert(goodsList);
                                     }
-
                                 }
                             }
                         });
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
-
                     }
 
 
@@ -287,14 +285,19 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     break;
                 case 3:
                     if (resultInfo != null) {
-                        if (resultInfo.getStatus() == 0) {
-                            List<GoodsType> goodsList = JSON.parseArray(resultInfo.getData(), GoodsType.class);
-                            if (goodsList != null && goodsList.size() > 0) {
+                        sysApplication.getThreadPool().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (resultInfo.getStatus() == 0) {
+                                    goodsTypeDao.deleteAll();
+                                    List<GoodsType> goodsList = JSON.parseArray(resultInfo.getData(), GoodsType.class);
+                                    if (goodsList != null && goodsList.size() > 0) {
+                                        goodsTypeDao.insert(goodsList);
+                                    }
 
-                                goodsTypeDao.insert(goodsList);
+                                }
                             }
-
-                        }
+                        });
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
                     }
@@ -304,14 +307,20 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     break;
                 case 4:
                     if (resultInfo != null) {
-                        if (resultInfo.getStatus() == 0) {
-                            List<AllGoods> goodsList = JSON.parseArray(resultInfo.getData(), AllGoods.class);
-                            if (goodsList != null && goodsList.size() > 0) {
 
-                                allGoodsDao.insert(goodsList);
+                        sysApplication.getThreadPool().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (resultInfo.getStatus() == 0) {
+                                    allGoodsDao.deleteAll();
+                                    List<AllGoods> goodsList = JSON.parseArray(resultInfo.getData(), AllGoods.class);
+                                    if (goodsList != null && goodsList.size() > 0) {
+                                        allGoodsDao.insert(goodsList);
+                                    }
+                                }
                             }
+                        });
 
-                        }
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
                     }
@@ -321,8 +330,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     private int successFlag = 0;
@@ -365,11 +372,18 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     startDDMActivity(SystemSettingsActivity2.class, false);
                     break;
                 case POSITION_RE_BOOT:
-                    EventBus.getDefault().post(new BusEvent(BusEvent.GO_HOME_PAGE, true));
+//                    EventBus.getDefault().post(new BusEvent(BusEvent.GO_HOME_PAGE, true));
+//                    Intent intent = new Intent();
+//                    intent.setClass(SettingsActivity.this, HomeActivity.class);
+//                    intent.putExtra(IS_RE_BOOT, true);
+//                    startActivity(intent);
+                    System.exit(0);
+
                     Intent intent = new Intent();
                     intent.setClass(SettingsActivity.this, HomeActivity.class);
                     intent.putExtra(IS_RE_BOOT, true);
                     startActivity(intent);
+
                     break;
                 case POSITION_WEIGHT:
                     finish();
@@ -380,20 +394,20 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 //                    SPUtils.put(SettingsActivity.this, KET_SWITCH_SIMPLE_OR_COMPLEX, !switchSimpleOrComplex);
 //                    break;
                 case POSITION_RE_CONNECTING:
-                    baseDialog.showLoading();
-                    String wifiSSID = SPUtils.getString(SettingsActivity.this, WifiSettingsActivity.KEY_SSID_WIFI_SAVED, "");
-                    if (!TextUtils.isEmpty(wifiSSID)) {
-                        WifiConfiguration mWifiConfiguration;
-                        WifiConfiguration tempConfig = IsExsits(wifiSSID);
-                        if (tempConfig != null) {
-                            mWifiConfiguration = tempConfig;
-                            boolean b = wifiManager.enableNetwork(mWifiConfiguration.networkId, true);
-                            if (b) {
-//                                showLoading("连接成功");
-                                baseDialog.closeLoading();
-                            }
-                        }
-                    }
+//                    baseDialog.showLoading();
+//                    String wifiSSID = SPUtils.getString(SettingsActivity.this, WifiSettingsActivity.KEY_SSID_WIFI_SAVED, "");
+//                    if (!TextUtils.isEmpty(wifiSSID)) {
+//                        WifiConfiguration mWifiConfiguration;
+//                        WifiConfiguration tempConfig = IsExsits(wifiSSID);
+//                        if (tempConfig != null) {
+//                            mWifiConfiguration = tempConfig;
+//                            boolean b = wifiManager.enableNetwork(mWifiConfiguration.networkId, true);
+//                            if (b) {
+////                                showLoading("连接成功");
+//                                baseDialog.closeLoading();
+//                            }
+//                        }
+//                    }
                     break;
                 case POSITION_UPDATE:
                     baseDialog.showLoading();
@@ -404,32 +418,15 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 //                    SystemSettingManager.updateData(SettingsActivity.this);
 //                    updateScalesId();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            baseDialog.closeLoading();
-                        }
-                    }, 2000);
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            baseDialog.closeLoading();
+//                        }
+//                    }, 2000);
+
+
                     break;
-//                case POSITION_BLUETOOTH:
-//                    BTHelperDialog.Builder builder = new BTHelperDialog.Builder(SettingsActivity.this);
-//                    builder.create(new BTHelperDialog.OnBtnClickListener() {
-//
-//                        @Override
-//                        public void onConfirmed(BtHelperClient.STATUS mCurrStatus, String deviceAddress) {
-//                            if (mCurrStatus == BtHelperClient.STATUS.CONNECTED) {
-////                                showLoading("连接成功");
-//                                SPUtils.putString(SettingsActivity.this, BTHelperDialog.KEY_BT_ADDRESS, deviceAddress);
-//                                EventBus.getDefault().post(new BusEvent(BusEvent.BLUETOOTH_CONNECTED, true));
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCanceled(String result) {
-//
-//                        }
-//                    }).show();
-//                    break;
             }
         }
     };

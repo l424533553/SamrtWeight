@@ -170,7 +170,7 @@ public class OrderInfoDao {
      */
     public List<OrderInfo> queryByDay(String day, boolean isAsce) {
         try {
-            return dao.queryBuilder().orderBy("hour", true).where().like("time", day + "%").query(); //参数false表示降序，true表示升序。
+            return dao.queryBuilder().orderBy("hour", false).where().like("time", day + "%").query(); //参数false表示降序，true表示升序。
         } catch (SQLException e) {
             e.printStackTrace();
         }

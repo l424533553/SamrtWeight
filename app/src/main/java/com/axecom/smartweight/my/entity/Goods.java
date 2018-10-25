@@ -33,7 +33,7 @@ public class Goods {
     @DatabaseField
     private int cid;
     @DatabaseField
-    private String price;
+    private String price="0.00";
     @DatabaseField
     private String batchCode; // 批次號
 

@@ -50,7 +50,6 @@ import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.my.rzl.utils.DownloadDialog;
 import com.axecom.smartweight.my.rzl.utils.Version;
 import com.axecom.smartweight.ui.adapter.GoodMenuAdapter;
-import com.axecom.smartweight.utils.SPUtils;
 import com.luofx.help.CashierInputFilter;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
@@ -59,8 +58,6 @@ import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.ToastUtils;
 import com.luofx.utils.log.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
-import com.luofx.utils.text.MyTextUtils;
-import com.luofx.view.CustomScrollBar;
 import com.shangtongyin.tools.serialport.Print;
 import com.shangtongyin.tools.serialport.WeightHelper;
 
@@ -68,7 +65,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Timer;
@@ -126,10 +122,12 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     private DownloadDialog downloadDialog;
 
+    private TextView tvmarketName;
+
     private void initViewFirst() {
 
         TextView tvSeller = findViewById(R.id.tvSeller);
-        TextView tvmarketName = findViewById(R.id.tvmarketName);
+        tvmarketName = findViewById(R.id.tvmarketName);
         TextView tvTid = findViewById(R.id.tvTid);
         tvSeller.setText(seller);
         tvTid.setText(tid + "");
@@ -155,6 +153,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //        weightTopMsgTv = findViewById(R.id.main_weight_msg_tv);
         findViewById(R.id.main_cash_btn).setOnClickListener(this);
         findViewById(R.id.main_settings_btn).setOnClickListener(this);
+        findViewById(R.id.main_settings_btn).setOnLongClickListener(this);
         findViewById(R.id.main_clear_btn).setOnClickListener(this);
         findViewById(R.id.btnClearn).setOnClickListener(this);
         findViewById(R.id.btnClearn).setOnLongClickListener(this);
@@ -172,7 +171,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
         disableShowInput(etPrice);
         disableShowInput(countEt);
-
         weightTopTv.setOnClickListener(this);
 
     }
@@ -187,7 +185,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
         //初始化 键盘 设置
         initDigital();
-
         //TODO
         weighUtils = new WeightHelper(handler);
         weighUtils.open();
@@ -195,8 +192,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         initHeartBeat();
     }
 
-
-    private TextView tvmarqueeView; //走马灯控件
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -251,7 +246,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                             }
                         }
                         Thread.sleep(3000);
-
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -260,7 +254,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             }
         }).start();
     }
-
 
     @Override
     protected void onResume() {
@@ -280,6 +273,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //        LogUtils.d("------------: " + presentationDisplays.length + "  --- " + presentationDisplays[1].getName());
         if (presentationDisplays.length > 1) {
             banner = new SecondPresentation(this.getApplicationContext(), presentationDisplays[1]);
+            banner.setData(askInfos);
             SysApplication.bannerActivity = banner;
             Objects.requireNonNull(banner.getWindow()).setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
             banner.show();
@@ -289,11 +283,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private GoodsDao goodsDao;
 
     private void getGoods() {
-
         List<Goods> goodsList = goodsDao.queryAll();
         goodMenuAdapter.setDatas(goodsList);
     }
-
 
     /**
      * 获取称重重量信息
@@ -315,16 +307,14 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         break;
                     case NOTIFY_EPAY_SUCCESS:
                         String message = msg.obj.toString();
-                        showLoading("支付成功", message, 1500);
+                        showLoading("0", message, 1500);
                         clearnContext(0);
                         setmarQueeNotify();
                         break;
                     case NOTIFY_CLEAR:
                         clearnContext(0);
                         break;
-
                     case 10012:
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -333,10 +323,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                                 }
                             }
                         });
-
                         break;
                     case 10013:
-
                         final Version v = (Version) msg.obj;
                         runOnUiThread(new Runnable() {
                             @Override
@@ -368,20 +356,22 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         });
     }
 
-    private StringBuilder scrollBarBuilder;
+    //    private StringBuilder scrollBarBuilder;
     private final String textEmpty = "              ";
 
     private void setmarQueeNotify() {
-        if (scrollBarBuilder == null) {
-            scrollBarBuilder = new StringBuilder();
-        }
-        scrollBarBuilder.setLength(0);
-
-        for (OrderInfo orderinfo : askInfos) {
-            scrollBarBuilder.append(orderinfo.getTotalamount()).append("元，待支付").append(textEmpty);
-        }
+//        if (scrollBarBuilder == null) {
+//            scrollBarBuilder = new StringBuilder();
+//        }
+//        scrollBarBuilder.setLength(0);
+//
+//        for (OrderInfo orderinfo : askInfos) {
+//            scrollBarBuilder.append(orderinfo.getTotalamount()).append("元，待支付").append(textEmpty);
+//        }
 
 //        customScrollBar.setText(scrollBarBuilder.toString());
+
+
         banner.notifyData(askInfos);
 
     }
@@ -495,6 +485,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedGoods = goodMenuAdapter.getItem(position);
                 tvGoodsName.setText(selectedGoods.getName());
+
                 etPrice.setText("");
                 etPrice.setHint(selectedGoods.getPrice());
 
@@ -520,12 +511,11 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         });
 
 
-        LinkedHashMap valueMap = (LinkedHashMap) SPUtils.readObject(this, SystemSettingsActivity.KEY_STOP_PRINT);
-        if (valueMap != null) {
-            stopPrint = (boolean) valueMap.get("val");
-        }
+//        LinkedHashMap valueMap = (LinkedHashMap) SPUtils.readObject(this, SystemSettingsActivity.KEY_STOP_PRINT);
+//        if (valueMap != null) {
+//            stopPrint = (boolean) valueMap.get("val");
+//        }
         switchSimpleOrComplex = false;
-
 
     }
 
@@ -703,6 +693,20 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             }
             banner = null;
         }
+
+//        sysApplication.getThreadPool().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<Goods> goodsList = goodMenuAdapter.getList();
+//                if (goodsList != null && goodsList.size() > 0) {
+//                    for (Goods goods : goodsList) {
+//                        goodsDao.updateOrInsert(goods);
+//                    }
+//                }
+//            }
+//        });
+
+
         super.onDestroy();
     }
 
@@ -729,10 +733,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         return;
                     }
 
-
                     OrderBean orderBean = new OrderBean();
                     String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
                     orderBean.setPrice(price);
+                    selectedGoods.setPrice(price);
+                    goodsDao.update(selectedGoods);
+
+
                     String weight = weightTopTv.getText().toString();
                     tvTotalWeight.setText(weight);
                     orderBean.setWeight(weight);
@@ -772,6 +779,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                     OrderBean orderBean = new OrderBean();
                     String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
                     orderBean.setPrice(price);
+                    selectedGoods.setPrice(price);
+                    goodsDao.update(selectedGoods);
+
                     String weight = weightTopTv.getText().toString();
                     tvTotalWeight.setText(weight);
                     orderBean.setWeight(weight);
@@ -791,7 +801,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             case R.id.main_settings_btn:
 //                if (!ButtonUtils.isFastDoubleClick(R.id.home_card_number_tv)) {
 //                    Intent intent2 = new Intent();
-//                    intent2.setClass(this, StaffMemberLoginActivity.class);
+//                    intent2.setClass(this, SystemLoginActivity.class);
 //                    startActivityForResult(intent2, 1002);
 //                }
 
@@ -838,6 +848,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         OrderBean orderBean = new OrderBean();
         String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
         orderBean.setPrice(price);
+        selectedGoods.setPrice(price);
+        goodsDao.update(selectedGoods);
+
         String weight = weightTopTv.getText().toString();
         orderBean.setWeight(weight);
 
@@ -865,7 +878,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 priceTotal += parseFloat(goods.getMoney());
             }
         }
-
         tvTotalWeight.setText(String.format("%.3f", weightTotalF));
         tvTotalPrice.setText(String.format("%.2f", priceTotal));
     }
@@ -889,13 +901,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             @Override
             public void run() {
 
-                helper.commitDD(orderInfo, MainActivity.this, 3);
+
                 List<OrderBean> orderBeans = orderInfo.getOrderItem();
                 orderInfoDao.insert(orderInfo);
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("------------交易明细------------\n");
-                sb.append(companyName + "\n");
+//
                 String stallNumber;
                 if (TextUtils.isEmpty(stallNumber2)) {
                     stallNumber = " ";
@@ -903,6 +915,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                     stallNumber = stallNumber2;
                 }
 
+                sb.append("市场名称：").append(orderInfo.getMarketName()).append("\n");
                 sb.append("交易日期：").append(currentTime).append("\n");
                 sb.append("交易单号：").append(orderInfo.getBillcode()).append("\n");
 
@@ -930,6 +943,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 sb.append("--------------------------------\n");
                 sb.append("合计(元)：").append(orderInfo.getTotalamount()).append("\n");
                 sb.append("司磅员：").append(orderInfo.getSeller()).append("\t").append("秤号：").append(tid);
+                sb.append(companyName + "\n");
                 sb.append("\n\n");
 
                 sb.append("\n\n");
@@ -1077,13 +1091,14 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         String dayTime = DateUtils.getDD(date);
 
         if (payType == 0) {
-            orderInfo.setBillstatus("支付成功");
+            orderInfo.setBillstatus("0");
         } else {
-            orderInfo.setBillstatus("待支付");
+            orderInfo.setBillstatus("1");
         }
 
         orderInfo.setSeller(seller);
         orderInfo.setSellerid(sellerid);
+        orderInfo.setMarketName(tvmarketName.getText().toString());
         orderInfo.setTerid(tid);
         orderInfo.setTotalamount(tvTotalPrice.getText().toString());
         orderInfo.setTotalweight(tvTotalWeight.getText().toString());
@@ -1095,14 +1110,31 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         orderInfo.setSettlemethod(payType);
         orderInfo.setBillcode(billcode);
 
+        if (NetWorkJudge.isNetworkAvailable(context)) {
+            helper.commitDD(orderInfo, MainActivity.this, 3);
+        } else {
+            String message = "支付金额：" + tvTotalPrice.getText().toString() + "元";
+            int delayTimes = 1500;
+            showLoading("0", message, delayTimes);
+            handler.sendEmptyMessage(NOTIFY_CLEAR);
+        }
 
         btnShangtongPrint(orderInfo);
 
-        if (payType == 1) {
-//         String baseUrl  = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
-            askInfos.add(orderInfo);
-            banner.notifyData(askInfos);
-        }
+
+        askInfos.add(orderInfo);
+        banner.notifyData(askInfos);
+
+
+//        if (payType == 1) {
+////         String baseUrl  = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
+//            //TODO
+//            banner.addData(orderInfo);
+////            askInfos.add(orderInfo);
+////            banner.notifyData(askInfos);
+//        }
+
+
     }
 
     List<OrderBean> secondOrderbeans = new ArrayList<>();
@@ -1144,8 +1176,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         if (resultInfo != null) {
                             if (resultInfo.getStatus() == 0) {//支付成功
                                 String orderNo = resultInfo.getData();
+
                                 for (OrderInfo orderInfo : askInfos) {
                                     if (orderInfo.getBillcode().equals(orderNo)) {
+                                        // TODO
                                         askInfos.remove(orderInfo);
                                         //TODO 电子订单支付成功
                                         Message message = new Message();
@@ -1184,10 +1218,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 OrderResultBean resultInfo = JSON.parseObject(response, OrderResultBean.class);
                 if (resultInfo != null && resultInfo.getStatus() == 0) {
                     String billstatus = resultInfo.getData().getBillstatus();
-                    String title = MyTextUtils.changeCharset(billstatus);
+//                    String title = MyTextUtils.changeCharset(billstatus);
                     String message = "支付金额：" + tvTotalPrice.getText().toString() + "元";
                     int delayTimes = 1500;
-                    showLoading(title, message, delayTimes);
+                    showLoading(billstatus, message, delayTimes);
                     handler.sendEmptyMessage(NOTIFY_CLEAR);
                 }
 
@@ -1235,6 +1269,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                             }
                         });
                 builder.create().show();
+                break;
+            case R.id.main_settings_btn:
+                Intent intent2 = new Intent(context, SystemLoginActivity.class);
+                startActivity(intent2);
                 break;
         }
         return false;

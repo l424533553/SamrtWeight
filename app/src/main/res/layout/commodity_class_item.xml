@@ -10,7 +10,7 @@
         android:id="@+id/commodity_class_name_tv"
         android:layout_width="140dp"
         android:singleLine="true"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:textSize="22sp"
         android:background="@drawable/shape_weight_display_bg"
         android:clickable="false"

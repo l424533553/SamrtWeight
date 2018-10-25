@@ -554,7 +554,7 @@
 //            case R.id.main_settings_btn:
 //                if (!ButtonUtils.isFastDoubleClick(R.id.home_card_number_tv)) {
 //                    Intent intent2 = new Intent();
-//                    intent2.setClass(this, StaffMemberLoginActivity.class);
+//                    intent2.setClass(this, SystemLoginActivity.class);
 //                    startActivityForResult(intent2, 1002);
 //                }
 //                break;

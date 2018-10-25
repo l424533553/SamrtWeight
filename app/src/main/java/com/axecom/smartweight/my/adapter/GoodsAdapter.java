@@ -25,7 +25,11 @@ import java.util.List;
 public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.DragViewHolder> {
     private List<Goods> goodsList;
     private LayoutInflater mInflater;
+    private boolean isDelete;
 
+    public void setDelete(boolean delete) {
+        isDelete = delete;
+    }
 
     public GoodsAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -69,17 +73,25 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.DragViewHold
             holder.selectedTv.setVisibility(View.VISIBLE);
         }
         holder.nameTv.setText(goodsList.get(position).getName());
+        if (isDelete) {
+            holder.deleteTv.setVisibility(View.VISIBLE);
+        } else {
+            holder.deleteTv.setVisibility(View.GONE);
+        }
+
         holder.deleteTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myOnItemClickListener.myOnItemClick(position,1);
+                myOnItemClickListener.myOnItemClick(position, 1);
             }
         });
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                holder.deleteTv.setVisibility(View.VISIBLE);
+                isDelete=!isDelete;
+//                holder.deleteTv.setVisibility(View.VISIBLE);
+                notifyDataSetChanged();
                 return false;
             }
         });
@@ -88,7 +100,7 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.DragViewHold
 
     @Override
     public int getItemCount() {
-        return  goodsList==null?0:goodsList.size();
+        return goodsList == null ? 0 : goodsList.size();
     }
 
 

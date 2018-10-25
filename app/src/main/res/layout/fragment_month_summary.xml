@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -12,8 +12,8 @@
             android:id="@+id/data_summary_reports_title_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginRight="2dp"
             android:layout_marginTop="1dp"
+            android:layout_marginRight="2dp"
             android:background="@color/gray_ccc"
             android:orientation="horizontal">
 
@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="重量(kg)/件数"
+                android:text="重量"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -67,8 +67,8 @@
             android:id="@+id/data_summary_sales_title_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginRight="2dp"
             android:layout_marginTop="1dp"
+            android:layout_marginRight="2dp"
             android:background="@color/gray_ccc"
             android:orientation="horizontal"
             android:visibility="gone">
@@ -217,10 +217,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:orientation="horizontal"
             android:padding="5dp">
-
-
 
             <Button
                 android:id="@+id/btnBeforeMonth"

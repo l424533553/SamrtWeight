@@ -23,6 +23,7 @@ import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.luofx.listener.IMyItemOnLongclick;
 import com.luofx.listener.IMyItemOnclick123;
 import com.luofx.utils.DateUtils;
+import com.luofx.utils.match.MyMatch;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -178,7 +179,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                         for (int i = 0; i < adapter.getGroupCount(); i++) {
                             lvSearch.expandGroup(i);
                         }
-                        tvTotalMoney.setText(totalMoney + "元");
+                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney)  + "元");
                         break;
                 }
                 return false;
@@ -260,6 +261,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                 convertView = View.inflate(context, R.layout.item_sample_fragment_group, null);
                 holder.tvTotalAmount = convertView.findViewById(R.id.tvTotalAmount);
                 holder.tvOrderNo = convertView.findViewById(R.id.tvOrderNo);
+                holder.tvTime = convertView.findViewById(R.id.tvTime);
 
                 convertView.setTag(holder);
             } else {
@@ -267,6 +269,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
             }
             holder.tvOrderNo.setText(data.get(groupPosition).getBillcode());
             holder.tvTotalAmount.setText(data.get(groupPosition).getTotalamount());
+            holder.tvTime.setText(data.get(groupPosition).getTime());
 //            convertView.setOnLongClickListener(new View.OnLongClickListener() {
 //                @Override
 //                public boolean onLongClick(View v) {
@@ -330,7 +333,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
 
         private class GroupHolder {
 
-            private TextView tvTotalAmount, tvOrderNo;
+            private TextView tvTotalAmount, tvOrderNo,tvTime;
 
         }
 
@@ -340,8 +343,6 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
             TextView tvWeight;
             TextView tvMoney;
             TextView tvUnit;
-
-
         }
 
     }
