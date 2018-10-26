@@ -34,16 +34,20 @@ import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.bean.SubOrderReqBean;
 import com.axecom.smartweight.manager.AccountManager;
 import com.axecom.smartweight.manager.MacManager;
+import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.adapter.DigitalAdapter;
 import com.axecom.smartweight.my.adapter.OrderAdapter;
 import com.axecom.smartweight.my.entity.Goods;
+import com.axecom.smartweight.my.entity.GoodsType;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.ResultInfo;
 import com.axecom.smartweight.my.entity.dao.GoodsDao;
+import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
 import com.axecom.smartweight.my.entity.dao.OrderBeanDao;
 import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.axecom.smartweight.my.entity.netresult.OrderResultBean;
+import com.axecom.smartweight.my.entity.netresult.TracenoResultBean;
 import com.axecom.smartweight.my.helper.CountTextWatcher;
 import com.axecom.smartweight.my.helper.HeartBeatServcice;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
@@ -58,11 +62,11 @@ import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.ToastUtils;
 import com.luofx.utils.log.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
-import com.shangtongyin.tools.serialport.Print;
 import com.shangtongyin.tools.serialport.WeightHelper;
 
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,17 +75,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.axecom.smartweight.utils.CommonUtils.parseFloat;
-import static com.shangtongyin.tools.serialport.IConstants_ST.KEY;
-import static com.shangtongyin.tools.serialport.IConstants_ST.MARKET_ID;
-import static com.shangtongyin.tools.serialport.IConstants_ST.MARKET_NAME;
-import static com.shangtongyin.tools.serialport.IConstants_ST.MCHID;
-import static com.shangtongyin.tools.serialport.IConstants_ST.NOTIFY_CLEAR;
-import static com.shangtongyin.tools.serialport.IConstants_ST.NOTIFY_EPAY_SUCCESS;
-import static com.shangtongyin.tools.serialport.IConstants_ST.NOTIFY_MARQUEE;
-import static com.shangtongyin.tools.serialport.IConstants_ST.NOTIFY_WEIGHT;
-import static com.shangtongyin.tools.serialport.IConstants_ST.SELLER;
-import static com.shangtongyin.tools.serialport.IConstants_ST.SELLER_ID;
-import static com.shangtongyin.tools.serialport.IConstants_ST.TID;
 
 public class MainActivity extends MainBaseActivity implements VolleyListener, VolleyStringListener, View.OnClickListener, View.OnLongClickListener {
 
@@ -202,7 +195,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         marketId = PreferenceUtils.getInt(context, MARKET_ID, -1);
         marketname = PreferenceUtils.getString(context, MARKET_NAME, "");
         sellerid = PreferenceUtils.getInt(context, SELLER_ID, -1);
-        seller = PreferenceUtils.getString(context, SELLER, null);
+        seller = PreferenceUtils.getString(context, SELLER, "");
         key = PreferenceUtils.getString(context, KEY, null);
         mchid = PreferenceUtils.getString(context, MCHID, null);
 
@@ -281,10 +274,19 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     private GoodsDao goodsDao;
+    private List<Goods> goodsList;
 
     private void getGoods() {
-        List<Goods> goodsList = goodsDao.queryAll();
+        goodsList = goodsDao.queryAll();
         goodMenuAdapter.setDatas(goodsList);
+
+//        if (NetWorkJudge.isNetworkAvailable(context)) {
+//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + sellerid;
+//            sysApplication.volleyGet(url, this, 6);
+//
+//        }
+
+
     }
 
     /**
@@ -304,6 +306,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         break;
                     case NOTIFY_MARQUEE:
                         setmarQueeNotify();
+                        break;
+                    case NOTIFY_TRACENO:
+                        goodMenuAdapter.notifyDataSetChanged();
                         break;
                     case NOTIFY_EPAY_SUCCESS:
                         String message = msg.obj.toString();
@@ -799,12 +804,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 payCashDirect(1);
                 break;
             case R.id.main_settings_btn:
-//                if (!ButtonUtils.isFastDoubleClick(R.id.home_card_number_tv)) {
-//                    Intent intent2 = new Intent();
-//                    intent2.setClass(this, SystemLoginActivity.class);
-//                    startActivityForResult(intent2, 1002);
-//                }
-
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
 
@@ -882,113 +881,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         tvTotalPrice.setText(String.format("%.2f", priceTotal));
     }
 
-
-    /**
-     * shangtong 打印机打印
-     */
-
-    public void btnShangtongPrint(final OrderInfo orderInfo) {
-        final String companyName = "深圳市安鑫宝科技发展有限公司";
-        final String stallNumber2 = stallNumberTv.getText().toString();//摊位号
-        final String currentTime = DateUtils.getYY_TO_ss(new Date());
-
-//        threadPool = ThreadPool.getInstantiation();
-
-        final Print print = sysApplication.getPrint();
-
-        //TODO  打印功能  带开启
-        sysApplication.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-
-
-                List<OrderBean> orderBeans = orderInfo.getOrderItem();
-                orderInfoDao.insert(orderInfo);
-
-                StringBuilder sb = new StringBuilder();
-                sb.append("------------交易明细------------\n");
-//
-                String stallNumber;
-                if (TextUtils.isEmpty(stallNumber2)) {
-                    stallNumber = " ";
-                } else {
-                    stallNumber = stallNumber2;
-                }
-
-                sb.append("市场名称：").append(orderInfo.getMarketName()).append("\n");
-                sb.append("交易日期：").append(currentTime).append("\n");
-                sb.append("交易单号：").append(orderInfo.getBillcode()).append("\n");
-
-                if (1 == orderInfo.getSettlemethod()) {
-                    sb.append("结算方式：微信支付\n");
-                }
-                if (2 == orderInfo.getSettlemethod()) {
-                    sb.append("结算方式：支付宝支付\n");
-                }
-                if (3 == orderInfo.getSettlemethod()) {
-                    sb.append("结算方式：现金支付\n");
-                }
-
-                sb.append("卖方名称：").append(orderInfo.getSeller()).append("\n");
-                sb.append("摊位号：").append(stallNumber).append("\n");
-                sb.append("商品名\b" + "单价/元\b" + "重量/kg\b" + "金额/元" + "\n");
-
-                for (int i = 0; i < orderBeans.size(); i++) {
-                    OrderBean goods = orderBeans.get(i);
-                    goods.setOrderInfo(orderInfo);
-                    sb.append(goods.getName()).append("\t").append(goods.getPrice()).append("\t").append(goods.getWeight()).append("\t").append(goods.getMoney()).append("\n");
-                }
-                orderBeanDao.insert(orderBeans);
-
-                sb.append("--------------------------------\n");
-                sb.append("合计(元)：").append(orderInfo.getTotalamount()).append("\n");
-                sb.append("司磅员：").append(orderInfo.getSeller()).append("\t").append("秤号：").append(tid);
-                sb.append(companyName + "\n");
-                sb.append("\n\n");
-
-                sb.append("\n\n");
-                print.setLineSpacing((byte) 32);
-                print.PrintString(sb.toString());
-
-
-//                boolean isAvailable = NetworkUtil.isAvailable(context);// 有网打印二维码
-//                if (!isAvailable) {
-//                    sb.append("\n\n");
-//                    print.setLineSpacing((byte) 32);
-//                    print.PrintString(sb.toString());
-//                } else {
-//                    print.setLineSpacing((byte) 32);
-//                    print.PrintString(sb.toString());
-//
-//                    byte[] bytes = null;
-//                    try {
-//                        int index1 = bitmap.indexOf("url=");
-//                        if (index1 > 0) {
-//                            String qrString = bitmap.substring(index1 + 4);
-//                            if (qrString.length() > 0) {
-//                                bytes = print.getbyteData(qrString, 32, 32);
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    try {
-//                        if (bytes != null) {
-//                            print.PrintltString("扫一扫获取追溯信息：");
-//                            print.printQR(bytes);
-//                            print.PrintltString("--------------------------------\n\n\n");
-//                        }
-//
-//                    } catch (IOException | InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
-
-            }
-        });
-    }
 
     @SuppressLint("SetTextI18n")
     public void clear(int type, boolean b) {
@@ -1080,9 +972,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
      * 直接现金支付
      */
     public void payCashDirect(int payType) {
-
-        OrderInfo orderInfo = new OrderInfo();
-        List<OrderBean> orderlist = new ArrayList<>(orderBeans);
+        final List<OrderBean> data = new ArrayList<>(orderBeans);
+        final OrderInfo orderInfo = new OrderInfo();
+        List<OrderBean> orderlist = new ArrayList<>(data);
         orderInfo.setOrderItem(orderlist);
         String billcode = "AX" + DateUtils.getSampleNo() + tid;
         Date date = new Date();
@@ -1105,10 +997,12 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
         orderInfo.setMarketid(marketId);
         orderInfo.setTime(currentTime);
+        orderInfo.setTimestamp(Timestamp.valueOf(currentTime));
         orderInfo.setHour(Integer.valueOf(hourTime));
         orderInfo.setDay(Integer.valueOf(dayTime));
         orderInfo.setSettlemethod(payType);
         orderInfo.setBillcode(billcode);
+        orderInfo.setStallNo(stallNumberTv.getText().toString());
 
         if (NetWorkJudge.isNetworkAvailable(context)) {
             helper.commitDD(orderInfo, MainActivity.this, 3);
@@ -1118,8 +1012,27 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             showLoading("0", message, delayTimes);
             handler.sendEmptyMessage(NOTIFY_CLEAR);
         }
+        // 打印数据
+        if (epsPrinter == null) {
+            epsPrinter = new MyEPSPrinter(sysApplication.getEpsPrint());
+        }
+        epsPrinter.printOrder(sysApplication.getThreadPool(), orderInfo);
 
-        btnShangtongPrint(orderInfo);
+//        select max(Age) from Student
+
+        //保存交易数据
+        sysApplication.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                for (int i = 0; i < data.size(); i++) {
+                    OrderBean goods = orderBeans.get(i);
+                    goods.setOrderInfo(orderInfo);
+                }
+                orderInfoDao.insert(orderInfo);
+                orderBeanDao.insert(orderBeans);
+            }
+        });
 
 
         askInfos.add(orderInfo);
@@ -1137,6 +1050,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     }
 
+    MyEPSPrinter epsPrinter;
     List<OrderBean> secondOrderbeans = new ArrayList<>();
     List<OrderInfo> askInfos = new ArrayList<>();
 
@@ -1193,6 +1107,53 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                             }
                         }
                         MyLog.myInfo("成功" + jsonObject.toString());
+                        break;
+                    case 6:
+                        sysApplication.getThreadPool().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                TracenoResultBean tracenoResultBean = JSON.parseObject(jsonObject.toString(), TracenoResultBean.class);
+                                if (tracenoResultBean != null) {
+                                    if (tracenoResultBean.getStatus() == 0) {
+                                        if (tracenoResultBean.getData().size() > 0) {
+                                            boolean isUpdate = false;
+                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
+                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
+                                                for (int j = 0; j < goodsList.size(); j++) {
+                                                    if (dataBean.getTypeid() == goodsList.get(j).getTypeid()) {
+                                                        goodsList.get(j).setBatchCode(dataBean.getTraceno());
+                                                        isUpdate = true;
+                                                    }
+                                                }
+                                            }
+                                            if (isUpdate) {
+                                                handler.sendEmptyMessage(NOTIFY_TRACENO);
+                                            }
+                                            //更新 数据中的批次号
+
+                                            boolean isUpdateType = false;
+                                            GoodsTypeDao goodsTypeDao = new GoodsTypeDao(context);
+                                            List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
+                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
+                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
+                                                for (int j = 0; j < goodsTypes.size(); j++) {
+                                                    if (dataBean.getTypeid() == goodsTypes.get(j).getId()) {
+                                                        goodsTypes.get(j).setTraceno(dataBean.getTraceno());
+                                                        isUpdateType = true;
+                                                    }
+                                                }
+                                            }
+
+                                            if (isUpdateType) {//批次号 有更新
+                                                goodsTypeDao.updates(goodsTypes);
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
                         break;
                 }
             }

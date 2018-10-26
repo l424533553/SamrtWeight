@@ -182,7 +182,7 @@ public class GPprinterManager {
 		/* 打印文字 */
         esc.addSelectPrintModes(EscCommand.FONT.FONTA, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF, EscCommand.ENABLE.OFF);// 取消倍高倍宽
         esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT);// 设置打印左对齐
-        esc.addText("Print text\n"); // 打印文字
+        esc.addText("EpsPrint text\n"); // 打印文字
         esc.addText("Welcome to use SMARNET printer!\n"); // 打印文字
 
 		/* 打印繁体中文 需要打印机支持繁体字库 */
@@ -201,12 +201,12 @@ public class GPprinterManager {
         esc.addPrintAndLineFeed();
 
 		/* 打印图片 */
-        esc.addText("Print bitmap!\n"); // 打印文字
+        esc.addText("EpsPrint bitmap!\n"); // 打印文字
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         esc.addRastBitImage(b, 384, 0); // 打印图片
 
 		/* 打印一维条码 */
-        esc.addText("Print code128\n"); // 打印文字
+        esc.addText("EpsPrint code128\n"); // 打印文字
         esc.addSelectPrintingPositionForHRICharacters(EscCommand.HRI_POSITION.BELOW);//
         // 设置条码可识别字符位置在条码下方
         esc.addSetBarcodeHeight((byte) 60); // 设置条码高度为60点
@@ -217,7 +217,7 @@ public class GPprinterManager {
 		/*
 		 * QRCode命令打印 此命令只在支持QRCode命令打印的机型才能使用。 在不支持二维码指令打印的机型上，则需要发送二维条码图片
 		 */
-        esc.addText("Print QRcode\n"); // 打印文字
+        esc.addText("EpsPrint QRcode\n"); // 打印文字
         esc.addSelectErrorCorrectionLevelForQRCode((byte) 0x31); // 设置纠错等级
         esc.addSelectSizeOfModuleForQRCode((byte) 3);// 设置qrcode模块大小
         esc.addStoreQRCodeData("www.smarnet.cc");// 设置qrcode内容

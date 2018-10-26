@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.adapter.LogRVAdapter;
 import com.axecom.smartweight.my.entity.LogBean;
-import com.luofx.entity.dao.BaseDao;
 
 import java.util.List;
 
@@ -36,9 +35,9 @@ public class LogActivity extends Activity {
     }
 
     /**
-     *  初始
+     * 初始
      */
-    private void initData(){
+    private void initData() {
 //        LogBean logBean=new LogBean();
 //        logBean.setLocation(this.getPackageCodePath());
 //        logBean.setTime(DateUtils.getYY_TO_ss(new Date()));
@@ -54,12 +53,9 @@ public class LogActivity extends Activity {
 //        list.add(logBean2);
 //        list.add(logBean);
 
-        BaseDao<LogBean> baseDao=new BaseDao<>(context,LogBean.class);
-        List<LogBean > list= baseDao.queryAll();
 
-        adapter.setData(list);
+        adapter.setData(null);
     }
-
 
     private Context context;
 

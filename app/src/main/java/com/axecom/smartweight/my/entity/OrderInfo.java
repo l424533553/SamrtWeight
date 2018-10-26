@@ -1,10 +1,13 @@
 package com.axecom.smartweight.my.entity;
 
+import android.text.TextUtils;
+
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ import java.util.List;
  * describe:
  */
 @DatabaseTable(tableName = "orderinfo")
-public class OrderInfo implements Cloneable{
+public class OrderInfo implements Cloneable {
     /**
      * billcode : AX1234
      * billstatus : 成功
@@ -40,7 +43,7 @@ public class OrderInfo implements Cloneable{
     @DatabaseField
     private int settlemethod;
     @DatabaseField
-    private int terid;
+    private int terid;//称号
     @DatabaseField
     private int marketid;
     @DatabaseField
@@ -53,7 +56,14 @@ public class OrderInfo implements Cloneable{
     private String totalamount;  // 总金额
     @DatabaseField
     private String totalweight;  // 总重量
+    @DatabaseField
+    private String stallNo;// 摊位号
+    @DatabaseField
+    private Timestamp timestamp;  //时间戳
 
+    @DatabaseField
+    private int state;  // 订单状态
+    @DatabaseField
     private String marketName;
 
     /**
@@ -76,6 +86,32 @@ public class OrderInfo implements Cloneable{
     public OrderInfo() {
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getStallNo() {
+        if (TextUtils.isEmpty(stallNo)) {
+            return " ";
+        }
+        return stallNo;
+    }
+
+    public void setStallNo(String stallNo) {
+        this.stallNo = stallNo;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 
     public String getMarketName() {
         return marketName;

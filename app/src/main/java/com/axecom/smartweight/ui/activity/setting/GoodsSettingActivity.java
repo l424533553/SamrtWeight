@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.BusEvent;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.bean.SaveGoodsReqBean;
 import com.axecom.smartweight.impl.ItemDragHelperCallback;
 import com.axecom.smartweight.my.adapter.GoodsAdapter;
 import com.axecom.smartweight.my.adapter.GoodsTypeAdapter;
@@ -70,12 +69,16 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     private GoodsDao goodsDao;
     private AllGoodsDao allGoodsDao;
-    private GoodsTypeDao  goodsTypeDao;
+    private GoodsTypeDao goodsTypeDao;
     private Context context;
 
-    //           ((TextView) classTitleLayout.getChildAt(i)).setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.black));
-//
-//        allTitleTv.setTextColor(GoodsSettingActivity.this.getResources().getColor(R.color.green_3CB371));
+    /**
+     * 销售商品列表
+     */
+    private List<Goods> hotGoodsList;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -158,6 +161,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         rvGoodsSelect.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 AllGoods allGoods = classAdapter.getItem(position);
                 Goods goods = new Goods();
                 goods.setCid(allGoods.getCid());
@@ -170,56 +174,27 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 if (!hotGoodsList.contains(goods)) {
                     hotGoodsList.add(goods);
                     goodsAdapter.notifyItemChanged(hotGoodsList.size() - 1);
-                    int count = goodsDao.insert(goods);
-                    if(count>0){
-                        MyToast.toastShort(context,"添加成功");
+                    int typeid = allGoods.getTypeid();
+
+                    GoodsType goodsType = goodsTypeDao.queryById(typeid);
+                    if (goodsType != null) {
+                        goods.setBatchCode(goodsType.getTraceno());
                     }
 
-
+                    int count = goodsDao.insert(goods);
+                    if (count > 0) {
+                        MyToast.toastShort(context, "添加成功");
+                    }
                 }
             }
         });
-
-
-//        GridLayoutManager selectmanager = new GridLayoutManager(this, 5);
-//        rvGoodsSelect.setLayoutManager(selectmanager);
-//        ItemDragHelperCallback callback2 = new ItemDragHelperCallback() {
-//            @Override
-//            public boolean isLongPressDragEnabled() {
-//                // 长按拖拽打开
-//                return true;
-//            }
-//        };
-//        ItemTouchHelper helper2 = new ItemTouchHelper(callback2);
-//        helper2.attachToRecyclerView(rvGoodsSelect);
-
-
-//        goodsSelectAdapter = new GoodsSelectAdapter(context);
-//        goodsSelectAdapter.setMyOnItemClickListener(new MyOnItemClickListener2() {
-//            @Override
-//            public void myOnItemClick(int position, int flag) {
-//                //TODO   添加侧面 面板中
-//                AllGoods allGoods = goodsSelectAdapter.getItem(position);
-//                Goods goods = new Goods();
-//                goods.setCid(allGoods.getCid());
-//                goods.setPrice(allGoods.getPrice());
-//                goods.setBatchCode(allGoods.getBatchCode());
-//                goods.setName(allGoods.getName());
-//
-//                goods.setType(allGoods.getType());
-//                goods.setTypeid(allGoods.getTypeid());
-//                if (hotGoodsSet.add(goods)) {
-//                    hotGoodsList.add(goods);
-//                    goodsAdapter.notifyItemChanged(hotGoodsList.size() - 1);
-//                    goodsDao.insert(goods);
-//                }
-//            }
-//        });
-//        rvGoodsSelect.setAdapter(goodsSelectAdapter);
-
     }
 
-
+    /**
+     *
+     * @param position  位置
+     * @param flag      标识
+     */
     @Override
     public void myOnItemClick(int position, int flag) {
         switch (flag) {
@@ -237,19 +212,12 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 List<AllGoods> goodsList = allGoodsDao.queryByTypeId(goodsTypeId);
                 classAdapter.setDatas(goodsList);
                 classAdapter.notifyDataSetChanged();
-
                 break;
         }
     }
 
-
-    private Set<Goods> hotGoodsSet;
-    private List<Goods> hotGoodsList;
-
     private void getGoods() {
         hotGoodsList = goodsDao.queryAll();
-        hotGoodsSet = new HashSet<>(hotGoodsList);
-
 
         final List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
         GoodsType goodsType = new GoodsType();
@@ -265,22 +233,15 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 List<AllGoods> goodsList = allGoodsDao.queryByTypeId(-1);
 //                goodsSelectAdapter.setDatas(goodsList);
                 classAdapter.setDatas(goodsList);
-
                 handler.sendEmptyMessage(NOTIFY_INITDAT);
-
-
             }
         }).start();
-
-
-//        goodsAdapter.setDatas(goodsList);
 
     }
 
     public void setInitView() {
 
         findViewById(R.id.btnSave).setOnClickListener(this);
-
         EditText searchEt = findViewById(R.id.commodity_management_search_et);
 
         searchEt.addTextChangedListener(new TextWatcher() {
@@ -301,8 +262,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 }
 //                Pattern pattern = Pattern.compile(s.toString());
 //                List<CommodityBean> result = new ArrayList<>();
-
-
 //                setClassTitleTxtColor();
             }
         });
@@ -336,22 +295,16 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 bean.setHotKeyBean(goods);
                 hotKeyList.set(position, bean);
             }
-
         }*/
     }
-
-
 
     private void saveSelectedGoods(String message) {
         EventBus.getDefault().post(new BusEvent(BusEvent.SAVE_COMMODITY_SUCCESS, true));
         Toast.makeText(GoodsSettingActivity.this, message, Toast.LENGTH_SHORT).show();
 
-
         goodsAdapter.showDeleteTv(false);
         rvGoods.setAdapter(goodsAdapter);
     }
-
-
 
     private SweetAlertDialog mSweetAlertDialog;
 

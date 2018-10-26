@@ -85,9 +85,9 @@ package com.shangtongyin.tools.test;//package com.shangtongyin.tools.test;
 //            @Override
 //            public void onClick(View v) {
 //                try {
-//                    app.getPrint().reset();
-//                    app.getPrint().isWordBlod((byte) 0);
-//                    app.getPrint().PrintltString("你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷");
+//                    app.getEpsPrint().reset();
+//                    app.getEpsPrint().isWordBlod((byte) 0);
+//                    app.getEpsPrint().PrintltString("你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷你大爷爷爷");
 //
 //                } catch (IOException | InterruptedException e) {
 //                    e.printStackTrace();
@@ -109,8 +109,8 @@ package com.shangtongyin.tools.test;//package com.shangtongyin.tools.test;
 //            @Override
 //            public void onClick(View v) {
 //                try {
-//                    app.getPrint().reset();
-//                    app.getPrint().PrintNetLine(MainActivity22.this);
+//                    app.getEpsPrint().reset();
+//                    app.getEpsPrint().PrintNetLine(MainActivity22.this);
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
@@ -122,7 +122,7 @@ package com.shangtongyin.tools.test;//package com.shangtongyin.tools.test;
 //        btnQR.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                app.getPrint().printQR();
+//                app.getEpsPrint().printQR();
 //            }
 //        });
 //

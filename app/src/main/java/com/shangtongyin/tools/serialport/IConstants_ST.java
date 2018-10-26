@@ -31,6 +31,7 @@ public interface IConstants_ST {
     int NOTIFY_CLEAR = 9333;
     int NOTIFY_INITDAT = 9444;
     int NOTIFY_SUCCESS = 9555;
+    int NOTIFY_TRACENO = 9777;
     int NOTIFY_EPAY_SUCCESS = 9666; //电子支付成功
 
 
@@ -55,6 +56,7 @@ public interface IConstants_ST {
     String MCHID = "mchid";
     String BASE_WEB_IP = "base_web_ip";
 
+    String BASE_COMPANY_NAME = "深圳市安鑫宝科技发展有限公司";
 
     String KET_SWITCH_SIMPLE_OR_COMPLEX = "key_switch_simple_or_complex";
 

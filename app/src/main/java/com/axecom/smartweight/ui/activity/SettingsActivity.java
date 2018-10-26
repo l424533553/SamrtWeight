@@ -26,14 +26,17 @@ import com.axecom.smartweight.base.BaseDialog;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.bean.SettingsBean;
 import com.axecom.smartweight.manager.AccountManager;
+import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
+import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.ResultInfo;
 import com.axecom.smartweight.my.entity.UserInfo;
 import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
+import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.axecom.smartweight.my.entity.dao.UserInfoDao;
 import com.axecom.smartweight.my.net.NetHelper;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
@@ -72,6 +75,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
     private final int POSITION_WEIGHT = 11;
     private final int POSITION_RE_BOOT = 12;
+    private final int POSITION_BACK = 16;
     private final int POSITION_BD = 13;
     private final int POSITION_SYSTEM = 14;
 
@@ -173,27 +177,35 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
         SettingsBean settingsBean3 = new SettingsBean(R.drawable.server_setting, "服务器测试", POSITION_SERVER);
         settngsList.add(settingsBean3);
-        SettingsBean settingsBean4 = new SettingsBean(R.drawable.invalid, "异常订单", POSITION_INVALID);
-        settngsList.add(settingsBean4);
-
-        SettingsBean settingsBean5 = new SettingsBean(R.drawable.bd_setting, "订单作废", POSITION_BD);
-        settngsList.add(settingsBean5);
 
 
-        SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
-        settngsList.add(settingsBean8);
+
+//        SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
+//        settngsList.add(settingsBean8);
+
         SettingsBean settingsBean9 = new SettingsBean(R.drawable.wifi_setting, "WIFI设置", POSITION_WIFI);
         settngsList.add(settingsBean9);
 //        SettingsBean settingsBean10 = new SettingsBean(R.drawable.local_setting, "本机设置", POSITION_LOCAL);
 //        settngsList.add(settingsBean10);
-        SettingsBean settingsBean11 = new SettingsBean(R.drawable.weight_setting, "标定管理", POSITION_WEIGHT);
-        settngsList.add(settingsBean11);
-        SettingsBean settingsBean12 = new SettingsBean(R.drawable.re_boot, "重启", POSITION_RE_BOOT);
-        settngsList.add(settingsBean12);
-        if(type==1){
+
+        if (type == 1) {
+            SettingsBean settingsBean4 = new SettingsBean(R.drawable.invalid, "异常订单", POSITION_INVALID);
+            settngsList.add(settingsBean4);
+
+            SettingsBean settingsBean5 = new SettingsBean(R.drawable.bd_setting, "订单作废", POSITION_BD);
+            settngsList.add(settingsBean5);
+
+            SettingsBean settingsBean11 = new SettingsBean(R.drawable.weight_setting, "标定管理", POSITION_WEIGHT);
+            settngsList.add(settingsBean11);
             SettingsBean settingsBean13 = new SettingsBean(R.drawable.system_setting, "系统设置", POSITION_SYSTEM);
             settngsList.add(settingsBean13);
         }
+
+
+        SettingsBean settingsBean12 = new SettingsBean(R.drawable.re_boot, "重启", POSITION_RE_BOOT);
+        settngsList.add(settingsBean12);
+        SettingsBean settingsBean14 = new SettingsBean(R.drawable.re_boot, "返回", POSITION_BACK);
+        settngsList.add(settingsBean14);
 
         settingsAdapter = new SettingsAdapter(this, settngsList);
         settingsGV.setAdapter(settingsAdapter);
@@ -324,7 +336,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
                     }
-
                     break;
             }
         } catch (Exception e) {
@@ -332,6 +343,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         }
     }
 
+    /**
+     * 是否更新成功
+     */
     private int successFlag = 0;
 
     AdapterView.OnItemClickListener settingsOnItemClickListener = new AdapterView.OnItemClickListener() {
@@ -340,7 +354,17 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
             int flag = settingsAdapter.getItem(position).getFlag();
             switch (flag) {
-                case POSITION_PATCH:
+                case POSITION_PATCH://补打上一笔
+                    OrderInfoDao orderInfoDao = new OrderInfoDao(context);
+                    List<OrderInfo> infoList = orderInfoDao.queryByDay(false, 1);
+                    if (infoList.size() == 0) {
+                        MyToast.toastShort(context, "暂无交易数据");
+                    } else {
+                        OrderInfo orderInfo = infoList.get(0);
+                        MyEPSPrinter myEPSPrinter = new MyEPSPrinter(sysApplication.getEpsPrint());
+                        myEPSPrinter.printOrder(sysApplication.getThreadPool(), orderInfo);
+                    }
+
 //                    EventBus.getDefault().post(new BusEvent(BusEvent.POSITION_PATCH, SPUtils.getString(SettingsActivity.this, "print_orderno", ""), SPUtils.getString(SettingsActivity.this, "print_payid", "")));
 //                    finish();
                     break;
@@ -388,6 +412,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                 case POSITION_WEIGHT:
                     finish();
                     break;
+                case POSITION_BACK:
+                    finish();
+                    break;
 //                case POSITION_SWITCH:
 //                    showLoading("切换成功");
 //                    boolean switchSimpleOrComplex = (boolean) SPUtils.get(SettingsActivity.this, KET_SWITCH_SIMPLE_OR_COMPLEX, false);
@@ -409,9 +436,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 //                        }
 //                    }
                     break;
-                case POSITION_UPDATE:
+                case POSITION_UPDATE:// 数据更新
                     baseDialog.showLoading();
-
+                    successFlag = 0;
                     netHelper.getUserInfo(netHelper.getIMEI(context), 1);
 
 

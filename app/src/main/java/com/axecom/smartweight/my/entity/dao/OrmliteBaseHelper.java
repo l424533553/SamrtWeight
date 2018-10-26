@@ -37,6 +37,8 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     // 数据库名称
     private static String DATABASE_NAME = "r2011.db";
 
+    public final static int version = 1;
+
     // 本类的单例实例
     private static OrmliteBaseHelper instance;
 
@@ -57,7 +59,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 
     // 私有的构造方法
     private OrmliteBaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, version);
     }
 
     // 根据传入的DAO的路径获取到这个DAO的单例对象（要么从daos这个Map中获取，要么新创建一个并存入daos）
@@ -79,6 +81,8 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
         try {
 
 //            TableUtils.createTable(connectionSource, Goods.class);
+
+
             TableUtils.createTable(connectionSource, OrderInfo.class);
             TableUtils.createTable(connectionSource, OrderBean.class);
             TableUtils.createTable(connectionSource, Teacher.class);
@@ -94,18 +98,35 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override // 数据库版本更新时调用的方法
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        try {
+//        try {
+
+
+        //增加表 的列
+//        if (oldVersion == 2) {
+//            String sql2 = "ALTER TABLE `GoodsType` ADD COLUMN traceno VARCHAR";
+//            database.execSQL(sql2);
+//
+////            getUserDao().executeRaw();
+//        }else if(oldVersion == 1){
+//            String sql = "ALTER TABLE `orderinfo` ADD COLUMN state INTEGER DEFAULT 0";
+//            database.execSQL(sql);
+//
+//            String sql2 = "ALTER TABLE `GoodsType` ADD COLUMN traceno VARCHAR";
+//            database.execSQL(sql2);
+//        }
+
+        // 数据库更新 删除表 ,在重建
 //            TableUtils.dropTable(connectionSource, Goods.class, true);
-            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
-            TableUtils.dropTable(connectionSource, OrderBean.class, true);
-            TableUtils.dropTable(connectionSource, UserInfo.class, true);
-            TableUtils.dropTable(connectionSource, Goods.class, true);
-            TableUtils.dropTable(connectionSource, GoodsType.class, true);
-            TableUtils.dropTable(connectionSource, AllGoods.class, true);
-            onCreate(database, connectionSource);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
+//            TableUtils.dropTable(connectionSource, OrderBean.class, true);
+//            TableUtils.dropTable(connectionSource, UserInfo.class, true);
+//            TableUtils.dropTable(connectionSource, Goods.class, true);
+//            TableUtils.dropTable(connectionSource, GoodsType.class, true);
+//            TableUtils.dropTable(connectionSource, AllGoods.class, true);
+//            onCreate(database, connectionSource);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     // 释放资源

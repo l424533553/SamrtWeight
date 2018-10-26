@@ -23,6 +23,7 @@ import com.axecom.smartweight.ui.uiutils.UIUtils;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bumptech.glide.Glide;
 import com.luofx.listener.VolleyListener;
+import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * email:424533553@qq.com
  * describe:
  */
-public class MainBaseActivity extends Activity implements VolleyListener {
+public class MainBaseActivity extends Activity implements VolleyListener ,IConstants_ST {
 
     protected SysApplication sysApplication;
     protected Handler handler;

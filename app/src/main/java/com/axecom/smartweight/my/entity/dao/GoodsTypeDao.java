@@ -87,6 +87,17 @@ public class GoodsTypeDao {
         }
         return rows;
     }
+    public int updates(List<GoodsType> datas) {
+        int rows = -1;
+        try {
+            for (GoodsType goodsType:datas) {
+                rows += dao.update(goodsType);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
 
     // 修改或者插入数据
     public boolean updateOrInsert(GoodsType data) {

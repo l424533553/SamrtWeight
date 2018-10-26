@@ -23,6 +23,16 @@ public class GoodsType {
     private String name;
     @DatabaseField
     private int sort;
+    @DatabaseField
+    private String traceno;
+
+    public String getTraceno() {
+        return traceno;
+    }
+
+    public void setTraceno(String traceno) {
+        this.traceno = traceno;
+    }
 
     public GoodsType() {
     }

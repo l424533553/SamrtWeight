@@ -70,7 +70,7 @@
 //import com.raizlabs.android.dbflow.config.FlowManager;
 //import com.raizlabs.android.dbflow.sql.language.SQLite;
 //import com.raizlabs.android.dbflow.structure.ModelAdapter;
-//import com.shangtongyin.tools.serialport.Print;
+//import com.shangtongyin.tools.serialport.EpsPrint;
 //import com.shangtongyin.tools.serialport.WeightHelper;
 //
 //import org.greenrobot.eventbus.EventBus;
@@ -780,7 +780,7 @@
 //        }
 //        threadPool = ThreadPool.getInstantiation();
 //        SysApplication application = (SysApplication) MainActivityCopy.this.getApplication();
-//        final Print print = application.getPrint();
+//        final EpsPrint print = application.getEpsPrint();
 //        final HttpHelper helper = new HttpHelper(this, application);
 //
 //        // 还需要传订单信息

@@ -170,7 +170,22 @@ public class OrderInfoDao {
      */
     public List<OrderInfo> queryByDay(String day, boolean isAsce) {
         try {
-            return dao.queryBuilder().orderBy("hour", false).where().like("time", day + "%").query(); //参数false表示降序，true表示升序。
+            return dao.queryBuilder().orderBy("time", false).where().like("time", day + "%").query(); //参数false表示降序，true表示升序。
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * @param day
+     * @param isAsce
+     * @param limitNum
+     * @return
+     */
+    public List<OrderInfo> queryByDay(boolean isAsce, long limitNum) {
+        try {
+            return dao.queryBuilder().orderBy("time", false).limit(limitNum).query(); //参数false表示降序，true表示升序。
         } catch (SQLException e) {
             e.printStackTrace();
         }

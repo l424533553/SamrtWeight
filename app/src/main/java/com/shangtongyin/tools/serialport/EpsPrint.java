@@ -16,7 +16,7 @@ import java.util.List;
  * Author：Linus_Xie
  * Date：2018/8/2 14:22
  */
-public class Print {
+public class EpsPrint {
     public String getPath() {
         return path;
     }
