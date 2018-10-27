@@ -191,8 +191,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
     private void getTraceNo(UserInfo userInfo) {
         if (NetWorkJudge.isNetworkAvailable(context)) {
             //TODO
-            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=1136";
-//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
+//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=1136";
+            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
             sysApplication.volleyGet(url, this, 7);
         }
     }

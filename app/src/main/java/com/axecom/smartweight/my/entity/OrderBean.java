@@ -37,9 +37,6 @@ public class OrderBean {
     private String k;
     @DatabaseField
     private String xcur;
-
-
-
     @DatabaseField
     private String traceno; // 批次號
 

@@ -78,7 +78,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     private List<Goods> hotGoodsList;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -191,19 +190,23 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     }
 
     /**
-     *
-     * @param position  位置
-     * @param flag      标识
+     * @param position 位置
+     * @param flag     标识
      */
     @Override
     public void myOnItemClick(int position, int flag) {
         switch (flag) {
             case 1:
-                // 进行 删除操作
-                Goods goods = goodsAdapter.getItem(position);
-                goodsAdapter.removeList(position);
-                if (goods != null) {
-                    goodsDao.delete(goods);
+                try {
+                    // 进行 删除操作
+                    Goods goods = goodsAdapter.getItem(position);
+                    goodsAdapter.removeList(position);
+                    if (goods != null) {
+                        goodsDao.delete(goods);
+                    }
+                } catch (Exception e) {
+                    //TODO
+                    e.printStackTrace();
                 }
                 break;
             case 2:
@@ -220,22 +223,24 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         hotGoodsList = goodsDao.queryAll();
 
         final List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
-        GoodsType goodsType = new GoodsType();
-        goodsType.setId(-1);
-        goodsType.setName("全部商品");
-        goodsTypes.add(0, goodsType);
+        if(goodsTypes!=null){
+            GoodsType goodsType = new GoodsType();
+            goodsType.setId(-1);
+            goodsType.setName("全部商品");
+            goodsTypes.add(0, goodsType);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                goodsAdapter.setDatas(hotGoodsList);
-                goodsTypeAdapter.setDatas(goodsTypes);
-                List<AllGoods> goodsList = allGoodsDao.queryByTypeId(-1);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    goodsAdapter.setDatas(hotGoodsList);
+                    goodsTypeAdapter.setDatas(goodsTypes);
+                    List<AllGoods> goodsList = allGoodsDao.queryByTypeId(-1);
 //                goodsSelectAdapter.setDatas(goodsList);
-                classAdapter.setDatas(goodsList);
-                handler.sendEmptyMessage(NOTIFY_INITDAT);
-            }
-        }).start();
+                    classAdapter.setDatas(goodsList);
+                    handler.sendEmptyMessage(NOTIFY_INITDAT);
+                }
+            }).start();
+        }
 
     }
 

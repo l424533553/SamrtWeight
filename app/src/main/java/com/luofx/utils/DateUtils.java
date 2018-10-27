@@ -20,7 +20,7 @@ public class DateUtils {
     private static SimpleDateFormat HHFormat = new SimpleDateFormat("HH", Locale.CHINA);
     private static SimpleDateFormat DDFormat = new SimpleDateFormat("dd", Locale.CHINA);
     private static SimpleDateFormat mmssFormat = new SimpleDateFormat(mm_ss, Locale.CHINA);
-    private static SimpleDateFormat sampleNoFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA);
+    private static SimpleDateFormat sampleNoFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.CHINA);
     private static SimpleDateFormat yymmddFormat = new SimpleDateFormat(YY_MM_DD, Locale.CHINA);
     private static SimpleDateFormat yymmFormat = new SimpleDateFormat(YY_MM, Locale.CHINA);
 

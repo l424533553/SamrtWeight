@@ -220,7 +220,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 if (traceNoDao == null) {
                     traceNoDao = new TraceNoDao(context);
                 }
-
                 List<TraceNoBean> traceNoBeans = traceNoDao.queryAll();
                 if (traceNoBeans != null && traceNoBeans.size() > 0) {
                     for (int i = 0; i < traceNoBeans.size(); i++) {
@@ -237,7 +236,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
 
 //        goodMenuAdapter.setDatas(goodsList);
-
 //        if (NetWorkJudge.isNetworkAvailable(context)) {
 //            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + sellerid;
 //            sysApplication.volleyGet(url, this, 6);
@@ -408,7 +406,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //                tvGoodsName.setText("");
                 break;
             case 1:
-                etPrice.setHint(etPrice.getText().toString());
+//                etPrice.setHint(etPrice.getText().toString());
+                etPrice.setHint("");
                 etPrice.getText().clear();
 //                tvGoodsName.setText("");
                 break;
@@ -544,11 +543,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     public void setGrandTotalTxt() {
         try {
             float count = 0;
-//            if (!TextUtils.isEmpty(countEt.getText())) {
-//                count = parseFloat(countEt.getText().toString());
-//            } else if (!TextUtils.isEmpty(countEt.getHint())) {
-//                count = parseFloat(countEt.getHint().toString());
-//            }
 
             if (switchSimpleOrComplex) {
                 if (!TextUtils.isEmpty(etPrice.getText())) {
@@ -593,19 +587,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             banner = null;
         }
 
-//        sysApplication.getThreadPool().execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<Goods> goodsList = goodMenuAdapter.getList();
-//                if (goodsList != null && goodsList.size() > 0) {
-//                    for (Goods goods : goodsList) {
-//                        goodsDao.updateOrInsert(goods);
-//                    }
-//                }
-//            }
-//        });
-
-
         super.onDestroy();
     }
 
@@ -628,8 +609,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                     getGoods();// 需要更新 状态
                 }
             }
-
-
         }
     }
 
@@ -637,7 +616,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_cash_btn:
-                if (orderBeans.size() == 0) {
+//                if (orderBeans.size() == 0) {
                     if (selectedGoods == null) {
                         return;
                     }
@@ -666,15 +645,17 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                     orderBean.setItemno(String.valueOf(selectedGoods.getCid()));
                     orderBean.setName(tvGoodsName.getText().toString());
 
-                    orderBeans.add(orderBean);
+
+                    if (!TextUtils.isEmpty(tvGoodsName.getText().toString())) {
+                        orderBeans.add(orderBean);
+                    }
 //                    orderAdapter.notifyDataSetChanged();
 //                    calculatePrice();
-                }
+//                }
                 payCashDirect(0);
 
                 break;
             case R.id.main_scan_pay:
-
                 if (!NetWorkJudge.checkedNetWork(context)) {
                     ToastUtils.showToast(this, "使用第三方支付需要连接网络！");
                     break;
@@ -691,23 +672,23 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         return;
                     }
 
-                    OrderBean orderBean = new OrderBean();
-                    String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
-                    orderBean.setPrice(price);
-                    selectedGoods.setPrice(price);
+                    OrderBean orderBean2 = new OrderBean();
+                    String price2 = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
+                    orderBean2.setPrice(price2);
+                    selectedGoods.setPrice(price2);
                     goodsDao.update(selectedGoods);
 
-                    String weight = weightTopTv.getText().toString();
-                    tvTotalWeight.setText(weight);
-                    orderBean.setWeight(weight);
+                    String weight2 = weightTopTv.getText().toString();
+                    tvTotalWeight.setText(weight2);
+                    orderBean2.setWeight(weight2);
 
-                    String grandTotal = tvgrandTotal.getText().toString();
-                    tvTotalPrice.setText(grandTotal);
-                    orderBean.setMoney(grandTotal);
+                    String grandTotal2 = tvgrandTotal.getText().toString();
+                    tvTotalPrice.setText(grandTotal2);
+                    orderBean2.setMoney(grandTotal2);
 
-                    orderBean.setItemno(String.valueOf(selectedGoods.getCid()));
-                    orderBean.setName(tvGoodsName.getText().toString());
-                    orderBeans.add(orderBean);
+                    orderBean2.setItemno(String.valueOf(selectedGoods.getCid()));
+                    orderBean2.setName(tvGoodsName.getText().toString());
+                    orderBeans.add(orderBean2);
 //                    orderAdapter.notifyDataSetChanged();
 //                    calculatePrice();
                 }
@@ -785,6 +766,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
         orderBean.setItemno(String.valueOf(selectedGoods.getCid()));
         orderBean.setName(tvGoodsName.getText().toString());
+        orderBean.setTraceno(selectedGoods.getBatchCode());
 
         orderBeans.add(orderBean);
         calculatePrice();
@@ -849,52 +831,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         }
     }
 
-   /* public void charge(boolean useCash) {
-
-        if (orderBeans.size() < 1) {
-            accumulative(true);
-        }
-        Intent intent = new Intent();
-        SubOrderReqBean subOrderReqBean = new SubOrderReqBean();
-        SubOrderReqBean.Goods good;
-        List<SubOrderReqBean.Goods> goodsList = new ArrayList<>();
-        for (int i = 0; i < orderBeans.size(); i++) {
-            good = new SubOrderReqBean.Goods();
-            OrderBean HotKeyBean = orderBeans.get(i);
-            good.setGoods_id(HotKeyBean.getItemno() + "");
-            good.setGoods_name(HotKeyBean.getName());
-            good.setGoods_price(HotKeyBean.getPrice());
-            good.setGoods_number(countEt.getText().toString());
-            good.setGoods_weight(HotKeyBean.getWeight());
-            good.setGoods_amount(HotKeyBean.getMoney());
-            good.setBatch_code(HotKeyBean.getTraceno());
-            goodsList.add(good);
-        }
-        subOrderReqBean.setToken(AccountManager.getInstance().getToken());
-        subOrderReqBean.setMac(MacManager.getInstace(this).getMac());
-        subOrderReqBean.setTotal_amount(tvTotalPrice.getText().toString());
-        subOrderReqBean.setTotal_weight(tvTotalWeight.getText().toString());
-        subOrderReqBean.setCreate_time(getCurrentTime());
-        String orderNo = "AX" + getCurrentTime("yyyyMMddHHmmss") + AccountManager.getInstance().getScalesId();
-        subOrderReqBean.setOrder_no(orderNo);
-        subOrderReqBean.setGoods(goodsList);
-        if (switchSimpleOrComplex) {
-            subOrderReqBean.setPricing_model("2");
-        } else {
-            subOrderReqBean.setPricing_model("1");
-        }
-
-
-        intent.setClass(this, UseCashActivity.class);
-
-
-    }*/
-
-
     /**
      * 直接现金支付
      */
     public void payCashDirect(int payType) {
+        if(orderBeans.size()==0){
+            return;
+        }
         final List<OrderBean> data = new ArrayList<>(orderBeans);
         final OrderInfo orderInfo = new OrderInfo();
         List<OrderBean> orderlist = new ArrayList<>(data);
@@ -1149,7 +1092,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-
                             }
                         });
                 builder.create().show();

@@ -1,51 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/main_grid_item_btn"
+        android:layout_width="match_parent"
+        android:layout_height="73dp"
+        android:background="@drawable/shape_weight_display_bg"
+        android:clickable="false"
+        android:gravity="center"
+        android:text="白菜白菜"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/img_tag"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_alignEnd="@id/main_grid_item_btn"
+        android:layout_alignBottom="@id/main_grid_item_btn"
+        android:background="@drawable/circle_trade" />
+
+    <TextView
+        android:id="@+id/tvIndex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/main_grid_item_btn"
+        android:layout_marginStart="0dp"
+        android:gravity="center"
+        android:paddingLeft="1dp"
+        android:text="1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+</RelativeLayout>
 
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-
-        android:descendantFocusability="blocksDescendants"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/main_grid_item_btn"
-            android:layout_width="match_parent"
-            android:layout_height="73dp"
-            android:background="@drawable/shape_weight_display_bg"
-            android:clickable="false"
-            android:gravity="center"
-            android:text="白菜白菜"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/img_tag"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@drawable/circle_trade" />
-
-        <TextView
-            android:id="@+id/tvIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/main_grid_item_btn"
-            android:layout_marginStart="0dp"
-            android:gravity="center"
-            android:paddingLeft="1dp"
-            android:text="1"
-            android:textColor="@color/colorPrimary"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-</LinearLayout>
 
 
 
