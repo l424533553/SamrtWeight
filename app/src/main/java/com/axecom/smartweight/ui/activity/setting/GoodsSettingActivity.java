@@ -157,17 +157,40 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 //拖拽元素交换
                 int fromPosition=viewHolder.getAdapterPosition();
                 int toPosition=target.getAdapterPosition();
-                Collections.swap(hotGoodsList,fromPosition,toPosition);
-                recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
-                //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
                 Goods from=hotGoodsList.get(fromPosition);
                 Goods to=hotGoodsList.get(toPosition);
-                int fromId=from.getId();
-                int toId=to.getId();
-                from.setId(toId);
-                to.setId(fromId);
-                goodsDao.update(from);
-                goodsDao.update(to);
+                Log.i("rzl","from:" + from.getName() + ",to:" + to.getName() + "," + fromPosition + "<->" + toPosition);
+                if (fromPosition < toPosition) {
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Goods from1=hotGoodsList.get(i);
+                        Goods to1=hotGoodsList.get(i+1);
+                        //内存排序
+                        Collections.swap(hotGoodsList, i, i + 1);
+                        //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
+                        int fromId=from1.getId();
+                        int toId=to1.getId();
+                        from1.setId(toId);
+                        to1.setId(fromId);
+                        goodsDao.update(from1);
+                        goodsDao.update(to1);
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        Goods from1=hotGoodsList.get(i);
+                        Goods to1=hotGoodsList.get(i-1);
+                        //内存排序
+                        Collections.swap(hotGoodsList, i, i - 1);
+                        //数据库排序
+                        int fromId=from1.getId();
+                        int toId=to1.getId();
+                        from1.setId(toId);
+                        to1.setId(fromId);
+                        goodsDao.update(from1);
+                        goodsDao.update(to1);
+                    }
+                }
+                recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+
                 return true;
             }
 
