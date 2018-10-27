@@ -227,7 +227,7 @@ public class ApkUtils implements  VolleyListener{
                                         msg.what=10013;
                                         Version v=new Version();
                                         v.setDate(remoteDate);
-                                        v.setDescription("我不在的时候不要偷吃我的蔬菜和肉肉，因为我会很生气，后果很严重，你们到底听到了没有，记住，千万别偷吃我的东西");//remoteDescription
+                                        v.setDescription(remoteDescription);//我不在的时候不要偷吃我的蔬菜和肉肉，因为我会很生气，后果很严重，你们到底听到了没有，记住，千万别偷吃我的东西
                                         v.setVersion(_newVersion);
                                         v.setMarketId(marketId);
                                         v.setApkPath(remoteApkPath);
