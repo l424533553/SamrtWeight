@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,6 +35,7 @@ public class DownloadDialog extends Dialog {
         tvProgress=findViewById(R.id.tvDownload_Apk_Progress);
         pbProgress=findViewById(R.id.pbDownload_Apk_Progress);
         tvApkPath=findViewById(R.id.tvDownload_Apk_Path);
+        btnCancel=findViewById(R.id.btnDownload_Apk_Cancel);
         Log.i("rzl","tvVersion is null ? " + (tvVersion==null));
         tvMarketId.setText("市场编号:" + this.getMarketId());
         tvDate.setText("更新日期:" + this.getDate());
@@ -41,6 +44,15 @@ public class DownloadDialog extends Dialog {
         tvApkPath.setText("文件:" + this.getApkPath());
         tvProgress.setText("更新进度:" + this.getDownloadedBytes() + "/" + this.getTotalBytes());
         pbProgress.setMax(0);
+        //取消更新
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ApkUtils.getInstance().cancelDownloading();
+                canForceQuit();
+                dismiss();
+            }
+        });
     }
 
     private TextView tvMarketId;
@@ -50,6 +62,7 @@ public class DownloadDialog extends Dialog {
     private TextView tvProgress;
     private ProgressBar pbProgress;
     private TextView tvApkPath;
+    private Button btnCancel;
 
     private int downloadedBytes;//已下载量
     private int totalBytes;//总下载量

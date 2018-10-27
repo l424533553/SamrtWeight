@@ -11,19 +11,17 @@ import android.util.Log;
 //监控uri下载过程中的内容变化
 public class DownloadChangeObserver extends ContentObserver {
     private Handler _handler;//向ui线程发送消息
-    private long _downloadId;//下载id
     private Context _context;//下载管理器附属的context
-    public DownloadChangeObserver(long downloadId, Context context, Handler handler){
+    public DownloadChangeObserver( Context context, Handler handler){
         super(handler);
         _handler=handler;
-        _downloadId=downloadId;
         _context=context;
     }
 
     @Override
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
-        DownloadManager.Query query=new DownloadManager.Query().setFilterById(_downloadId);
+        DownloadManager.Query query=new DownloadManager.Query().setFilterById(ApkUtils.getInstance().getDownloadId());
         final DownloadManager dm=(DownloadManager) this._context.getSystemService(Context.DOWNLOAD_SERVICE);
         Cursor cs=null;
         try{
