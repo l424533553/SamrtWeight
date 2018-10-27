@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,9 @@ import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -127,14 +131,51 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         rvGoods = findViewById(R.id.rvGoods);
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         rvGoods.setLayoutManager(manager);
-        ItemDragHelperCallback callback = new ItemDragHelperCallback() {
+       /* ItemDragHelperCallback callback = new ItemDragHelperCallback() {
             @Override
             public boolean isLongPressDragEnabled() {
                 // 长按拖拽打开
+                return false;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled(){
                 return true;
             }
-        };
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        };*/
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                //设置拖拽方向，上下左右
+                final int dragFlags=ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                final int swipeFlags=0;
+                return makeMovementFlags(dragFlags,swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                //拖拽元素交换
+                int fromPosition=viewHolder.getAdapterPosition();
+                int toPosition=target.getAdapterPosition();
+                Collections.swap(hotGoodsList,fromPosition,toPosition);
+                recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+                //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
+                Goods from=hotGoodsList.get(fromPosition);
+                Goods to=hotGoodsList.get(toPosition);
+                int fromId=from.getId();
+                int toId=to.getId();
+                from.setId(toId);
+                to.setId(fromId);
+                goodsDao.update(from);
+                goodsDao.update(to);
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
         helper.attachToRecyclerView(rvGoods);
         goodsAdapter = new GoodsAdapter(context);
         goodsAdapter.setMyOnItemClickListener(this);
@@ -221,7 +262,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     private void getGoods() {
         hotGoodsList = goodsDao.queryAll();
-
         final List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
         if(goodsTypes!=null){
             GoodsType goodsType = new GoodsType();

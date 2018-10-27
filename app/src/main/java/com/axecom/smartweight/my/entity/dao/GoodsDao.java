@@ -2,11 +2,14 @@ package com.axecom.smartweight.my.entity.dao;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.axecom.smartweight.my.entity.Goods;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -171,8 +174,18 @@ public class GoodsDao {
     public List<Goods> queryAll() {
         try {
 //            return dao.queryBuilder().where().eq("Status", 0).query();
-            return dao.queryForAll();
+            List<Goods> hotGoodsList= dao.queryForAll();
+            //重新排序，排序规则可以在界面拖拽更新
+            Collections.sort(hotGoodsList, new Comparator<Goods>() {
+                @Override
+                public int compare(Goods goods, Goods t1) {
+                    //按id升序排序(这个id是排序用的,并非唯一标志)
+                    return goods.getId()-t1.getId();
+                }
+            });
+            return hotGoodsList;
         } catch (SQLException e) {
+            Log.e("rzl","query all goods error:" + e.getMessage());
             e.printStackTrace();
         }
         return null;
