@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
@@ -144,6 +145,28 @@ public class ApkUtils implements  VolleyListener{
         String url = "https://data.axebao.com/api/smartsz/getvbymarketid?marketid=" + marketId;
         if(context!=null){
             if(context instanceof MyBaseApplication){
+                //把原来的广播侦听取消掉
+                if(ApkUtils.getInstance().ctx!=null){
+                    if(ApkUtils.getInstance().radio!=null){
+                        ApkUtils.getInstance().ctx.unregisterReceiver(ApkUtils.getInstance().radio);
+                    }
+                }
+                //把原来的文件清理掉
+                File directory=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                Log.i("rzl","direcotry:" +  directory.getAbsolutePath());
+
+                File[] files= directory.listFiles();
+                if(files!=null){
+                    int c=0;
+                    for(File f :files){
+                        if(f.exists()){
+                            if(f.getName().endsWith(".apk")){
+                                c+=f.delete()?1:0;
+                            }
+                        }
+                    }
+                    Log.e("rzl",c +  " apk files has been cleared" );
+                }
                 ApkUtils.getInstance().ctx=context;//用来获得旧版本信息和显示下载进度
                 ApkUtils.getInstance().marketId=marketId;
                 ApkUtils.getInstance().handler=handler;
@@ -204,7 +227,7 @@ public class ApkUtils implements  VolleyListener{
                                         msg.what=10013;
                                         Version v=new Version();
                                         v.setDate(remoteDate);
-                                        v.setDescription(remoteDescription);
+                                        v.setDescription("我不在的时候不要偷吃我的蔬菜和肉肉，因为我会很生气，后果很严重，你们到底听到了没有，记住，千万别偷吃我的东西");//remoteDescription
                                         v.setVersion(_newVersion);
                                         v.setMarketId(marketId);
                                         v.setApkPath(remoteApkPath);
@@ -214,19 +237,20 @@ public class ApkUtils implements  VolleyListener{
                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);//允许手机流量和wifi
                                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,"/smartWeight.apk");
                                         //request.setDestinationInExternalFilesDir(this.ctx,Environment.getExternalStorageDirectory().toString(),"smartWeight.apk");
-                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);//在下载过程中通知栏是否会一直显示该下载的Notification
+                                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);//在下载过程中通知栏是否会一直显示该下载的Notification
                                         //设置通知信息
-                                        request.setTitle("智能称");
-                                        request.setDescription("安鑫宝智能称-可溯源、防作弊");
+                                        request.setTitle("智能秤");
+                                        request.setDescription("安鑫宝智能秤-可溯源、防作弊");
                                         request.setVisibleInDownloadsUi(true);
                                         request.allowScanningByMediaScanner();
                                         request.setMimeType("application/vnd.android.package-archive");
                                         //得到DownloadManager实例
                                         final DownloadManager dm=(DownloadManager) this.ctx.getSystemService(Context.DOWNLOAD_SERVICE);
-                                        final long downloadId=dm.enqueue(request);//在广播接收器中匹配该下载id并不停查询该下载任务的状态
-                                        IntentFilter filter=new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-                                        final DownloadChangeObserver dco=new DownloadChangeObserver(downloadId,this.ctx,handler);//下载过程监控
-                                        BroadcastReceiver radio=new BroadcastReceiver() {
+                                        downloadId=dm.enqueue(request);//在广播接收器中匹配该下载id并不停查询该下载任务的状态
+
+                                        filter=new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+                                        dco=new DownloadChangeObserver(this.ctx,handler);//下载过程监控
+                                        radio=new BroadcastReceiver() {
                                             @Override
                                             public void onReceive(Context context, Intent intent) {
                                                 long id=intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
@@ -245,11 +269,9 @@ public class ApkUtils implements  VolleyListener{
                                                         int downloadedBytes=cs.getInt(cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                                                         if(downloadedBytes>0){
                                                             if(fileName!=null){
-
                                                                 Log.i("rzl","will install:" + fileName);
-                                                                Log.i("rzl","externam storage public directory:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
                                                                 File f=new File(fileName);
-                                                                Log.i("rzl","file111 exist? " + f.exists());
+                                                                //Log.i("rzl","file exist? " + f.exists());
                                                                 installUseAS(ctx,fileName);
                                                             }
                                                         }else{
@@ -294,11 +316,50 @@ public class ApkUtils implements  VolleyListener{
             //isWorking=false;
         }
     }
+
+
+    //取消下载更新
+    public void cancelDownloading(){
+        //停止下载管理器
+        if(this.ctx!=null) {
+            DownloadManager dm = (DownloadManager) ctx.getSystemService(Context.DOWNLOAD_SERVICE);
+            if(dm!=null){
+                dm.remove(this.downloadId);
+                Log.i("rzl","cancel downloading apk successful,downloadId:" + this.downloadId);
+            }
+            //取消URI监控
+            if(this.dco!=null){
+                this.ctx.getContentResolver().unregisterContentObserver(this.dco);
+                this.dco=null;
+            }
+            //取消下载完成广播
+            if(this.radio!=null){
+                this.ctx.unregisterReceiver(this.radio);
+                this.radio=null;
+            }
+            this.ctx=null;
+            this.downloadId=0;
+            handler=null;
+            remoteVersion="";
+            remoteDescription="";
+            remoteDate="";
+            remoteApkPath="";
+            isWorking=false;
+        }
+    }
+
+    public long getDownloadId(){
+        return this.downloadId;
+    }
     private static boolean isWorking=false;//是否正在工作-防止连续发起多次检查更新操作
     // private long downloadId;DownloadManager下载完后返回的一个下载id,自带的，每一个下载任务都会返回一个唯一的id，并且会发一条广播
     private Context ctx;//检查版本更新传入，显示进度画面、获得旧版本信息需要用到
     private int marketId;//市场编号
+    private long downloadId;//下载任务id-唯一的
     private Handler handler;//用来向UI通知消息
+    private DownloadChangeObserver dco;//监控URI内容变化并发出通知的contentObserver对象
+    private IntentFilter filter;//下载完成通知消息的操作系统过滤器
+    private BroadcastReceiver radio;//下载消息广播
     //  private Activity act;//用来安装apk用的
     private String remoteVersion;//新版本号
     private String remoteDescription;//新版本描述
