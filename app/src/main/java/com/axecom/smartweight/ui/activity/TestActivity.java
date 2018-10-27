@@ -19,17 +19,18 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity implements View.OnClickListener,VolleyListener {
+public class TestActivity extends AppCompatActivity implements View.OnClickListener, VolleyListener {
 
-   private  SysApplication sysApplication;
+    private SysApplication sysApplication;
 
     private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         sysApplication = (SysApplication) getApplication();
-        context=this;
+        context = this;
 
         findViewById(R.id.btnTest).setOnClickListener(this);
     }
@@ -40,10 +41,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.btnTest:
-                initGoods(sysApplication.getTid());
-
+//                initGoods(sysApplication.getTid());
                 break;
-
         }
     }
 
@@ -77,7 +76,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 if (resultInfo != null) {
                     List<Goods> goodsList = JSON.parseArray(resultInfo.getData(), Goods.class);
                     if (goodsList != null && goodsList.size() > 0) {
-                        GoodsDao goodsDao=new GoodsDao(context);
+                        GoodsDao goodsDao = new GoodsDao(context);
                         goodsDao.insert(goodsList);
                     }
                 }

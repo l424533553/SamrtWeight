@@ -30,22 +30,18 @@ import cn.jpush.android.api.JPushInterface;
  * Created by Longer on 2016/10/26.
  */
 public class SysApplication extends ShangTongApp {
-    public static String DEFAULT_LANGUAGE = "zh_CN";
     public static Context mContext;
     public static Handler mHandler;
     public static long mMainThreadId;
     public static SysApplication instance;
-    private List<String> mSerachHistoryList;
+//    private List<String> mSerachHistoryList;
     public static int mWidthPixels;
     public static int mHeightPixels;
-    private UsbDevice usbDevice;
+
     public static SecondPresentation bannerActivity;
 
-    private static DisplayImageOptions options02;
 
-
-    private static ImageLoader mImageLoader;
-
+//    private static ImageLoader mImageLoader;
 
 
     public static Context getContext() {
@@ -84,17 +80,16 @@ public class SysApplication extends ShangTongApp {
         });*/
 
 
-
         //初始化Facebook登录
-        mImageLoader = ImageLoader.getInstance();
-
-        mImageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
-        mSerachHistoryList = new ArrayList<>();
+//        mImageLoader = ImageLoader.getInstance();
+//
+//        mImageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
+//        mSerachHistoryList = new ArrayList<>();
         //极光推送
-        JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+//        JPushInterface.setDebugMode(true);
+//        JPushInterface.init(this);
 
-        options02 = new DisplayImageOptions.Builder().resetViewBeforeLoading(true).displayer(new FadeInBitmapDisplayer(100)).displayer(new RoundedBitmapDisplayer(10)).cacheInMemory(true).cacheOnDisk(true).showImageOnLoading(R.drawable.shape_bg_for_home_head).build();
+//        options02 = new DisplayImageOptions.Builder().resetViewBeforeLoading(true).displayer(new FadeInBitmapDisplayer(100)).displayer(new RoundedBitmapDisplayer(10)).cacheInMemory(true).cacheOnDisk(true).showImageOnLoading(R.drawable.shape_bg_for_home_head).build();
         super.onCreate();
     }
 
@@ -116,54 +111,54 @@ public class SysApplication extends ShangTongApp {
     private List<Activity> mList = new LinkedList<Activity>();
 
 
-    public List<String> getSerachHistoryList() {
-        return mSerachHistoryList;
-    }
+//    public List<String> getSerachHistoryList() {
+//        return mSerachHistoryList;
+//    }
 
-    @SuppressLint("MissingPermission")
-    public String getMachineCode() {
-        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, tmPhone, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        String uniqueId = deviceUuid.toString();
-        LogUtils.e("这是机器码:" + uniqueId);
-        return uniqueId;
-    }
+//    @SuppressLint("MissingPermission")
+//    public String getMachineCode() {
+//        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+//        final String tmDevice, tmSerial, tmPhone, androidId;
+//        tmDevice = "" + tm.getDeviceId();
+//        tmSerial = "" + tm.getSimSerialNumber();
+//        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+//        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+//        String uniqueId = deviceUuid.toString();
+//        LogUtils.e("这是机器码:" + uniqueId);
+//        return uniqueId;
+//    }
 
-    private String getChanl() {
-        String channel = "";
-        try {
-            channel = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).metaData.getString("UMENG_CHANNEL");
-            //LogUtils.e("这是渠道号:" + channel);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return channel;
-    }
+//    private String getChanl() {
+//        String channel = "";
+//        try {
+//            channel = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA).metaData.getString("UMENG_CHANNEL");
+//            //LogUtils.e("这是渠道号:" + channel);
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return channel;
+//    }
 
-    public static ImageLoader getImageLoader() {
-        return mImageLoader;
-    }
+//    public static ImageLoader getImageLoader() {
+//        return mImageLoader;
+//    }
 
     public static String getRandoomUUID() {
         return UUID.randomUUID().toString();
     }
 
-    public static DisplayImageOptions getRoundImageLoaderOption() {
+//    public static DisplayImageOptions getRoundImageLoaderOption() {
+//
+//        return options02;
+//    }
+//
+//    public UsbDevice getCardDevice() {
+//        return usbDevice;
+//    }
+//
+//    public void setCardDevice(UsbDevice cardDevice) {
+//        this.usbDevice = cardDevice;
+//    }
 
-        return options02;
-    }
 
-
-
-    public UsbDevice getCardDevice() {
-        return usbDevice;
-    }
-
-    public void setCardDevice(UsbDevice cardDevice) {
-        this.usbDevice = cardDevice;
-    }
 }

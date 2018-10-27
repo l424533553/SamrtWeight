@@ -46,6 +46,16 @@ public class MainBaseActivity extends Activity implements VolleyListener ,IConst
     protected Handler handler;
     protected HttpHelper helper;
 
+
+//    protected int tid = -1;  //秤的编号
+//    protected int marketId = -1;  // 市场id
+//    protected String marketname;  // 市场id
+//    protected String seller;  //售卖人
+//    protected String key;  //售卖人
+//    protected String mchid;  //售卖人
+//    protected int sellerid;  // 售卖人id
+//    protected String stallNo;  // 摊位号
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

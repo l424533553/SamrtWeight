@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -36,6 +36,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
+            debuggable true
+            jniDebuggable true
         }
         sourceSets {
             main {
@@ -82,13 +84,10 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
     implementation files('libs/jcore-android-1.2.1.jar')
-
-
     /* 网络通信 框架 */
     implementation files('libs/xUtils-2.6.14.jar')
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    
     implementation 'com.intentfilter:android-wificonnect:0.1.2'
     /*  爱普生  打印机  jar包*/
     implementation files('libs/posprinterconnectandsendsdk.jar')
@@ -104,5 +103,4 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
     implementation 'com.bigkoo:convenientbanner:2.0.5'
     implementation 'com.allenliu.versionchecklib:library:2.0.8'
-
 }

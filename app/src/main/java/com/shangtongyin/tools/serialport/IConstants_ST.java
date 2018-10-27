@@ -31,8 +31,10 @@ public interface IConstants_ST {
     int NOTIFY_CLEAR = 9333;
     int NOTIFY_INITDAT = 9444;
     int NOTIFY_SUCCESS = 9555;
-    int NOTIFY_TRACENO = 9777;
     int NOTIFY_EPAY_SUCCESS = 9666; //电子支付成功
+    int NOTIFY_DATA_CHANGE = 9777;
+    int NOTIFY_TRACENO = 9999;
+    int NOTIFY_JUMP = 9888;
 
 
     String BASE_IP_ST = "http://119.23.43.64";
@@ -51,6 +53,7 @@ public interface IConstants_ST {
 
     String SELLER = "seller";
     String SELLER_ID = "sellerid";
+    String STALL_NO = "stallNo";//摊位号
 
     String KEY = "key";
     String MCHID = "mchid";

@@ -31,9 +31,6 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.bean.SubOrderReqBean;
-import com.axecom.smartweight.manager.AccountManager;
-import com.axecom.smartweight.manager.MacManager;
 import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.adapter.DigitalAdapter;
 import com.axecom.smartweight.my.adapter.OrderAdapter;
@@ -42,13 +39,16 @@ import com.axecom.smartweight.my.entity.GoodsType;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.ResultInfo;
+import com.axecom.smartweight.my.entity.UserInfo;
 import com.axecom.smartweight.my.entity.dao.GoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
 import com.axecom.smartweight.my.entity.dao.OrderBeanDao;
 import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
+import com.axecom.smartweight.my.entity.dao.TraceNoDao;
+import com.axecom.smartweight.my.entity.dao.UserInfoDao;
 import com.axecom.smartweight.my.entity.netresult.OrderResultBean;
+import com.axecom.smartweight.my.entity.netresult.TraceNoBean;
 import com.axecom.smartweight.my.entity.netresult.TracenoResultBean;
-import com.axecom.smartweight.my.helper.CountTextWatcher;
 import com.axecom.smartweight.my.helper.HeartBeatServcice;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.my.rzl.utils.DownloadDialog;
@@ -58,8 +58,8 @@ import com.luofx.help.CashierInputFilter;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
 import com.luofx.utils.DateUtils;
-import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.ToastUtils;
+import com.luofx.utils.common.MyToast;
 import com.luofx.utils.log.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
 import com.shangtongyin.tools.serialport.WeightHelper;
@@ -84,62 +84,45 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private OrderAdapter orderAdapter;
     private GoodMenuAdapter goodMenuAdapter;
 
-    private LinearLayout weightLayout;
-    private LinearLayout countLayout;
-    private EditText countEt;
     private EditText etPrice;
     private TextView tvGoodsName;
     private TextView tvgrandTotal;
     private TextView tvTotalWeight;
     private TextView weightTv;
-
     private TextView tvTotalPrice;
 
-    private TextView stallNumberTv;
-
+    /**
+     * 摊位号
+     */
+    private TextView tvNumber;
     private TextView weightTopTv;
-
     private List<OrderBean> orderBeans;
     private Goods selectedGoods;
-    private int mTotalCopies = 1;
-
-
     public SecondPresentation banner;
     boolean switchSimpleOrComplex;
-    boolean stopPrint;
 
     /************************************************************************************/
-
-//    private ThreadPool threadPool;  //线程池 管理
-    private boolean flag = true;
-
     private DownloadDialog downloadDialog;
 
-    private TextView tvmarketName;
+    // 市场名    售卖者   秤号
+    private TextView tvmarketName, tvSeller, tvTid;
 
     private void initViewFirst() {
-
-        TextView tvSeller = findViewById(R.id.tvSeller);
+        tvSeller = findViewById(R.id.tvSeller);
         tvmarketName = findViewById(R.id.tvmarketName);
-        TextView tvTid = findViewById(R.id.tvTid);
-        tvSeller.setText(seller);
-        tvTid.setText(tid + "");
-        tvmarketName.setText(marketname);
-
+        tvTid = findViewById(R.id.tvTid);
+        tvNumber = findViewById(R.id.tvNumber);
 
         digitalGridView = findViewById(R.id.main_digital_keys_grid_view);
         commoditysListView = findViewById(R.id.main_commoditys_list_view);
-        weightLayout = findViewById(R.id.main_weight_layout);
-        countLayout = findViewById(R.id.main_count_layout);
-        countEt = findViewById(R.id.main_count_et);
+
+//        countEt = findViewById(R.id.main_count_et);
         tvGoodsName = findViewById(R.id.tvGoodsName);
         tvgrandTotal = findViewById(R.id.main_grandtotal_tv);
         tvTotalWeight = findViewById(R.id.main_weight_total_tv);
 //        weightTotalMsgTv = findViewById(R.id.main_weight_total_msg_tv);
         weightTv = findViewById(R.id.main_weight_tv);
 
-
-        stallNumberTv = findViewById(R.id.main_stall_number_tv);
 
         tvTotalPrice = findViewById(R.id.main_price_total_tv);
         weightTopTv = findViewById(R.id.main_weight_top_tv);
@@ -157,13 +140,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
         InputFilter[] filters = {new CashierInputFilter()};
         etPrice.setFilters(filters); //设置
-//        etPrice.addTextChangedListener(new MoneyTextWatcher(etPrice));
-
-        CountTextWatcher countTextWatcher = new CountTextWatcher(countEt);
-        countEt.addTextChangedListener(countTextWatcher);
-
         disableShowInput(etPrice);
-        disableShowInput(countEt);
+
+//        disableShowInput(countEt);
         weightTopTv.setOnClickListener(this);
 
     }
@@ -175,10 +154,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     private void initData() {
-
         //初始化 键盘 设置
         initDigital();
-        //TODO
         weighUtils = new WeightHelper(handler);
         weighUtils.open();
 
@@ -186,37 +163,89 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
 
+    private UserInfoDao userInfoDao;
+    private UserInfo userInfo;
+
+    private void initUserInfo() {
+        userInfo = sysApplication.getUserInfo();
+        if (userInfo == null) {
+            MyToast.toastLong(context, "未读取到用户基本信息!");
+            this.finish();
+            System.exit(0);
+        }
+    }
+
+
+    private Context context;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-        tid = PreferenceUtils.getInt(context, TID, -1);
-        marketId = PreferenceUtils.getInt(context, MARKET_ID, -1);
-        marketname = PreferenceUtils.getString(context, MARKET_NAME, "");
-        sellerid = PreferenceUtils.getInt(context, SELLER_ID, -1);
-        seller = PreferenceUtils.getString(context, SELLER, "");
-        key = PreferenceUtils.getString(context, KEY, null);
-        mchid = PreferenceUtils.getString(context, MCHID, null);
+        initUserInfo();
 
         initViewFirst();
         initHandler();
         initView();
         initData();
 
-        checkVersion(sysApplication.getMarketid());//检查版本更新
-        goodsDao = new GoodsDao(context);
-        initSecondScreen();
+        getGoods();
 
+
+        checkVersion(userInfo.getMarketid());//检查版本更新
+        initSecondScreen();
         askOrderState();
-        //TODO 滚动有问题
-//        customScrollBar = findViewById(R.id.tvScrollBar);
 
         orderInfoDao = new OrderInfoDao(context);
         orderBeanDao = new OrderBeanDao(context);
 
     }
 
+    private void getGoods() {
+        initUserInfo();
+        tvmarketName.setText(userInfo.getMarketname());
+        tvSeller.setText(userInfo.getSeller());
+        tvTid.setText(userInfo.getTid() + "");
+        tvNumber.setText(userInfo.getCompanyno());
+
+        sysApplication.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (goodsDao == null) {
+                    goodsDao = new GoodsDao(context);
+                }
+                goodsList = goodsDao.queryAll();
+                handler.sendEmptyMessage(NOTIFY_DATA_CHANGE);
+                if (traceNoDao == null) {
+                    traceNoDao = new TraceNoDao(context);
+                }
+
+                List<TraceNoBean> traceNoBeans = traceNoDao.queryAll();
+                if (traceNoBeans != null && traceNoBeans.size() > 0) {
+                    for (int i = 0; i < traceNoBeans.size(); i++) {
+                        for (int j = 0; j < goodsList.size(); j++) {
+                            if (traceNoBeans.get(i).getTypeid() == goodsList.get(j).getTypeid()) {
+                                goodsList.get(j).setBatchCode(traceNoBeans.get(i).getTraceno());
+                            }
+                        }
+                    }
+                    handler.sendEmptyMessage(NOTIFY_TRACENO);
+                }
+            }
+        });
+
+
+//        goodMenuAdapter.setDatas(goodsList);
+
+//        if (NetWorkJudge.isNetworkAvailable(context)) {
+//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + sellerid;
+//            sysApplication.volleyGet(url, this, 6);
+//        }
+
+    }
+
+    private TraceNoDao traceNoDao;
     private OrderInfoDao orderInfoDao;
     private OrderBeanDao orderBeanDao;
     //    private CustomScrollBar customScrollBar;
@@ -234,7 +263,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         if (askInfos.size() > 0) {
                             handler.sendEmptyMessage(NOTIFY_MARQUEE);
                             for (int i = 0; i < askInfos.size(); i++) {
-                                helper.askOrder(mchid, askInfos.get(i).getBillcode(), MainActivity.this, 4);
+                                helper.askOrder(userInfo.getMchid(), askInfos.get(i).getBillcode(), MainActivity.this, 4);
                                 Thread.sleep(100);
                             }
                         }
@@ -248,17 +277,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         }).start();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getGoods();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
+    /**
+     * 控制副屏
+     */
     private void initSecondScreen() {
         DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
         assert displayManager != null;
@@ -275,19 +297,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     private GoodsDao goodsDao;
     private List<Goods> goodsList;
-
-    private void getGoods() {
-        goodsList = goodsDao.queryAll();
-        goodMenuAdapter.setDatas(goodsList);
-
-//        if (NetWorkJudge.isNetworkAvailable(context)) {
-//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + sellerid;
-//            sysApplication.volleyGet(url, this, 6);
-//
-//        }
-
-
-    }
 
     /**
      * 获取称重重量信息
@@ -309,6 +318,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         break;
                     case NOTIFY_TRACENO:
                         goodMenuAdapter.notifyDataSetChanged();
+                    case NOTIFY_DATA_CHANGE:
+                        goodMenuAdapter.setDatas(goodsList);
                         break;
                     case NOTIFY_EPAY_SUCCESS:
                         String message = msg.obj.toString();
@@ -361,8 +372,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         });
     }
 
-    //    private StringBuilder scrollBarBuilder;
-    private final String textEmpty = "              ";
 
     private void setmarQueeNotify() {
 //        if (scrollBarBuilder == null) {
@@ -394,14 +403,14 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 orderAdapter.notifyDataSetChanged();
                 tvTotalPrice.setText("0.00");
                 tvTotalWeight.setText("0.00");
+                etPrice.setHint(etPrice.getText().toString());
                 etPrice.getText().clear();
-                etPrice.setHint("0");
-                tvGoodsName.setText("");
+//                tvGoodsName.setText("");
                 break;
             case 1:
+                etPrice.setHint(etPrice.getText().toString());
                 etPrice.getText().clear();
-                etPrice.setHint("0");
-                tvGoodsName.setText("");
+//                tvGoodsName.setText("");
                 break;
         }
 
@@ -425,7 +434,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         });
     }
 
-
+    /**
+     * 初始化键盘
+     */
     private void initDigital() {
 
         final DigitalAdapter digitalAdapter = new DigitalAdapter(this, null);
@@ -454,33 +465,15 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         etPrice.setText(priceNew);
                     }
                 }
-
-//                setGrandTotalTxt();
-
-//                switch (view.getId()) {
-//                    case R.id.main_count_et:
-//                        setEditText(countEt, position, text);
-//                        break;
-//                    case R.id.main_commodity_price_et:
-////                        if(priceEt.requestFocus()){
-////                            priceEt.setText("");
-////                        }
-//                        setEditText(etPrice, position, text, 0);
-
-
             }
 
 
         });
     }
 
-
-    private Context context;
-
-
     public void initView() {
+        //初始化结算列表
         initSettlement();
-
         gvGoodMenu = findViewById(R.id.gvGoodMenu);
         goodMenuAdapter = new GoodMenuAdapter(this);
         gvGoodMenu.setAdapter(goodMenuAdapter);
@@ -490,16 +483,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedGoods = goodMenuAdapter.getItem(position);
                 tvGoodsName.setText(selectedGoods.getName());
-
                 etPrice.setText("");
                 etPrice.setHint(selectedGoods.getPrice());
-
                 float count = 0;
-                if (!TextUtils.isEmpty(countEt.getText())) {
-                    count = parseFloat(countEt.getText().toString());
-                } else if (!TextUtils.isEmpty(countEt.getHint())) {
-                    count = parseFloat(countEt.getHint().toString());
-                }
+
                 if (switchSimpleOrComplex) {
                     tvgrandTotal.setText(String.format("%.2f", parseFloat(selectedGoods.getPrice()) * count));
                 } else {
@@ -515,13 +502,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             }
         });
 
-
-//        LinkedHashMap valueMap = (LinkedHashMap) SPUtils.readObject(this, SystemSettingsActivity.KEY_STOP_PRINT);
-//        if (valueMap != null) {
-//            stopPrint = (boolean) valueMap.get("val");
-//        }
         switchSimpleOrComplex = false;
-
     }
 
     // 商通的称重  工具类
@@ -529,26 +510,19 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private HeartBeatServcice.MyBinder myBinder;
     private HeartBeatServcice heartBeatServcice;
     private ServiceConnection mConnection;
-    private int tid = -1;  //秤的编号
-    private int marketId = -1;  // 市场id
-    private String marketname;  // 市场id
-    private String seller;  //售卖人
-    private String key;  //售卖人
-    private String mchid;  //售卖人
-    private int sellerid;  // 售卖人id
 
     /**
      * 初始化心跳
      */
     private void initHeartBeat() {
-        if (tid > 0 && marketId > 0) {
+        if (userInfo.getTid() > 0 && userInfo.getMarketid() > 0) {
             mConnection = new ServiceConnection() {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     myBinder = (HeartBeatServcice.MyBinder) service;
                     heartBeatServcice = myBinder.getService();
-                    heartBeatServcice.setMarketid(marketId);
-                    heartBeatServcice.setTerid(tid);
+                    heartBeatServcice.setMarketid(userInfo.getMarketid());
+                    heartBeatServcice.setTerid(userInfo.getTid());
                 }
 
                 @Override
@@ -559,7 +533,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             Intent serviceIntent = new Intent(this, HeartBeatServcice.class);
             bindService(serviceIntent, mConnection, BIND_AUTO_CREATE);
         } else {
-            //TODO  未获取到秤的市场id 和秤编号 ，需要重新登陆
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
             MainActivity.this.finish();
@@ -567,95 +540,16 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
 
-//    private TextWatcher countTextWatcher = new TextWatcher() {
-//
-//        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//        }
-//
-//        @Override
-//        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            if (s.toString().startsWith("0") && s.toString().trim().length() > 1) {
-//                if (!s.toString().substring(1, 2).equals(".")) {
-//                    countEt.setText(s.subSequence(1, 2));
-//                    countEt.setSelection(1);
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-//            String temp = s.toString();
-//            int posDot = temp.indexOf(".");
-//            //小数点之前保留3位数字或者一千
-//            if (posDot <= 0) {
-//                //temp
-//                if (temp.equals("10000")) {
-//                    return;
-//                } else {
-//                    if (temp.length() <= 4) {
-//                        return;
-//                    } else {
-//                        s.delete(4, 5);
-//                        return;
-//                    }
-//                }
-//            }
-//            //保留三位小数
-//            if (temp.length() - posDot - 1 > 1) {
-//                s.delete(posDot + 2, posDot + 3);
-//            }
-//        }
-//    };
-
-//    public void advertising() {
-//        RetrofitFactory.getInstance().API()
-//                .advertising()
-//                .compose(this.<BaseEntity<Advertis>>setThread())
-//                .subscribe(new Observer<BaseEntity<Advertis>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(BaseEntity<Advertis> advertisBaseEntity) {
-//                        if (advertisBaseEntity.isSuccess()) {
-//                            final Advertis advertis = advertisBaseEntity.getData();
-//                            List<String> list = new ArrayList<>();
-//                            for (int i = 0; i < advertis.list.size(); i++) {
-//                                list.add(advertis.list.get(i).img);
-//                            }
-//                            banner.convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
-//                                @Override
-//                                public NetworkImageHolderView createHolder() {
-//                                    return new NetworkImageHolderView();
-//                                }
-//                            }, list).startTurning(2000);
-////                            banner.showAutoCancel(2000);
-//                            banner.show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                    }
-//                });
-//    }
-
     @SuppressLint("DefaultLocale")
     public void setGrandTotalTxt() {
         try {
             float count = 0;
-            if (!TextUtils.isEmpty(countEt.getText())) {
-                count = parseFloat(countEt.getText().toString());
-            } else if (!TextUtils.isEmpty(countEt.getHint())) {
-                count = parseFloat(countEt.getHint().toString());
-            }
+//            if (!TextUtils.isEmpty(countEt.getText())) {
+//                count = parseFloat(countEt.getText().toString());
+//            } else if (!TextUtils.isEmpty(countEt.getHint())) {
+//                count = parseFloat(countEt.getHint().toString());
+//            }
+
             if (switchSimpleOrComplex) {
                 if (!TextUtils.isEmpty(etPrice.getText())) {
                     tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getText().toString()) * count));
@@ -719,7 +613,23 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            startDDMActivity(SettingsActivity.class, false);
+            if (requestCode == 2222) {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(intent, 1111);
+            } else if (requestCode == 1111) {
+                boolean isDataChange = data.getBooleanExtra("isDataChange", false); //将计算的值回传回去
+                if (isDataChange) {// 设置改变了
+                    //TODO
+                    if (userInfoDao == null) {
+                        userInfoDao = new UserInfoDao(context);
+                    }
+                    sysApplication.setUserInfo(userInfo);
+                    userInfo = userInfoDao.queryById(1);
+                    getGoods();// 需要更新 状态
+                }
+            }
+
+
         }
     }
 
@@ -805,7 +715,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 break;
             case R.id.main_settings_btn:
                 Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1111);
 
                 break;
             case R.id.main_clear_btn:
@@ -820,6 +730,23 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 break;
         }
     }
+
+
+//    // 为了获取结果
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        // RESULT_OK，判断另外一个activity已经结束数据输入功能，Standard activity result:
+//        // operation succeeded. 默认值是-1
+//        if (resultCode == RESULT_OK) {
+////            if (requestCode == REQUESTCODE) {
+////                int three = data.getIntExtra("three", 0);
+////                //设置结果显示框的显示数值
+////                result.setText(String.valueOf(three));
+////            }
+//        }
+//    }
+
 
     private void appendCurrentGood() {
         if (orderBeans.size() == 0)
@@ -922,7 +849,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         }
     }
 
-    public void charge(boolean useCash) {
+   /* public void charge(boolean useCash) {
 
         if (orderBeans.size() < 1) {
             accumulative(true);
@@ -961,12 +888,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         intent.setClass(this, UseCashActivity.class);
 
 
-    }
+    }*/
 
-    public void payEbay(SubOrderReqBean orderBean) {
-
-
-    }
 
     /**
      * 直接现金支付
@@ -976,7 +899,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         final OrderInfo orderInfo = new OrderInfo();
         List<OrderBean> orderlist = new ArrayList<>(data);
         orderInfo.setOrderItem(orderlist);
-        String billcode = "AX" + DateUtils.getSampleNo() + tid;
+        String billcode = "AX" + DateUtils.getSampleNo() + userInfo.getTid();
         Date date = new Date();
         String currentTime = DateUtils.getYY_TO_ss(date);
         String hourTime = DateUtils.getHH(date);
@@ -988,21 +911,21 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             orderInfo.setBillstatus("1");
         }
 
-        orderInfo.setSeller(seller);
-        orderInfo.setSellerid(sellerid);
+        orderInfo.setSeller(userInfo.getSeller());
+        orderInfo.setSellerid(userInfo.getSellerid());
         orderInfo.setMarketName(tvmarketName.getText().toString());
-        orderInfo.setTerid(tid);
+        orderInfo.setTerid(userInfo.getTid());
         orderInfo.setTotalamount(tvTotalPrice.getText().toString());
         orderInfo.setTotalweight(tvTotalWeight.getText().toString());
 
-        orderInfo.setMarketid(marketId);
+        orderInfo.setMarketid(userInfo.getMarketid());
         orderInfo.setTime(currentTime);
         orderInfo.setTimestamp(Timestamp.valueOf(currentTime));
         orderInfo.setHour(Integer.valueOf(hourTime));
         orderInfo.setDay(Integer.valueOf(dayTime));
         orderInfo.setSettlemethod(payType);
         orderInfo.setBillcode(billcode);
-        orderInfo.setStallNo(stallNumberTv.getText().toString());
+        orderInfo.setStallNo(tvNumber.getText().toString());
 
         if (NetWorkJudge.isNetworkAvailable(context)) {
             helper.commitDD(orderInfo, MainActivity.this, 3);
@@ -1017,8 +940,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             epsPrinter = new MyEPSPrinter(sysApplication.getEpsPrint());
         }
         epsPrinter.printOrder(sysApplication.getThreadPool(), orderInfo);
-
-//        select max(Age) from Student
 
         //保存交易数据
         sysApplication.getThreadPool().execute(new Runnable() {
@@ -1050,9 +971,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     }
 
-    MyEPSPrinter epsPrinter;
-    List<OrderBean> secondOrderbeans = new ArrayList<>();
-    List<OrderInfo> askInfos = new ArrayList<>();
+    private MyEPSPrinter epsPrinter;
+
+    private List<OrderInfo> askInfos = new ArrayList<>();
 
 
     /**
@@ -1108,53 +1029,56 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         }
                         MyLog.myInfo("成功" + jsonObject.toString());
                         break;
-                    case 6:
-                        sysApplication.getThreadPool().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                TracenoResultBean tracenoResultBean = JSON.parseObject(jsonObject.toString(), TracenoResultBean.class);
-                                if (tracenoResultBean != null) {
-                                    if (tracenoResultBean.getStatus() == 0) {
-                                        if (tracenoResultBean.getData().size() > 0) {
-                                            boolean isUpdate = false;
-                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
-                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
-                                                for (int j = 0; j < goodsList.size(); j++) {
-                                                    if (dataBean.getTypeid() == goodsList.get(j).getTypeid()) {
-                                                        goodsList.get(j).setBatchCode(dataBean.getTraceno());
-                                                        isUpdate = true;
-                                                    }
-                                                }
-                                            }
-                                            if (isUpdate) {
-                                                handler.sendEmptyMessage(NOTIFY_TRACENO);
-                                            }
-                                            //更新 数据中的批次号
 
-                                            boolean isUpdateType = false;
-                                            GoodsTypeDao goodsTypeDao = new GoodsTypeDao(context);
-                                            List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
-                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
-                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
-                                                for (int j = 0; j < goodsTypes.size(); j++) {
-                                                    if (dataBean.getTypeid() == goodsTypes.get(j).getId()) {
-                                                        goodsTypes.get(j).setTraceno(dataBean.getTraceno());
-                                                        isUpdateType = true;
-                                                    }
-                                                }
-                                            }
-
-                                            if (isUpdateType) {//批次号 有更新
-                                                goodsTypeDao.updates(goodsTypes);
-                                            }
-
-                                        }
-                                    }
-                                }
-
-                            }
-                        });
+                    default:
                         break;
+//                    case 6:
+//                        sysApplication.getThreadPool().execute(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                TracenoResultBean tracenoResultBean = JSON.parseObject(jsonObject.toString(), TracenoResultBean.class);
+//                                if (tracenoResultBean != null) {
+//                                    if (tracenoResultBean.getStatus() == 0) {
+//                                        if (tracenoResultBean.getData().size() > 0) {
+//                                            boolean isUpdate = false;
+//                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
+//                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
+//                                                for (int j = 0; j < goodsList.size(); j++) {
+//                                                    if (dataBean.getTypeid() == goodsList.get(j).getTypeid()) {
+//                                                        goodsList.get(j).setBatchCode(dataBean.getTraceno());
+//                                                        isUpdate = true;
+//                                                    }
+//                                                }
+//                                            }
+//                                            if (isUpdate) {
+//                                                handler.sendEmptyMessage(NOTIFY_TRACENO);
+//                                            }
+//                                            //更新 数据中的批次号
+//
+//                                            boolean isUpdateType = false;
+//                                            GoodsTypeDao goodsTypeDao = new GoodsTypeDao(context);
+//                                            List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
+//                                            for (int i = 0; i < tracenoResultBean.getData().size(); i++) {
+//                                                TracenoResultBean.DataBean dataBean = tracenoResultBean.getData().get(i);
+//                                                for (int j = 0; j < goodsTypes.size(); j++) {
+//                                                    if (dataBean.getTypeid() == goodsTypes.get(j).getId()) {
+//                                                        goodsTypes.get(j).setTraceno(dataBean.getTraceno());
+//                                                        isUpdateType = true;
+//                                                    }
+//                                                }
+//                                            }
+//
+//                                            if (isUpdateType) {//批次号 有更新
+//                                                goodsTypeDao.updates(goodsTypes);
+//                                            }
+//
+//                                        }
+//                                    }
+//                                }
+//
+//                            }
+//                        });
+//                        break;
                 }
             }
         });
@@ -1211,7 +1135,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     @Override
     public boolean onLongClick(View v) {
-
         switch (v.getId()) {
             case R.id.btnClearn:
 
@@ -1233,7 +1156,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 break;
             case R.id.main_settings_btn:
                 Intent intent2 = new Intent(context, SystemLoginActivity.class);
-                startActivity(intent2);
+                startActivityForResult(intent2, 2222);
                 break;
         }
         return false;

@@ -3,7 +3,6 @@ package com.axecom.smartweight.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.BaseDialog;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.bean.SettingsBean;
-import com.axecom.smartweight.manager.AccountManager;
 import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.Goods;
@@ -43,7 +41,6 @@ import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.ui.activity.datasummary.SummaryActivity;
 import com.axecom.smartweight.ui.activity.setting.GoodsSettingActivity;
 import com.luofx.listener.VolleyListener;
-import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.common.MyToast;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
@@ -94,13 +91,13 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
     private NetHelper netHelper;
     private BaseDialog baseDialog;
     private int type;
+    private boolean isDataChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
         sysApplication = (SysApplication) getApplication();
-
         context = this;
         type = getIntent().getIntExtra(STRING_TYPE, 0);
         userInfoDao = new UserInfoDao(context);
@@ -153,9 +150,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         TextView tvSystemVersion = findViewById(R.id.tvDataUpdate_SystemVersion);
         tvSystemVersion.setText("当前版本号:" + ApkUtils.getVersionName(this));
 
-        context = this;
-
-
     }
 
 
@@ -177,7 +171,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
         SettingsBean settingsBean3 = new SettingsBean(R.drawable.server_setting, "服务器测试", POSITION_SERVER);
         settngsList.add(settingsBean3);
-
 
 
 //        SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
@@ -242,24 +235,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                             if (userInfo != null) {
                                 userInfo.setId(1);
                                 boolean isSuccess = userInfoDao.updateOrInsert(userInfo);
-                                SharedPreferences sp = PreferenceUtils.getSp(context);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt(MARKET_ID, userInfo.getMarketid());
-                                editor.putString(MARKET_NAME, userInfo.getMarketname());
-                                editor.putInt(TID, userInfo.getTid());
-                                editor.putInt(SELLER_ID, userInfo.getSellerid());
-                                editor.putString(SELLER, userInfo.getSeller());
-                                editor.putString(KEY, userInfo.getKey());
-                                editor.putString(MCHID, userInfo.getMchid());
-                                editor.apply();
-
-                                sysApplication.setMarketid(userInfo.getMarketid());
-                                sysApplication.setMarketname(userInfo.getMarketname());
-                                sysApplication.setTid(userInfo.getTid());
-                                sysApplication.setSellerid(userInfo.getSellerid());
-                                sysApplication.setSeller(userInfo.getSeller());
-                                sysApplication.setKey(userInfo.getKey());
-                                sysApplication.setMchid(userInfo.getMchid());
+                                sysApplication.setUserInfo(userInfo);
 
                                 Message message = handler.obtainMessage();
                                 message.arg1 = userInfo.getTid();
@@ -387,12 +363,14 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     startDDMActivity(WifiSettingsActivity.class, false);
                     break;
                 case POSITION_COMMODITY:// 商品设置
+                    isDataChange = true;
                     startDDMActivity(GoodsSettingActivity.class, false);
                     break;
                 case POSITION_LOCAL:
                     startDDMActivity(LocalSettingsActivity.class, false);
                     break;
                 case POSITION_SYSTEM:
+                    isDataChange = true;
                     startDDMActivity(SystemSettingsActivity2.class, false);
                     break;
                 case POSITION_RE_BOOT:
@@ -413,7 +391,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     finish();
                     break;
                 case POSITION_BACK:
-                    finish();
+                    finishActivity();
                     break;
 //                case POSITION_SWITCH:
 //                    showLoading("切换成功");
@@ -439,6 +417,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                 case POSITION_UPDATE:// 数据更新
                     baseDialog.showLoading();
                     successFlag = 0;
+                    isDataChange = true;
                     netHelper.getUserInfo(netHelper.getIMEI(context), 1);
 
 
@@ -458,7 +437,21 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         }
     };
 
-//    private void updateScalesId() {
+    @Override
+    public void onBackPressed() {
+        finishActivity();
+    }
+
+    private void finishActivity() {
+        Intent intentData = new Intent();
+        intentData.putExtra("isDataChange", isDataChange); //将计算的值回传回去
+        //通过intent对象返回结果，必须要调用一个setResult方法，
+        //setResult(resultCode, data);第一个参数表示结果返回码，一般只要大于1就可以，但是
+        setResult(RESULT_OK, intentData);
+        finish();
+    }
+
+    //    private void updateScalesId() {
 //        RetrofitFactory.getInstance().API()
 //                .getScalesIdByMac(MacManager.getInstace(this).getMac())
 //                .compose(this.<BaseEntity<WeightBean>>setThread())

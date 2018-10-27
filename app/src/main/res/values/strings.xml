@@ -85,7 +85,7 @@
     <string name="str_printer_error">打印机出错</string>
     <string name="str_state">状态：</string>
     <string name="kilogram">kg</string>
-    <string name="Administrators_pwd">88888888</string>
+    <string name="Administrators_pwd">123456</string>
     <string name="string_login_out">退出登录</string>
     <string name="string_login_auto_txt">自动登录</string>
 </resources>

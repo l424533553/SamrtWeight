@@ -9,6 +9,7 @@ import com.axecom.smartweight.my.entity.GoodsType;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.UserInfo;
+import com.axecom.smartweight.my.entity.netresult.TraceNoBean;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -37,7 +38,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     // 数据库名称
     private static String DATABASE_NAME = "r2011.db";
 
-    public final static int version = 1;
+    public final static int version = 2;
 
     // 本类的单例实例
     private static OrmliteBaseHelper instance;
@@ -79,9 +80,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     @Override // 创建数据库时调用的方法
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-
 //            TableUtils.createTable(connectionSource, Goods.class);
-
 
             TableUtils.createTable(connectionSource, OrderInfo.class);
             TableUtils.createTable(connectionSource, OrderBean.class);
@@ -90,6 +89,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Goods.class);
             TableUtils.createTable(connectionSource, GoodsType.class);
             TableUtils.createTable(connectionSource, AllGoods.class);
+            TableUtils.createTable(connectionSource, TraceNoBean.class);
 //            TableUtils.createTable(connectionSource, TimeBase.class);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,6 +99,14 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     @Override // 数据库版本更新时调用的方法
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 //        try {
+
+        if(oldVersion==1){
+            try {
+                TableUtils.createTable(connectionSource, TraceNoBean.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
 
         //增加表 的列

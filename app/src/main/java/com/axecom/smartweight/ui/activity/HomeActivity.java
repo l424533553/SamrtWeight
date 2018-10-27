@@ -33,7 +33,9 @@ import com.axecom.smartweight.my.entity.UserInfo;
 import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
+import com.axecom.smartweight.my.entity.dao.TraceNoDao;
 import com.axecom.smartweight.my.entity.dao.UserInfoDao;
+import com.axecom.smartweight.my.entity.netresult.TraceNoBean;
 import com.axecom.smartweight.my.net.NetHelper;
 import com.axecom.smartweight.ui.view.CustomDialog;
 import com.axecom.smartweight.ui.view.SoftKeyborad;
@@ -45,6 +47,7 @@ import com.luofx.utils.DateUtils;
 import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.common.MyToast;
 import com.luofx.utils.log.MyLog;
+import com.luofx.utils.net.NetWorkJudge;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.json.JSONObject;
@@ -117,7 +120,10 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                         break;
                     case NOTIFY_SUCCESS:
                         if (successFlag == 3)
-                            jumpActivity();
+                            getTraceNo(sysApplication.getUserInfo());
+                        break;
+                    case NOTIFY_JUMP:
+                        jumpActivity();
                         break;
                 }
                 return false;
@@ -146,12 +152,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
         pwdTv.setOnClickListener(this);
         loginTv.setOnClickListener(this);
 
-
         cardNumberTv.setOnClickListener(this);
         confirmBtn.setOnClickListener(this);
         savePwdCtv.setOnClickListener(this);
-
-
     }
 
 
@@ -171,16 +174,11 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
             netHelper = new NetHelper(application, this);
             netHelper.getUserInfo(netHelper.getIMEI(context), 1);
         } else {
-            application.setMarketid(userInfo.getMarketid());
-            application.setMarketname(userInfo.getMarketname());
-            application.setCompanyno(userInfo.getCompanyno());
-            application.setTid(userInfo.getTid());
+            sysApplication.setUserInfo(userInfo);
+            getTraceNo(userInfo);
 
-            application.setSeller(userInfo.getSeller());
-            application.setSellerid(userInfo.getSellerid());
-            application.setKey(userInfo.getKey());
-            application.setMchid(userInfo.getMchid());
-            jumpActivity();
+
+//            jumpActivity();
         }
     }
 
@@ -190,15 +188,21 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
         this.finish();
     }
 
+    private void getTraceNo(UserInfo userInfo) {
+        if (NetWorkJudge.isNetworkAvailable(context)) {
+            //TODO
+            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=1136";
+//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
+            sysApplication.volleyGet(url, this, 7);
+        }
+    }
 
     @Override
     public void onClick(View v) {
 //        SoftKeyborad.Builder builder = new SoftKeyborad.Builder(HomeActivity.this);
         switch (v.getId()) {
-
             case R.id.home_confirm_btn:
                 startLogin();
-
                 break;
 //            case R.id.home_card_number_tv:
 //                if (!ButtonUtils.isFastDoubleClick(R.id.home_card_number_tv)) {
@@ -262,6 +266,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                 jumpActivity();
                 MyToast.toastShort(context, "初始化数据不完全");
                 break;
+            case 7:
+                handler.sendEmptyMessage(NOTIFY_JUMP);
+                break;
 
             default:
                 break;
@@ -280,17 +287,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                             if (userInfo != null) {
                                 userInfo.setId(1);
                                 boolean isSuccess = userInfoDao.updateOrInsert(userInfo);
+                                sysApplication.setUserInfo(userInfo);//保存信息
 
-                                SharedPreferences sp = PreferenceUtils.getSp(context);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putInt(MARKET_ID, userInfo.getMarketid());
-                                editor.putString(MARKET_NAME, userInfo.getMarketname());
-                                editor.putInt(TID, userInfo.getTid());
-                                editor.putInt(SELLER_ID, userInfo.getSellerid());
-                                editor.putString(SELLER, userInfo.getSeller());
-                                editor.putString(KEY, userInfo.getKey());
-                                editor.putString(MCHID, userInfo.getMchid());
-                                editor.apply();
                                 Message message = handler.obtainMessage();
                                 message.arg1 = userInfo.getTid();
                                 message.what = NOTIFY_INITDAT;
@@ -299,7 +297,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                         } else {
                             MyToast.toastLong(context, "未获取到秤的配置信息");
                         }
-
                     } else {
                         MyToast.toastLong(context, "未获取到秤的配置信息");
                     }
@@ -320,10 +317,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                                 }
                             }
                         });
-
                     }
-
-
 //                jumpActivity();
                     break;
                 case 3:
@@ -354,7 +348,20 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                             handler.sendEmptyMessage(NOTIFY_SUCCESS);
                         }
                     }
+                    break;
+                case 7:
+                    if (resultInfo != null) {
+                        if (resultInfo.getStatus() == 0) {
+                            List<TraceNoBean> goodsList = JSON.parseArray(resultInfo.getData(), TraceNoBean.class);
+                            if (goodsList != null && goodsList.size() > 0) {
 
+                                TraceNoDao traceNoDao = new TraceNoDao(context);
+                                traceNoDao.deleteTableData();
+                              int flag2=  traceNoDao.insert(goodsList);
+                            }
+                        }
+                    }
+                    handler.sendEmptyMessage(NOTIFY_JUMP);
                     break;
             }
         } catch (Exception e) {

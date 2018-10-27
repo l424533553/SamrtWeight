@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.multidex.MultiDex;
 
+import com.axecom.smartweight.my.entity.UserInfo;
 import com.luofx.base.MyBaseApplication;
 import com.luofx.utils.PreferenceUtils;
+import com.luofx.utils.log.LogUtils;
 import com.shangtongyin.tools.serialport.EpsPrint;
 import com.shangtongyin.tools.serialport.USB_Print;
 
@@ -18,6 +20,17 @@ public class ShangTongApp extends MyBaseApplication {
 
 
 
+    private int marketid;
+
+    private UserInfo userInfo;
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 
     private EpsPrint epsPrint;
 
@@ -39,12 +52,15 @@ public class ShangTongApp extends MyBaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtils.init();
 
         epsPrint = new EpsPrint();
         epsPrint.open();
 //        registerBroadcast();
         USB_Print.initPrinter(this);
-        SharedPreferences sharedPreferences = PreferenceUtils.getSp(this);
+//        SharedPreferences sharedPreferences = PreferenceUtils.getSp(this);
+
+
 
     }
 
@@ -57,83 +73,6 @@ public class ShangTongApp extends MyBaseApplication {
         }
     }
 
-    protected int marketid;
 
-    protected String marketname;
 
-    protected String companyno;
-
-    protected int tid;
-
-    protected String seller;
-
-    protected int sellerid;
-
-    protected String key;
-
-    protected String mchid;
-
-    public int getMarketid() {
-        return marketid;
-    }
-
-    public void setMarketid(int marketid) {
-        this.marketid = marketid;
-    }
-
-    public String getMarketname() {
-        return marketname;
-    }
-
-    public void setMarketname(String marketname) {
-        this.marketname = marketname;
-    }
-
-    public String getCompanyno() {
-        return companyno;
-    }
-
-    public void setCompanyno(String companyno) {
-        this.companyno = companyno;
-    }
-
-    public int getTid() {
-        return tid;
-    }
-
-    public void setTid(int tid) {
-        this.tid = tid;
-    }
-
-    public String getSeller() {
-        return seller;
-    }
-
-    public void setSeller(String seller) {
-        this.seller = seller;
-    }
-
-    public int getSellerid() {
-        return sellerid;
-    }
-
-    public void setSellerid(int sellerid) {
-        this.sellerid = sellerid;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getMchid() {
-        return mchid;
-    }
-
-    public void setMchid(String mchid) {
-        this.mchid = mchid;
-    }
 }

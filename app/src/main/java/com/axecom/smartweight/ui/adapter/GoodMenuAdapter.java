@@ -19,11 +19,11 @@ import java.util.List;
  */
 public class GoodMenuAdapter extends BaseAdapter {
     private Context context;
-//    private List<HotKeyBean> list;
+    //    private List<HotKeyBean> list;
     private List<Goods> list;
     private int pos = -1;
 
-//    public GoodMenuAdapter(Context context, List<HotKeyBean> list) {
+    //    public GoodMenuAdapter(Context context, List<HotKeyBean> list) {
 //        this.context = context;
 //        this.list = list;
 //    }
@@ -35,13 +35,14 @@ public class GoodMenuAdapter extends BaseAdapter {
         return list;
     }
 
-    public  void setDatas(List<Goods> data){
-        list=data;
+    public void setDatas(List<Goods> data) {
+        list = data;
         notifyDataSetChanged();
     }
+
     @Override
     public int getCount() {
-        return list==null?0:list.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
@@ -78,6 +79,8 @@ public class GoodMenuAdapter extends BaseAdapter {
 
         Goods goods = list.get(position);
         holder.commodityBtn.setText(goods.getName());
+        holder.tvIndex.setText(String.valueOf(position + 1));
+
         if (pos == position) {
             holder.commodityBtn.setBackground(context.getResources().getDrawable(R.drawable.shape_green_bg));
             holder.commodityBtn.setTextColor(context.getResources().getColor(R.color.white));
@@ -85,7 +88,7 @@ public class GoodMenuAdapter extends BaseAdapter {
             holder.commodityBtn.setBackground(context.getResources().getDrawable(R.drawable.shape_weight_display_bg));
             holder.commodityBtn.setTextColor(context.getResources().getColor(R.color.black));
         }
-        holder.tag.setVisibility(TextUtils.isEmpty(goods.getBatchCode())?View.GONE:View.VISIBLE);
+        holder.tag.setVisibility(TextUtils.isEmpty(goods.getBatchCode()) ? View.GONE : View.VISIBLE);
 
 
 //        if(position%3==0){
@@ -105,7 +108,7 @@ public class GoodMenuAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        TextView commodityBtn,tvIndex;
+        TextView commodityBtn, tvIndex;
         ImageView tag;
     }
 }

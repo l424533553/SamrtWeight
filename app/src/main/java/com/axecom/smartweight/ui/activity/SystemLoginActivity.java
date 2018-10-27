@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class SystemLoginActivity extends Activity implements View.OnClickListener,IConstants_ST {
+public class SystemLoginActivity extends Activity implements View.OnClickListener, IConstants_ST {
 
 
     private EditText pwdEt;
@@ -55,9 +55,7 @@ public class SystemLoginActivity extends Activity implements View.OnClickListene
 
     }
 
-
     public void setInitView() {
-
         pwdEt = findViewById(R.id.staff_member_pwd_et);
         pwdEt.requestFocus();
         disableShowInput(pwdEt);
@@ -65,12 +63,9 @@ public class SystemLoginActivity extends Activity implements View.OnClickListene
         doneBtn = findViewById(R.id.staff_member_done_btn);
         backBtn = findViewById(R.id.staff_member_back_btn);
 
-
         doneBtn.setOnClickListener(this);
         backBtn.setOnClickListener(this);
-
     }
-
 
     @Override
     protected void onPause() {
@@ -95,9 +90,8 @@ public class SystemLoginActivity extends Activity implements View.OnClickListene
             case R.id.staff_member_done_btn:
                 String password = pwdEt.getText().toString();
                 if (getString(R.string.Administrators_pwd).equals(password)) {
-                    Intent intent = new Intent(this, SettingsActivity.class);
-                    intent.putExtra(STRING_TYPE,1);
-                    startActivity(intent);
+                    Intent intentData = new Intent();
+                    setResult(RESULT_OK, intentData);
                     this.finish();
                 }
 
