@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 /**
  * Created by zf on 2017/9/2 0002.
+ * 商通打印机  USB 打开
  */
 
 public class USB_Print {

@@ -6,11 +6,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,15 +17,11 @@ import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.adapter.OrderAdapter;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
-import com.axecom.smartweight.ui.uiutils.UIUtils;
 import com.bigkoo.convenientbanner.holder.Holder;
-import com.bumptech.glide.Glide;
 import com.luofx.help.QRHelper;
 import com.luofx.utils.PreferenceUtils;
-import com.luofx.utils.thread.MyTimeTask;
 
 import java.util.List;
-import java.util.TimerTask;
 
 import static com.shangtongyin.tools.serialport.IConstants_ST.KEY;
 import static com.shangtongyin.tools.serialport.IConstants_ST.MARKET_ID;
@@ -45,17 +40,11 @@ public class SecondPresentation extends Presentation {
     public TextView tvPayMoney, tvPayMoneySecond;
     public ImageView ivQR;
     public ImageView ivQRSecond;
-    public LinearLayout bannerOrderLayout;
-
     public List<OrderBean> goodsList;
     public OrderAdapter adapter;
-    public OrderAdapter adapterSecond;
-
+    private OrderAdapter adapterSecond;
 
     public List<String> list;
-    private Button messageBtn;
-    private TextView titleTv;
-
     private ListView lvOne;
     private ListView lvSecond;
 
@@ -64,21 +53,97 @@ public class SecondPresentation extends Presentation {
         this.context = outerContext;
     }
 
-    public void notifyData(List<OrderInfo> data) {
+    public void notifyData(final List<OrderInfo> data) {
+        this.data = data;
+        if (data == null || data.size() < 1) {
+            return;
+        }
+        if (TextUtils.isEmpty(tvPayWay.getText().toString())) {
+            OrderInfo orderInfoFirst = data.get(0);
+            tt1(orderInfoFirst);
+            data.remove(0);
+            notifyData(data);
+
+        } else if (TextUtils.isEmpty(tvPayWaySecond.getText().toString())) {
+            OrderInfo orderInfoFirst = data.get(0);
+            tt2(orderInfoFirst);
+            data.remove(0);
+            notifyData(data);
+        }
+
+    }
+
+    private void tt2(OrderInfo orderInfo) {
+        key = PreferenceUtils.getString(context, KEY, null);
+        mchid = PreferenceUtils.getString(context, MCHID, null);
+        baseUrl = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
+
+        adapterSecond.setDatas(orderInfo.getOrderItem());
+        tvPayMoneySecond.setText(orderInfo.getTotalamount());
+        if (orderInfo.getSettlemethod() == 1) {
+            tvPayWaySecond.setText("微信支付");
+        } else if (orderInfo.getSettlemethod() == 2) {
+            tvPayWaySecond.setText("支付宝支付");
+        } else if (orderInfo.getSettlemethod() == 0) {
+            tvPayWaySecond.setText("现金支付");
+        }
+
+        int showTime = 10000;
+        if (orderInfo.getSettlemethod() > 0) {
+            int newPriceSecond = (int) (Float.valueOf(orderInfo.getTotalamount()) * 100);
+            String urlSecond = baseUrl + "&orderno=" + orderInfo.getBillcode() + "&fee=" + newPriceSecond;
+            Bitmap bitmapSecond = QRHelper.createQRImage(urlSecond);
+            ivQRSecond.setImageBitmap(bitmapSecond);
+            showTime = 60000;
+        }
+        handler.sendEmptyMessageDelayed(666, showTime);
+
+
+
+    }
+
+    private void tt1(OrderInfo orderInfoFirst) {
+        key = PreferenceUtils.getString(context, KEY, null);
+        mchid = PreferenceUtils.getString(context, MCHID, null);
+        baseUrl = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
+
+        adapter.setDatas(orderInfoFirst.getOrderItem());
+        tvPayMoney.setText(orderInfoFirst.getTotalamount());
+        if (orderInfoFirst.getSettlemethod() == 1) {
+            tvPayWay.setText("微信支付");
+        } else if (orderInfoFirst.getSettlemethod() == 2) {
+            tvPayWay.setText("支付宝支付");
+        } else if (orderInfoFirst.getSettlemethod() == 0) {
+            tvPayWay.setText("现金支付");
+        }
+
+        int showTime = 10000;
+        if (orderInfoFirst.getSettlemethod() > 0) {
+            int newPrice = (int) (Float.valueOf(orderInfoFirst.getTotalamount()) * 100);
+            String urlFirst = baseUrl + "&orderno=" + orderInfoFirst.getBillcode() + "&fee=" + newPrice;
+            Bitmap bitmapFirst = QRHelper.createQRImage(urlFirst);
+            ivQR.setImageBitmap(bitmapFirst);
+            showTime = 60000;
+        }
+        handler.sendEmptyMessageDelayed(555, showTime);
+    }
+
+
+    public void notifyData2(final List<OrderInfo> data) {
         if (data != null && data.size() > 0) {
             if (data.size() <= 2) {
                 key = PreferenceUtils.getString(context, KEY, null);
                 mchid = PreferenceUtils.getString(context, MCHID, null);
                 baseUrl = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
 
-                OrderInfo orderInfoFirst = data.get(0);
+                final OrderInfo orderInfoFirst = data.get(0);
                 adapter.setDatas(orderInfoFirst.getOrderItem());
                 tvPayMoney.setText(orderInfoFirst.getTotalamount());
                 if (orderInfoFirst.getSettlemethod() == 1) {
                     tvPayWay.setText("微信支付");
                 } else if (orderInfoFirst.getSettlemethod() == 2) {
                     tvPayWay.setText("支付宝支付");
-                }else if (orderInfoFirst.getSettlemethod() == 0) {
+                } else if (orderInfoFirst.getSettlemethod() == 0) {
                     tvPayWaySecond.setText("现金支付");
                 }
 
@@ -87,8 +152,18 @@ public class SecondPresentation extends Presentation {
                     String urlFirst = baseUrl + "&orderno=" + orderInfoFirst.getBillcode() + "&fee=" + newPrice;
                     Bitmap bitmapFirst = QRHelper.createQRImage(urlFirst);
                     ivQR.setImageBitmap(bitmapFirst);
-
                 }
+
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (data.contains(orderInfoFirst)) {
+                            data.remove(orderInfoFirst);
+                            handler.sendEmptyMessage(1100);//刷新
+                        }
+                    }
+                }, 30000);
+
 
                 if (data.size() == 1) {
                     tvPayMoneySecond.setText("0.00");
@@ -107,7 +182,7 @@ public class SecondPresentation extends Presentation {
                         tvPayWaySecond.setText("现金支付");
                     }
 
-                    if (orderInfoFirst.getSettlemethod() > 0) {
+                    if (orderInfoSecond.getSettlemethod() > 0) {
                         int newPriceSecond = (int) (Float.valueOf(orderInfoSecond.getTotalamount()) * 100);
                         String urlSecond = baseUrl + "&orderno=" + orderInfoSecond.getBillcode() + "&fee=" + newPriceSecond;
                         Bitmap bitmapSecond = QRHelper.createQRImage(urlSecond);
@@ -118,16 +193,35 @@ public class SecondPresentation extends Presentation {
                 //无反应
             }
         } else {// 无数据
+
             tvPayMoney.setText("0.00");
             tvPayWay.setText("");
             ivQR.setImageResource(R.drawable.logo);
+            adapter.setDatas(null);
+
             tvPayMoneySecond.setText("0.00");
             tvPayWaySecond.setText("");
             ivQRSecond.setImageResource(R.drawable.logo);
             adapterSecond.setDatas(null);
-            adapter.setDatas(null);
+
         }
 
+    }
+
+    private void clearnFirst() {
+        tvPayMoney.setText("0.00");
+        tvPayWay.setText("");
+        ivQR.setImageResource(R.drawable.logo);
+        adapter.setDatas(null);
+        notifyData(data);
+    }
+
+    private void clearnSecond() {
+        tvPayMoneySecond.setText("0.00");
+        tvPayWaySecond.setText("");
+        ivQRSecond.setImageResource(R.drawable.logo);
+        adapterSecond.setDatas(null);
+        notifyData(data);
     }
 
     private void initView() {
@@ -167,21 +261,22 @@ public class SecondPresentation extends Presentation {
     }
 
 
-    private MyTimeTask task;
-
-    private void setTimer() {
-        task = new MyTimeTask(60000, new TimerTask() {
-            @Override
-            public void run() {
-                if (data.size() > 0) {
-                    data.remove(0);
-                    handler.sendEmptyMessage(1100);
-                }
-                //或者发广播，启动服务都是可以的
-            }
-        });
-        task.start();
-    }
+//    private MyTimeTask task;
+//
+//    private void setTimer() {
+//        task = new MyTimeTask(30000,,60000, new TimerTask() {
+//            @Override
+//            public void run() {
+//                if (data.size() > 0) {
+//                    data.remove(0);
+//                    handler.sendEmptyMessage(1100);
+//                }
+//                //或者发广播，启动服务都是可以的
+//            }
+//        });
+//
+//        task.start();
+//    }
 
     private Handler handler;
 
@@ -189,7 +284,20 @@ public class SecondPresentation extends Presentation {
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                notifyData(data);
+                switch (msg.what) {
+                    case 555:
+                        //清空First
+                        clearnFirst();
+//                        notifyData(data);
+                        break;
+                    case 666:
+                        //清空First
+                        clearnSecond();
+                        break;
+                    default:
+//                        notifyData(data);
+                        break;
+                }
                 return false;
             }
         });
@@ -206,7 +314,7 @@ public class SecondPresentation extends Presentation {
         initData();
         initData();
         inithander();
-        setTimer();
+//        setTimer();
 
     }
 
@@ -221,23 +329,6 @@ public class SecondPresentation extends Presentation {
 //        handler.sendEmptyMessage(1100);
 //    }
 
-
-    public void showPayResult(String titleText, String confirmText, long times) {
-        bannerOrderLayout.setVisibility(View.VISIBLE);
-        Glide.with(context).load(R.drawable.logo).into(ivQR);
-        titleTv.setText(titleText);
-        messageBtn.setText(confirmText);
-
-
-//        UIUtils.getMainThreadHandler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                alertView.setVisibility(View.GONE);
-//            }
-//        }, times);
-
-
-    }
 
     public class LocalImageHolderView implements Holder<Integer> {
         private ImageView imageView;
@@ -257,7 +348,7 @@ public class SecondPresentation extends Presentation {
 
     @Override
     public void dismiss() {
-        task.stop();
+//        task.stop();
         super.dismiss();
     }
 }

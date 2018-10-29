@@ -3,17 +3,11 @@ package com.axecom.smartweight.ui.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.hardware.display.DisplayManager;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
@@ -27,7 +21,6 @@ import com.axecom.smartweight.my.LogActivity;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
-import com.axecom.smartweight.my.entity.LogBean;
 import com.axecom.smartweight.my.entity.ResultInfo;
 import com.axecom.smartweight.my.entity.UserInfo;
 import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
@@ -37,24 +30,15 @@ import com.axecom.smartweight.my.entity.dao.TraceNoDao;
 import com.axecom.smartweight.my.entity.dao.UserInfoDao;
 import com.axecom.smartweight.my.entity.netresult.TraceNoBean;
 import com.axecom.smartweight.my.net.NetHelper;
-import com.axecom.smartweight.ui.view.CustomDialog;
-import com.axecom.smartweight.ui.view.SoftKeyborad;
-import com.axecom.smartweight.utils.ButtonUtils;
-import com.axecom.smartweight.utils.CommonUtils;
 import com.axecom.smartweight.utils.SPUtils;
 import com.luofx.listener.VolleyListener;
-import com.luofx.utils.DateUtils;
-import com.luofx.utils.PreferenceUtils;
 import com.luofx.utils.common.MyToast;
-import com.luofx.utils.log.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Administrator on 2018-5-8.
@@ -85,7 +69,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         sysApplication = (SysApplication) getApplication();
-
         context = this;
 
         userInfoDao = new UserInfoDao(context);
@@ -157,29 +140,30 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
         savePwdCtv.setOnClickListener(this);
     }
 
-
     /**
      * 上下文对象
      */
     private Context context;
-
-
-    NetHelper netHelper;
+    private NetHelper netHelper;
 
     private void startLogin() {
         UserInfo userInfo = userInfoDao.queryById(1);
         SysApplication application = (SysApplication) getApplication();
-        if (userInfo == null) {
-            //进行 信息获取
-            netHelper = new NetHelper(application, this);
-            netHelper.getUserInfo(netHelper.getIMEI(context), 1);
-        } else {
-            sysApplication.setUserInfo(userInfo);
-            getTraceNo(userInfo);
-
-
+        if (NetWorkJudge.isNetworkAvailable(context)) {
+            if (userInfo == null) {
+                //进行 信息获取
+                netHelper = new NetHelper(application, this);
+                netHelper.getUserInfo(netHelper.getIMEI(context), 1);
+            } else {
+                sysApplication.setUserInfo(userInfo);
+                getTraceNo(userInfo);
 //            jumpActivity();
+            }
+        }else {
+            sysApplication.setUserInfo(userInfo);
+            jumpActivity();
         }
+
     }
 
     private void jumpActivity() {
@@ -189,12 +173,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
     }
 
     private void getTraceNo(UserInfo userInfo) {
-        if (NetWorkJudge.isNetworkAvailable(context)) {
+
             //TODO
 //            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=1136";
             String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
             sysApplication.volleyGet(url, this, 7);
-        }
+
     }
 
     @Override

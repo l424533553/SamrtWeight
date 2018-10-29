@@ -8,9 +8,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.adapter.LogRVAdapter;
-import com.axecom.smartweight.my.entity.LogBean;
-
-import java.util.List;
 
 public class LogActivity extends Activity {
 

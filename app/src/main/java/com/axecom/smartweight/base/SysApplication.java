@@ -1,30 +1,16 @@
 package com.axecom.smartweight.base;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.hardware.usb.UsbDevice;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 
 
-import com.axecom.smartweight.R;
-import com.axecom.smartweight.ui.activity.SecondPresentation;
-import com.axecom.smartweight.utils.LogUtils;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.shangtongyin.ShangTongApp;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by Longer on 2016/10/26.
@@ -38,7 +24,7 @@ public class SysApplication extends ShangTongApp {
     public static int mWidthPixels;
     public static int mHeightPixels;
 
-    public static SecondPresentation bannerActivity;
+
 
 
 //    private static ImageLoader mImageLoader;
@@ -70,14 +56,14 @@ public class SysApplication extends ShangTongApp {
         mHandler = new Handler();
 
         // 3.得到主线程的id
-        mMainThreadId = android.os.Process.myTid();
+//        mMainThreadId = android.os.Process.myTid();
 
-/*        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                ex.printStackTrace();
-            }
-        });*/
+//       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+//            @Override
+//            public void uncaughtException(Thread thread, Throwable ex) {
+//                ex.printStackTrace();
+//            }
+//        });
 
 
         //初始化Facebook登录

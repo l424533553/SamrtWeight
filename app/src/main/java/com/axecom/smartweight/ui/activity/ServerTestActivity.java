@@ -4,25 +4,18 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.BaseActivity;
-import com.axecom.smartweight.base.BaseEntity;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.net.RetrofitFactory;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.net.NetWorkJudge;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.json.JSONObject;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Administrator on 2018-5-29.

@@ -12,6 +12,7 @@
         android:background="@drawable/shape_weight_display_bg"
         android:clickable="false"
         android:gravity="center"
+        android:singleLine="true"
         android:text="白菜白菜"
         android:textColor="@color/black"
         android:textSize="25sp"

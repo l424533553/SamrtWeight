@@ -63,14 +63,6 @@ public abstract class AbstractAdapter<T> extends BaseAdapter {
     }
 
 
-
-    public void initData(List<T> list) {
-        if(list==null){
-           list = new ArrayList<>();
-        }
-        this.list = list;
-    }
-
     /**
      * 设置 多个 数据
      * 原有数据 将被清除

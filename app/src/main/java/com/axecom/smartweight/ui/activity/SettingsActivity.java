@@ -24,6 +24,7 @@ import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.BaseDialog;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.bean.SettingsBean;
+import com.axecom.smartweight.manager.ActivityController;
 import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.Goods;
@@ -97,6 +98,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
+        ActivityController.addActivity(this);
         sysApplication = (SysApplication) getApplication();
         context = this;
         type = getIntent().getIntExtra(STRING_TYPE, 0);
@@ -338,7 +340,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     } else {
                         OrderInfo orderInfo = infoList.get(0);
                         MyEPSPrinter myEPSPrinter = new MyEPSPrinter(sysApplication.getEpsPrint());
-                        myEPSPrinter.printOrder(sysApplication.getThreadPool(), orderInfo);
+                        myEPSPrinter.printOrder(sysApplication.getSingleThread(), orderInfo);
                     }
 
 //                    EventBus.getDefault().post(new BusEvent(BusEvent.POSITION_PATCH, SPUtils.getString(SettingsActivity.this, "print_orderno", ""), SPUtils.getString(SettingsActivity.this, "print_payid", "")));
@@ -379,12 +381,13 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 //                    intent.setClass(SettingsActivity.this, HomeActivity.class);
 //                    intent.putExtra(IS_RE_BOOT, true);
 //                    startActivity(intent);
-                    System.exit(0);
+//                    System.exit(0);
 
                     Intent intent = new Intent();
                     intent.setClass(SettingsActivity.this, HomeActivity.class);
                     intent.putExtra(IS_RE_BOOT, true);
                     startActivity(intent);
+                    ActivityController.finishAll();
 
                     break;
                 case POSITION_WEIGHT:

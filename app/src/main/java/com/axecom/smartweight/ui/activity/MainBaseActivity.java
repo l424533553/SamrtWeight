@@ -15,17 +15,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.my.helper.HttpHelper;
 import com.axecom.smartweight.ui.uiutils.UIUtils;
 import com.bigkoo.convenientbanner.holder.Holder;
 import com.bumptech.glide.Glide;
-import com.luofx.listener.VolleyListener;
 import com.shangtongyin.tools.serialport.IConstants_ST;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -40,7 +36,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * email:424533553@qq.com
  * describe:
  */
-public class MainBaseActivity extends Activity implements VolleyListener ,IConstants_ST {
+public class MainBaseActivity extends Activity implements  IConstants_ST {
 
     protected SysApplication sysApplication;
     protected Handler handler;
@@ -60,7 +56,7 @@ public class MainBaseActivity extends Activity implements VolleyListener ,IConst
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sysApplication = (SysApplication) getApplication();
-        helper = new HttpHelper(this, sysApplication);
+
     }
 
     @Override
@@ -233,15 +229,7 @@ public class MainBaseActivity extends Activity implements VolleyListener ,IConst
         }
     }
 
-    @Override
-    public void onResponse(VolleyError volleyError, int flag) {
 
-    }
-
-    @Override
-    public void onResponse(JSONObject jsonObject, int flag) {
-
-    }
 
     /**
      * 网络  图片  holderView

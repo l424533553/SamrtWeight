@@ -99,8 +99,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         //获取屏幕的宽高的像素
         dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        SysApplication.mWidthPixels = dm.widthPixels;
-        SysApplication.mHeightPixels = dm.heightPixels;
+//        SysApplication.mWidthPixels = dm.widthPixels;
+//        SysApplication.mHeightPixels = dm.heightPixels;
         ActivityController.addActivity(this);
         initView();
     }

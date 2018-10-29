@@ -1,42 +1,23 @@
 package com.axecom.smartweight.ui.activity;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.BaseActivity;
-import com.axecom.smartweight.base.BaseEntity;
-import com.axecom.smartweight.base.BusEvent;
-import com.axecom.smartweight.bean.LoginData;
-import com.axecom.smartweight.bean.LoginInfo;
-import com.axecom.smartweight.manager.AccountManager;
-import com.axecom.smartweight.net.RetrofitFactory;
 import com.axecom.smartweight.ui.view.SoftKey;
-import com.axecom.smartweight.utils.LogUtils;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.lang.reflect.Method;
-
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public class SystemLoginActivity extends Activity implements View.OnClickListener, IConstants_ST {
 

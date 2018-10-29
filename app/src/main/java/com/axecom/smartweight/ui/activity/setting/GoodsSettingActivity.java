@@ -41,9 +41,7 @@ import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
@@ -93,7 +91,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         initHander();
 
         goodsDao = new GoodsDao(context);
-        goodsTypeDao = new GoodsTypeDao(context);
+
         allGoodsDao = new AllGoodsDao(context);
         initRecycle();
 
@@ -222,8 +220,12 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     private void getGoods() {
         hotGoodsList = goodsDao.queryAll();
 
+        if (goodsTypeDao == null) {
+            goodsTypeDao = new GoodsTypeDao(context);
+        }
+
         final List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
-        if(goodsTypes!=null){
+        if (goodsTypes != null) {
             GoodsType goodsType = new GoodsType();
             goodsType.setId(-1);
             goodsType.setName("全部商品");

@@ -11,9 +11,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
 /**
  * Created by Administrator on 2018/8/26 0026.

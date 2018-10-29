@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 

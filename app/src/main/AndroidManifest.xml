@@ -21,11 +21,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <permission android:name="android.permission.WRITE_SETTINGS" />
+   <!-- <permission android:name="android.permission.WRITE_SETTINGS" />-->
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <!-- 允许系统 弹框 ，想要在Service 和 application中启动弹框，需要添加 改权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -134,7 +135,6 @@
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity android:name="com.axecom.smartweight.ui.activity.LocalSettingsActivity" />
-        <activity android:name="com.axecom.smartweight.ui.activity.SystemSettingsActivity" />
         <activity android:name="com.axecom.smartweight.ui.activity.SystemSettingsActivity2" />
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />

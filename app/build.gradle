@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "1.4"
+        versionName "3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -33,11 +33,14 @@ android {
 
     buildTypes {
         release {
+            //是否进行混淆
             minifyEnabled false
+            // 移除无用的resource文件g
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             debuggable true
-            jniDebuggable true
+            jniDebuggable false
         }
         sourceSets {
             main {
@@ -89,8 +92,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.intentfilter:android-wificonnect:0.1.2'
-    /*  爱普生  打印机  jar包*/
-    implementation files('libs/posprinterconnectandsendsdk.jar')
+
     /*  微信 生成二维码  jar包 */
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'eu.the4thfloor.volley:com.android.volley:2015.05.28'

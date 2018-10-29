@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.axecom.smartweight.R;
@@ -40,9 +39,7 @@ public class OrderAdapter extends BaseAdapter {
 
     public void setDatas(List<OrderBean> list) {
         this.list = list;
-
         notifyDataSetChanged();
-
     }
 
     @Override
@@ -76,7 +73,7 @@ public class OrderAdapter extends BaseAdapter {
 //                holder.countTv = convertView.findViewById(R.id.commodity_count_tv);
             holder.weightTv = convertView.findViewById(R.id.commodity_weight_tv);
             holder.subtotalTv = convertView.findViewById(R.id.commodity_subtotal_tv);
-            holder.deleteBtn = convertView.findViewById(R.id.commodity_delete_btn);
+//            holder.deleteBtn = convertView.findViewById(R.id.commodity_delete_btn);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -103,7 +100,7 @@ public class OrderAdapter extends BaseAdapter {
         TextView priceTv;
         TextView weightTv;
         TextView subtotalTv;
-        Button deleteBtn;
+//        Button deleteBtn;
 
     }
 }

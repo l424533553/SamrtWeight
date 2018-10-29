@@ -50,55 +50,54 @@
                 android:visibility="visible" />-->
 
 
+        <!--      <com.sunfusheng.marqueeview.MarqueeView
+                  android:id="@+id/marqueeView"
+                  android:layout_width="match_parent"
+                  android:layout_height="30dp"
+                  app:mvAnimDuration="1000"
+                  app:mvDirection="bottom_to_top"
+                  app:mvInterval="4000"
+                  app:mvTextColor="@color/color_red"
+                  app:mvTextSize="18sp"
+                  app:mvGravity="left"
+                  app:mvSingleLine="true"/>
 
-  <!--      <com.sunfusheng.marqueeview.MarqueeView
-            android:id="@+id/marqueeView"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            app:mvAnimDuration="1000"
-            app:mvDirection="bottom_to_top"
-            app:mvInterval="4000"
-            app:mvTextColor="@color/color_red"
-            app:mvTextSize="18sp"
-            app:mvGravity="left"
-            app:mvSingleLine="true"/>
+              <TextView
+                  android:id="@+id/tvmarqueeView"
+                  android:layout_width="match_parent"
+                  android:layout_height="30dp"
+                  android:singleLine="true"
+                  android:ellipsize="marquee"
+                  android:marqueeRepeatLimit="marquee_forever"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true"
 
-        <TextView
-            android:id="@+id/tvmarqueeView"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+                  android:text="HHHHfafasfafaggdfg"
 
-            android:text="HHHHfafasfafaggdfg"
+                  />
 
-            />
-        
-        <com.luofx.view.ScrollTextView
-            android:id="@+id/tv123"
-            android:layout_height="60dp"
-            android:layout_width="match_parent"
-            android:text="hahaasdfa念佛案发时佛奥房间爱搜房骄傲骄傲附近阿发金佛"
-            android:textColor="#000"
-            android:inputType="text"
-            android:textSize="20px"
-            />-->
+              <com.luofx.view.ScrollTextView
+                  android:id="@+id/tv123"
+                  android:layout_height="60dp"
+                  android:layout_width="match_parent"
+                  android:text="hahaasdfa念佛案发时佛奥房间爱搜房骄傲骄傲附近阿发金佛"
+                  android:textColor="#000"
+                  android:inputType="text"
+                  android:textSize="20px"
+                  />-->
 
-<!--        <com.luofx.view.CustomScrollBar
-            android:id="@+id/tvScrollBar"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:paddingTop="15dp"
-            dapeng:clickEnable="true"
-            dapeng:isHorizontal="true"
-            app:text=""
-            dapeng:speed="2"
-            dapeng:textColor="@color/color_red"
-            dapeng:textSize="15sp"
-            />-->
+        <!--        <com.luofx.view.CustomScrollBar
+                    android:id="@+id/tvScrollBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:paddingTop="15dp"
+                    dapeng:clickEnable="true"
+                    dapeng:isHorizontal="true"
+                    app:text=""
+                    dapeng:speed="2"
+                    dapeng:textColor="@color/color_red"
+                    dapeng:textSize="15sp"
+                    />-->
 
         <!--
             app:mvAnimDuration="1000" 一行文字 动画 执行时间
@@ -114,15 +113,14 @@
         -->
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@drawable/shape_weight_display_bg"
             android:gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/main_weight_top_tv"
@@ -146,17 +144,19 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
 
+            android:layout_marginTop="5dp"
+            >
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="5">
+                android:layout_weight="5"
+                android:paddingStart="10dp"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -170,71 +170,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="单价："
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_white_btn_bg"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/main_commodity_price_et"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:hint="0.00"
-                        android:inputType="numberDecimal"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:text="元"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/main_weight_layout"
                 android:layout_width="0dp"
+                android:layout_weight="4"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="5"
+                android:paddingLeft="10dp"
                 android:visibility="visible">
 
                 <TextView
@@ -246,92 +192,146 @@
 
                 <TextView
                     android:id="@+id/main_weight_tv"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+
                     android:text="0.000"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
+
             </LinearLayout>
 
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="单价："
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
             <LinearLayout
-                android:id="@+id/main_count_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="6"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="数量："
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                android:orientation="horizontal">
 
+
+               <!-- android:background="@drawable/shape_white_btn_bg"-->
                 <EditText
-                    android:id="@+id/main_count_et"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/main_commodity_price_et"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:text="0"
+                    android:hint="0.00"
+                    style="@style/mytextEdit"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="件"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="小计："
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/main_grandtotal_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.00"
-                    android:textStyle="bold"
-                    android:textColor="@color/red_000"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
                     android:text="元"
-                    android:textColor="@color/red_000"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <!--  <LinearLayout
+              android:id="@+id/main_count_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10dp"
+              android:layout_weight="6"
+              android:orientation="horizontal"
+              android:visibility="gone">
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="数量："
+                  android:textColor="@color/black"
+                  android:textSize="20sp" />
+
+              <EditText
+                  android:id="@+id/main_count_et"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:singleLine="true"
+                  android:text="0"
+                  android:textColor="@color/black"
+                  android:textSize="20sp" />
+
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginRight="20dp"
+                  android:text="件"
+                  android:textColor="@color/black"
+                  android:textSize="20sp" />
+          </LinearLayout>-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小计："
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/main_grandtotal_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/red_000"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="元"
+                android:textColor="@color/red_000"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@color/gray_ccc"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:text="商品"
                 android:textColor="@color/black"
@@ -340,21 +340,11 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="单价"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="数量"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:visibility="gone" />
 
             <TextView
                 android:layout_width="0dp"
@@ -368,7 +358,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:text="小计"
                 android:textColor="@color/black"
@@ -403,7 +393,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="总重:"
+                android:text="总重："
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -429,8 +419,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="合计:"
+                android:layout_marginLeft="10dp"
+                android:text="合计："
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -440,7 +430,7 @@
                 android:layout_height="wrap_content"
                 android:text="0.00"
                 android:textColor="@color/red_000"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -471,7 +461,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -479,31 +469,29 @@
                 android:id="@+id/tvmarketName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginEnd="10dp"
                 android:text="@string/string_compony_name"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/tvTid"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_green_bg"
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
-
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -541,7 +529,6 @@
                 android:text="张三"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
-
         </LinearLayout>
 
         <View
@@ -629,7 +616,6 @@
             android:orientation="horizontal">
 
 
-
             <Button
                 android:id="@+id/main_scan_pay"
                 android:layout_width="0dp"
@@ -647,9 +633,9 @@
                 android:id="@+id/main_cash_btn"
                 android:layout_width="0dp"
                 android:layout_height="75dp"
+                android:layout_marginStart="3dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
-                android:layout_marginStart="3dp"
                 android:background="@drawable/selector_btn_carsh_click"
                 android:text="@string/string_pay_cash"
                 android:textColor="@color/black"

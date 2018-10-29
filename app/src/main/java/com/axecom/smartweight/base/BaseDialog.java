@@ -1,46 +1,12 @@
 package com.axecom.smartweight.base;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.text.Editable;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 
-import com.axecom.smartweight.R;
-import com.axecom.smartweight.bean.SubOrderBean;
-import com.axecom.smartweight.bean.SubOrderReqBean;
-import com.axecom.smartweight.net.RetrofitFactory;
 import com.axecom.smartweight.ui.uiutils.UIUtils;
-import com.axecom.smartweight.ui.uiutils.ViewUtils;
-import com.axecom.smartweight.utils.LogUtils;
-import com.axecom.smartweight.utils.SPUtils;
-
-import org.greenrobot.eventbus.Subscribe;
-
-import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Longer on 2016/10/26.

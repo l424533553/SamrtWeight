@@ -13,17 +13,19 @@ public class MyTimeTask {
     private Timer timer;
     private TimerTask task;
     private long time;
+    private long delayTime;
 
-    public MyTimeTask(long time, TimerTask task) {
+    public MyTimeTask(long delayTime, long time, TimerTask task) {
         this.task = task;
         this.time = time;
+        this.delayTime = delayTime;
         if (timer == null) {
             timer = new Timer();
         }
     }
 
     public void start() {
-        timer.schedule(task, 1000, time);//每隔time时间段就执行一次
+        timer.schedule(task, delayTime, time);//每隔time时间段就执行一次
     }
 
     public void stop() {

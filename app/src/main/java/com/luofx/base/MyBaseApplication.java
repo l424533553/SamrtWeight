@@ -41,6 +41,11 @@ public class MyBaseApplication extends Application implements Thread.UncaughtExc
     private Context context;
     //  线程池  记得要关闭
     protected ExecutorService threadPool;
+    protected ExecutorService singleThread;
+
+    public ExecutorService getSingleThread() {
+        return singleThread;
+    }
 
     //    ThreadPoolExecutor
     public ExecutorService getThreadPool() {
@@ -57,7 +62,7 @@ public class MyBaseApplication extends Application implements Thread.UncaughtExc
         this.context = this;
         queues = Volley.newRequestQueue(getApplicationContext());
         threadPool = Executors.newFixedThreadPool(4);
-
+        singleThread = Executors.newSingleThreadExecutor();
 //        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
@@ -205,7 +210,6 @@ public class MyBaseApplication extends Application implements Thread.UncaughtExc
                     return map;
                 }
             };
-
 
 
 //            CharsetJsonRequest request = new CharsetJsonRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {

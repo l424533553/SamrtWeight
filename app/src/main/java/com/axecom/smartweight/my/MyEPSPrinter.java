@@ -1,11 +1,7 @@
 package com.axecom.smartweight.my;
 
-import android.content.Context;
-
-import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
-import com.axecom.smartweight.utils.NetworkUtil;
 import com.shangtongyin.tools.serialport.EpsPrint;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
@@ -35,7 +31,7 @@ public class MyEPSPrinter implements IConstants_ST {
         if (epsPrint == null) {
             return;
         }
-        if(orderInfo==null){
+        if (orderInfo == null) {
             return;
         }
 
@@ -43,8 +39,8 @@ public class MyEPSPrinter implements IConstants_ST {
             @Override
             public void run() {
                 List<OrderBean> orderBeans = orderInfo.getOrderItem();
-                if(orderBeans==null){
-                    orderBeans=new ArrayList<>(orderInfo.getOrderBeans());
+                if (orderBeans == null) {
+                    orderBeans = new ArrayList<>(orderInfo.getOrderBeans());
                 }
                 StringBuilder sb = new StringBuilder();
                 sb.append("------------交易明细------------\n");
@@ -95,7 +91,8 @@ public class MyEPSPrinter implements IConstants_ST {
                     if (bytes != null) {
                         epsPrint.PrintltString("扫一扫获取追溯信息：");
                         epsPrint.printQR(bytes);
-                        epsPrint.PrintltString("--------------------------------\n\n\n");
+//                        epsPrint.PrintltString("--------------------------------\n\n\n");
+                        epsPrint.PrintltString("\n\n\n");
                     }
 
                 } catch (IOException | InterruptedException e) {
