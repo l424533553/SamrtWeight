@@ -68,6 +68,7 @@ public class TraceNoDao {
         }
         return -1;
     }
+
     // 添加数据
     public int insert(List<TraceNoBean> data) {
         try {
@@ -91,7 +92,7 @@ public class TraceNoDao {
         }
     }
 
-    // 删除数据
+    // 删除数据,不是删除表
     public void deleteTableData() {
         ormliteBaseHelper.getWritableDatabase().execSQL("DELETE FROM traceNo");
     }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llItem_search_adapter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray_ccc"
+    android:background="#C0D5F4"
+    android:layout_marginTop="5dp"
     android:orientation="horizontal"
     >
 

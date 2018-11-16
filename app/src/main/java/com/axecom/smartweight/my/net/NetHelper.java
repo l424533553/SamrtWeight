@@ -51,9 +51,10 @@ public class NetHelper implements IConstants_ST {
     }
 
 
-    public void initGoods(int tid) {
+
+    public void initGoods(int tid,int flag) {
         String url = "http://119.23.43.64/api/smartsz/getquick?terid=" + tid;
-        application.volleyGet(url, volleyListener, 2);
+        application.volleyGet(url, volleyListener, flag);
     }
 
     public void initGoodsType() {

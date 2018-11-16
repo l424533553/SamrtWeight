@@ -54,6 +54,70 @@ public class FileUtils {
     }
 
     /**
+     * 获取下载目录
+     */
+    public static String getDownloadDir(Context context, String DIR_TYPE) {
+        switch (DIR_TYPE) {
+            case DOWNLOAD_DIR:
+                //获取下载目录
+                return getDir(context, DOWNLOAD_DIR);
+            case CACHE_DIR:
+                // 获取缓存目录
+                return getDir(context, CACHE_DIR);
+            case ICON_DIR:
+                //获取icon 目录
+                return getDir(context, ICON_DIR);
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * 获取应用目录，当SD卡存在时，获取SD卡上的目录，当SD卡不存在时，获取应用的cache目录
+     */
+    public static String getDir(Context context, String name) {
+        StringBuilder sb = new StringBuilder();
+        if (isSDCardAvailable()) {
+            sb.append(getExternalStoragePath(context));
+        } else {
+            sb.append(getCachePath(context));
+        }
+        sb.append(name);
+        sb.append(File.separator);
+        String path = sb.toString();
+        if (createDirs(path)) {
+            return path;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 获取SD下的应用目录
+     */
+    public static String getExternalStoragePath(Context context) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
+        sb.append(File.separator);
+        sb.append("Android/data/").append(context.getPackageName());
+        sb.append(File.separator);
+        return sb.toString();
+    }
+
+    /**
+     * 获取应用的cache目录
+     */
+    public static String getCachePath(Context context) {
+        File f = context.getCacheDir();
+        if (null == f) {
+            return null;
+        } else {
+            return f.getAbsolutePath() + "/";
+        }
+    }
+
+
+    /**
      * 获取缓存目录
      */
     public static String getCacheDir() {
@@ -510,5 +574,28 @@ public class FileUtils {
         File data = context.getFileStreamPath(cachefile);
         if (data.exists()) exist = true;
         return exist;
+    }
+
+
+    public static boolean deleteDir(String path){
+        File file = new File(path);
+        if(!file.exists()){//判断是否待删除目录是否存在
+            System.err.println("The dir are not exists!");
+            return false;
+        }
+
+        String[] content = file.list();//取得当前目录下所有文件和文件夹
+        for(String name : content){
+            File temp = new File(path, name);
+            if(temp.isDirectory()){//判断是否是目录
+                deleteDir(temp.getAbsolutePath());//递归调用，删除目录里的内容
+                temp.delete();//删除空目录
+            }else{
+                if(!temp.delete()){//直接删除文件
+                    System.err.println("Failed to delete " + name);
+                }
+            }
+        }
+        return true;
     }
 }

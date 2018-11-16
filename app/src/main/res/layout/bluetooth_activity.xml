@@ -43,7 +43,6 @@
             android:gravity="center"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/bluetooth_scan_btn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_weight="1"
@@ -51,7 +50,6 @@
                 android:text="@string/scan"
                 android:textSize="20sp" />
             <Button
-                android:id="@+id/bluetooth_cancel_btn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_weight="1"

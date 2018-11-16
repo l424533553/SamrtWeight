@@ -14,8 +14,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.axecom.smartweight.ui.activity.LocalSettingsActivity.KEY_SERVER_IP;
-import static com.axecom.smartweight.ui.activity.LocalSettingsActivity.KEY_SVERVER_PORT;
+
 
 /**
  * Created by Administrator on 2017-11-29.
@@ -25,7 +24,7 @@ public class RetrofitFactory {
     private static RetrofitFactory mRetrofitFactory;
     private RequestInterface requestInterface;
 
-    private RetrofitFactory() {
+/*    private RetrofitFactory() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
@@ -56,7 +55,7 @@ public class RetrofitFactory {
                 .build();
 
         requestInterface = retrofit.create(RequestInterface.class);
-    }
+    }*/
 
     public static RetrofitFactory getInstance() {
         if (mRetrofitFactory == null) {

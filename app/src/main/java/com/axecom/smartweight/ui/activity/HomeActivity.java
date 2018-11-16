@@ -49,12 +49,8 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
     private TextView cardNumberTv;
     private TextView pwdTv;
 
-
     private CheckedTextView savePwdCtv;
-
-
     private CheckedTextView autoLogin;
-
     private Button confirmBtn;
 
     SysApplication sysApplication;
@@ -83,6 +79,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
 
 
     private Handler handler;
+    private int requestCount = 3;
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
@@ -94,16 +91,16 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                         sysApplication.getThreadPool().execute(new Runnable() {
                             @Override
                             public void run() {
-                                netHelper.initGoods(tid);
+                                netHelper.initGoods(tid, 2);
                                 netHelper.initGoodsType();
                                 netHelper.initAllGoods();
+                                requestCount = 3;
                             }
                         });
-
                         break;
                     case NOTIFY_SUCCESS:
-                        if (successFlag == 3)
-                            getTraceNo(sysApplication.getUserInfo());
+                        if (successFlag == requestCount)
+                            jumpActivity();
                         break;
                     case NOTIFY_JUMP:
                         jumpActivity();
@@ -112,14 +109,11 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                 return false;
             }
         });
-
     }
 
     /****************************************************************************************/
 
-
     public void setInitView() {
-
         findViewById(R.id.ivLog).setOnClickListener(this);
         confirmBtn = findViewById(R.id.home_confirm_btn);
 
@@ -144,6 +138,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
      * 上下文对象
      */
     private Context context;
+    //网络帮助类
     private NetHelper netHelper;
 
     private void startLogin() {
@@ -156,14 +151,12 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                 netHelper.getUserInfo(netHelper.getIMEI(context), 1);
             } else {
                 sysApplication.setUserInfo(userInfo);
-                getTraceNo(userInfo);
-//            jumpActivity();
+                jumpActivity();
             }
-        }else {
+        } else {
             sysApplication.setUserInfo(userInfo);
             jumpActivity();
         }
-
     }
 
     private void jumpActivity() {
@@ -172,13 +165,10 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
         this.finish();
     }
 
+
     private void getTraceNo(UserInfo userInfo) {
-
-            //TODO
-//            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=1136";
-            String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
-            sysApplication.volleyGet(url, this, 7);
-
+        String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
+        sysApplication.volleyGet(url, this, 7);
     }
 
     @Override
@@ -232,7 +222,6 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                 break;
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -296,9 +285,9 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                                     if (goodsList != null && goodsList.size() > 0) {
                                         goodsDao.insert(goodsList);
                                     }
-                                    successFlag++;
-                                    handler.sendEmptyMessage(NOTIFY_SUCCESS);
                                 }
+                                successFlag++;
+                                handler.sendEmptyMessage(NOTIFY_SUCCESS);
                             }
                         });
                     }
@@ -341,7 +330,7 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
 
                                 TraceNoDao traceNoDao = new TraceNoDao(context);
                                 traceNoDao.deleteTableData();
-                              int flag2=  traceNoDao.insert(goodsList);
+                                int flag2 = traceNoDao.insert(goodsList);
                             }
                         }
                     }

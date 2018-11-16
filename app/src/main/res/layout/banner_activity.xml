@@ -3,7 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_white"
+    android:gravity="center_horizontal"
     android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:text="上一笔交易"
+        android:textColor="@color/red_000"
+        android:visibility="gone"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/ivQROne"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/logo" />
+
+    <ImageView
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:background="@color/color_black_text" />
+
 
     <LinearLayout
         android:layout_width="0dp"
@@ -11,22 +38,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:text="上一笔交易"
-            android:textColor="@color/red_000"
-            android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/ivQROne"
-            android:layout_width="260dp"
-            android:layout_height="260dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/logo" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,9 +51,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:gravity="center"
+                android:layout_marginStart="20dp"
                 android:text="商品"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -50,7 +63,7 @@
                 android:gravity="center"
                 android:text="单价"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,16 +72,16 @@
                 android:gravity="center"
                 android:text="净重"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="小计"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="25sp" />
         </LinearLayout>
 
         <ListView
@@ -125,6 +138,15 @@
                     android:textSize="30sp"
 
                     />
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="元"
+                    android:textColor="@color/red_000"
+                    android:textSize="30sp"
+                    />
 
                 <TextView
                     android:id="@+id/tvPayWay"
@@ -135,7 +157,7 @@
                     android:paddingStart="30dp"
                     android:paddingEnd="20dp"
                     android:text=""
-                    android:textColor="@color/red_000"
+                    android:textColor="@color/main_blue_color"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -149,7 +171,7 @@
         android:layout_margin="4dp"
         android:background="@color/color_black_text" />
 
-    <LinearLayout
+   <!-- <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -283,6 +305,6 @@
             </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 </LinearLayout>

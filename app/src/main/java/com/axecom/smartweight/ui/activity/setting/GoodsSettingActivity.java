@@ -11,16 +11,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.axecom.smartweight.R;
@@ -41,6 +41,7 @@ import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Collections;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -53,8 +54,6 @@ import io.reactivex.schedulers.Schedulers;
 public class GoodsSettingActivity extends Activity implements View.OnClickListener, MyOnItemClickListener2, IConstants_ST {
 
     private RecyclerView rvGoods;
-    private RecyclerView rvGoodsType;
-    private GridView rvGoodsSelect;
 
 
     private GoodsAdapter goodsAdapter;
@@ -89,12 +88,9 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 //        ActivityController.addActivity(this);
 
         initHander();
-
         goodsDao = new GoodsDao(context);
-
         allGoodsDao = new AllGoodsDao(context);
         initRecycle();
-
         getGoods();
 
     }
@@ -132,14 +128,73 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 return true;
             }
         };
-        ItemTouchHelper helper = new ItemTouchHelper(callback);
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                //设置拖拽方向，上下左右
+                final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                final int swipeFlags = 0;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                //拖拽元素交换
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                Goods from = hotGoodsList.get(fromPosition);
+                Goods to = hotGoodsList.get(toPosition);
+                Log.i("rzl", "from:" + from.getName() + ",to:" + to.getName() + "," + fromPosition + "<->" + toPosition);
+                if (fromPosition < toPosition) {
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Goods from1 = hotGoodsList.get(i);
+                        Goods to1 = hotGoodsList.get(i + 1);
+                        //内存排序
+                        Collections.swap(hotGoodsList, i, i + 1);
+                        //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
+                        int fromId = from1.getId();
+                        int toId = to1.getId();
+                        from1.setId(toId);
+                        to1.setId(fromId);
+                        goodsDao.update(from1);
+                        goodsDao.update(to1);
+
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        Goods from1 = hotGoodsList.get(i);
+                        Goods to1 = hotGoodsList.get(i - 1);
+                        //内存排序
+                        Collections.swap(hotGoodsList, i, i - 1);
+                        //数据库排序
+                        int fromId = from1.getId();
+                        int toId = to1.getId();
+                        from1.setId(toId);
+                        to1.setId(fromId);
+                        goodsDao.update(from1);
+                        goodsDao.update(to1);
+                    }
+                }
+                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
         helper.attachToRecyclerView(rvGoods);
         goodsAdapter = new GoodsAdapter(context);
         goodsAdapter.setMyOnItemClickListener(this);
         rvGoods.setAdapter(goodsAdapter);
 
+
+
+
         /*  初始化  类别表  ************************************/
-        rvGoodsType = findViewById(R.id.rvGoodsType);
+        RecyclerView rvGoodsType = findViewById(R.id.rvGoodsType);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvGoodsType.setLayoutManager(linearLayoutManager);
@@ -151,14 +206,13 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         rvGoodsType.setAdapter(goodsTypeAdapter);
 
         /*  商品选择栏 **********************/
-        rvGoodsSelect = findViewById(R.id.rvGoodsSelect);
+        GridView rvGoodsSelect = findViewById(R.id.rvGoodsSelect);
         classAdapter = new ClassAdapter(context);
         rvGoodsSelect.setAdapter(classAdapter);
 
         rvGoodsSelect.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 AllGoods allGoods = classAdapter.getItem(position);
                 Goods goods = new Goods();
                 goods.setCid(allGoods.getCid());
@@ -209,6 +263,9 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 break;
             case 2:
                 GoodsType goodsType = goodsTypeAdapter.getItem(position);
+                goodsTypeAdapter.setSelected(position);
+                goodsTypeAdapter.notifyDataSetChanged();
+
                 int goodsTypeId = goodsType.getId();
                 List<AllGoods> goodsList = allGoodsDao.queryByTypeId(goodsTypeId);
                 classAdapter.setDatas(goodsList);
@@ -246,32 +303,12 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     }
 
+    private EditText etGoodName;
+
     public void setInitView() {
-
+        etGoodName = findViewById(R.id.etGoodName);
+        findViewById(R.id.btnSearch).setOnClickListener(this);
         findViewById(R.id.btnSave).setOnClickListener(this);
-        EditText searchEt = findViewById(R.id.commodity_management_search_et);
-
-        searchEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() == 0) {
-                    return;
-                }
-//                Pattern pattern = Pattern.compile(s.toString());
-//                List<CommodityBean> result = new ArrayList<>();
-//                setClassTitleTxtColor();
-            }
-        });
 
     }
 
@@ -287,9 +324,27 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             case R.id.btnSave:
                 MyToast.toastShort(context, "保存成功");
                 break;
+            case R.id.btnSearch:
+                String goodName = etGoodName.getText().toString();
+                List<AllGoods> lists = allGoodsDao.queryByName(goodName);
+                classAdapter.setDatas(lists);
+                hintKeyBoard();
+                break;
         }
     }
 
+    public void hintKeyBoard() {
+        //拿到InputMethodManager
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //如果window上view获取焦点 && view不为空
+        if (imm.isActive() && getCurrentFocus() != null) {
+            //拿到view的token 不为空
+            if (getCurrentFocus().getWindowToken() != null) {
+                //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -343,7 +398,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         private Context context;
 
         ClassAdapter(Context context) {
-            this.list = list;
             this.context = context;
         }
 
@@ -366,7 +420,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             return position;
         }
 
-
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
@@ -380,62 +433,16 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             }
             final AllGoods item = list.get(position);
             holder.nameBtn.setText(item.getName());
-//            convertView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-////                    CommodityBean bean = (CommodityBean) classAdapter.getItem(position);
-//                    AllGoods goods = item.getAllGoods();
-//                    if (goods != null && hotKeyMap.containsKey(goods.getName() + goods.cid)) return;
-//                    CategoryGoods.child categoryChilds = item.getCategoryChilds();
-//                    if (categoryChilds != null && hotKeyMap.containsKey(categoryChilds.name + categoryChilds.cid))
-//                        return;
-//                    item.setShow(isShowDelTv);
-//                    HotKeyBean HotKeyBean = new HotKeyBean();
-//                    if (goods != null) {
-//                        HotKeyBean.id = goods.id;
-//                        HotKeyBean.cid = goods.cid;
-//                        HotKeyBean.name = goods.name;
-//                        HotKeyBean.price = goods.price;
-//                        HotKeyBean.traceable_code = goods.traceable_code;
-//                        HotKeyBean.is_default = goods.is_default;
-//                    }
-//                    if (categoryChilds != null) {
-//                        HotKeyBean.id = categoryChilds.id;
-//                        HotKeyBean.cid = categoryChilds.cid;
-//                        HotKeyBean.name = categoryChilds.name;
-//                        HotKeyBean.price = categoryChilds.price;
-//                        HotKeyBean.traceable_code = categoryChilds.traceable_code;
-//                        HotKeyBean.is_default = categoryChilds.is_default;
-//                    }
-//                    CommodityBean hotKeyBean = new CommodityBean();
-//                    hotKeyBean.setHotKeyBean(HotKeyBean);
-//                    hotKeyMap.put(hotKeyBean.getHotKeyBean().getName() + hotKeyBean.getHotKeyBean().cid, hotKeyBean);
-//                    hotKeyList.add(hotKeyBean);
-//
-//                    for (int i = 0; i < hotKeyList.size() - 1; i++) {
-//                        for (int j = hotKeyList.size() - 1; j > i; j--) {
-//                            if (hotKeyList.get(j).getHotKeyBean().id == hotKeyList.get(i).getHotKeyBean().id) {
-//                                hotKeyList.remove(j);
-//                            }
-//                        }
-//                    }
-//
-//                    goodsAdapter.notifyDataSetChanged();
-//                }
-//            });
             return convertView;
         }
-
-        class ViewHolder {
-            Button nameBtn;
+        private class ViewHolder {
+            private TextView nameBtn;
         }
     }
-
 
     public interface OnItemClickListener {
         void onItemClickListener(View v);
     }
-
 
     public <T> ObservableTransformer<T, T> setThread() {
         return new ObservableTransformer<T, T>() {
@@ -445,6 +452,5 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             }
         };
     }
-
 
 }

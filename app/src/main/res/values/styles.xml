@@ -12,7 +12,7 @@
     <style name="layout_style" >
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_margin">5dp</item>
+
         <item name="android:background">@drawable/shape_bg</item>
     </style>
 
@@ -32,10 +32,6 @@
         <!--模糊-->
     </style>
 
-    <style name="dialog_close_outside" parent="dialog">
-        <item name="android:windowCloseOnTouchOutside">false</item>
-    </style>
-
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/green_3CB371</item>
         <item name="colorControlActivated">@color/green_3CB371</item>
@@ -51,9 +47,5 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    
-    <style name="mytextEdit"   parent="Base.V7.Widget.AppCompat.EditText">
-        <item name="android:paddingTop">1dp</item>
-        <item name="android:paddingBottom">1dp</item>
-    </style>
+
 </resources>

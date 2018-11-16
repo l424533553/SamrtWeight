@@ -37,7 +37,6 @@ public class NetBroadCastReciver extends BroadcastReceiver {
             checkState_23(context);
 
         } else { //API大于23时使用下面的方式进行网络监听
-
             checkState_23orNew(context);
         }
 

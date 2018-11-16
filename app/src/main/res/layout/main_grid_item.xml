@@ -13,9 +13,9 @@
         android:clickable="false"
         android:gravity="center"
         android:singleLine="true"
-        android:text="白菜白菜"
+        android:text="白菜"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="22sp"
         android:textStyle="bold" />
 
     <ImageView
@@ -33,11 +33,13 @@
         android:layout_alignTop="@id/main_grid_item_btn"
         android:layout_marginStart="0dp"
         android:gravity="center"
-        android:paddingLeft="1dp"
-        android:text="1"
-        android:textColor="@color/colorPrimary"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:text=""
+        android:textColor="@color/color_clean"
         android:textSize="15sp"
         android:textStyle="bold" />
+
 </RelativeLayout>
 
 

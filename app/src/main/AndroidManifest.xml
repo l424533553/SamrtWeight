@@ -21,37 +21,41 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-   <!-- <permission android:name="android.permission.WRITE_SETTINGS" />-->
+    <!-- <permission android:name="android.permission.WRITE_SETTINGS" /> -->
+
+
+    <!-- 在sdcard中创建/删除文件的权限 -->
+    <permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-
     <!-- 允许系统 弹框 ，想要在Service 和 application中启动弹框，需要添加 改权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-<!--    <uses-feature
-        android:name="android.hardware.usb.host"
-        android:required="false" />-->
+    <!--
+        <uses-feature
+            android:name="android.hardware.usb.host"
+            android:required="false" />
+    -->
+    <!--
+    <uses-permission android:name="android.hardware.usb.host" />
+        <uses-permission android:name="android.hardware.usb.accessory" />
+        &lt;!&ndash; Required &ndash;&gt;
+        <permission
+            android:name="com.axecom.smartweight.permission.JPUSH_MESSAGE"
+            android:protectionLevel="signature" />
 
-<!--    <uses-permission android:name="android.hardware.usb.host" />
-    <uses-permission android:name="android.hardware.usb.accessory" />
-    &lt;!&ndash; Required &ndash;&gt;
-    <permission
-        android:name="com.axecom.smartweight.permission.JPUSH_MESSAGE"
-        android:protectionLevel="signature" />
 
-
-    &lt;!&ndash; Required  一些系统要求的权限，如访问网络等 &ndash;&gt;
-    <uses-permission android:name="com.axecom.iweight.permission.JPUSH_MESSAGE" />-->
-
-    <!--<uses-feature-->
-        <!--android:name="android.hardware.bluetooth_le"-->
-        <!--android:required="false" />-->
-
+        &lt;!&ndash; Required  一些系统要求的权限，如访问网络等 &ndash;&gt;
+        <uses-permission android:name="com.axecom.iweight.permission.JPUSH_MESSAGE" />
+    -->
+    <!-- <uses-feature -->
+    <!-- android:name="android.hardware.bluetooth_le" -->
+    <!-- android:required="false" /> -->
     <application
-        android:name="com.axecom.smartweight.base.SysApplication"
+        android:name=".base.SysApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@drawable/logo"
@@ -63,7 +67,7 @@
 
         <!-- tools:replace="android:icon, android:theme,android:allowBackup,android:label" -->
         <activity
-            android:name="com.axecom.smartweight.ui.activity.HomeActivity"
+            android:name=".ui.activity.HomeActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
@@ -74,23 +78,31 @@
             </intent-filter>
         </activity>
 
-<!--        <receiver android:name="com.axecom.smartweight.net.UsbReceiver">
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
-            </intent-filter>
+        <!-- 记得在manifest中注册  -->
+        <!-- <receiver android:name=".my.helper.NetBroadcastReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
 
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
-        </receiver>-->
+
+        <!--
+                    <receiver android:name="com.axecom.smartweight.net.UsbReceiver">
+                    <intent-filter>
+                        <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                        <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+                    </intent-filter>
+
+                    <meta-data
+                        android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                        android:resource="@xml/device_filter" />
+                </receiver>
+        -->
 
         <activity
-            android:name="com.axecom.smartweight.ui.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden"
-
-            >
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
 
             <!--
   <intent-filter>
@@ -103,142 +115,110 @@
             -->
         </activity>
         <activity
-            android:name="com.axecom.smartweight.ui.activity.UseBankCardActivity"
+            android:name=".ui.activity.UseBankCardActivity"
             android:theme="@style/dialog" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.UseCashActivity"
+            android:name=".ui.activity.UseCashActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.SimpleModeActivity"
+            android:name=".ui.activity.SimpleModeActivity"
             android:hardwareAccelerated="false" />
-        <activity android:name="com.axecom.smartweight.ui.activity.SettingsActivity" />
-        <activity android:name="com.axecom.smartweight.ui.activity.OrderInvalidActivity" />
-
-        <activity android:name="com.axecom.smartweight.ui.activity.AbnormalOrderActivity" />
+        <activity android:name=".ui.activity.SettingsActivity" />
+        <activity android:name=".ui.activity.OrderInvalidActivity" />
+        <activity android:name=".ui.activity.AbnormalOrderActivity" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.ServerTestActivity"
+            android:name=".ui.activity.ServerTestActivity"
             android:theme="@style/dialog" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.CalibrationActivity"
+            android:name=".ui.activity.CalibrationActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.WifiSettingsActivity"
+            android:name=".ui.activity.WifiSettingsActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="com.axecom.smartweight.ui.activity.setting.GoodsSettingActivity" />
+        <activity android:name=".ui.activity.setting.GoodsSettingActivity" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.ModityCommodityActivity"
+            android:name=".ui.activity.ModityCommodityActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name="com.axecom.smartweight.ui.activity.SystemLoginActivity"
+            android:name=".ui.activity.SystemLoginActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity android:name="com.axecom.smartweight.ui.activity.LocalSettingsActivity" />
-        <activity android:name="com.axecom.smartweight.ui.activity.SystemSettingsActivity2" />
+        <!-- <activity android:name=".ui.activity.LocalSettingsActivity" /> -->
+        <activity android:name=".ui.activity.SystemSettingsActivity2" />
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />
 
-        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
-        <!--<service-->
-            <!--android:name="cn.jpush.android.service.DaemonService"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="cn.jpush.android.intent.DaemonService" />-->
+<!--
+        <service
+            android:name=".my.service.CarouselService"
+            android:enabled="true"
+            android:exported="true"
+            >
+            &lt;!&ndash; android:process="@string/networkprocess"&ndash;&gt;
 
-                <!--<category android:name="com.axecom.iweight" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
+            <intent-filter android:priority="1000">
+                &lt;!&ndash; 系统启动完成后会调用&ndash;&gt;
+                <action android:name="android.intent.action.BOOT_COMPLETED" />&lt;!&ndash; 用户开机广播 &ndash;&gt;
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.USER_PRESENT" />&lt;!&ndash;  用户使用 唤醒&ndash;&gt;
+                <action android:name="android.intent.action.ACTION_TIME_TICK" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />&lt;!&ndash; 应用状态改变 &ndash;&gt;
+            </intent-filter>
+        </service>-->
 
-        <!-- Rich push 核心功能 since 2.0.6 -->
+<!--        <service
+            android:name=".my.service.JobWakeUpService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />-->
+
+
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
             android:exported="false"
             android:theme="@style/MyDialogStyle" />
         <!-- Required SDK核心功能 -->
-        <!--<activity-->
-            <!--android:name="cn.jpush.android.ui.PushActivity"-->
-            <!--android:configChanges="orientation|keyboardHidden"-->
-            <!--android:exported="false"-->
-            <!--android:theme="@android:style/Theme.NoTitleBar">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="cn.jpush.android.ui.PushActivity" />-->
+        <!-- <activity -->
+        <!-- android:name="cn.jpush.android.ui.PushActivity" -->
+        <!-- android:configChanges="orientation|keyboardHidden" -->
+        <!-- android:exported="false" -->
+        <!-- android:theme="@android:style/Theme.NoTitleBar"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.ui.PushActivity" /> -->
 
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="com.axecom.iweight" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- <category android:name="com.axecom.iweight" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+
 
         <!-- Required SDK 核心功能 -->
         <!-- 可配置android:process参数将PushService放在其他进程中 -->
-        <!--<service-->
-            <!--android:name="cn.jpush.android.service.PushService"-->
-            <!--android:exported="false"-->
-            <!--android:process=":mult">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="cn.jpush.android.intent.REGISTER" />-->
-                <!--<action android:name="cn.jpush.android.intent.REPORT" />-->
-                <!--<action android:name="cn.jpush.android.intent.PushService" />-->
-                <!--<action android:name="cn.jpush.android.intent.PUSH_TIME" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
+        <!-- <service -->
+        <!-- android:name="cn.jpush.android.service.PushService" -->
+        <!-- android:exported="false" -->
+        <!-- android:process=":mult"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTER" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.REPORT" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.PushService" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.PUSH_TIME" /> -->
+        <!-- </intent-filter> -->
+        <!-- </service> -->
 
-
-        <service android:name="com.axecom.smartweight.my.helper.HeartBeatServcice" />
+        <service android:name=".my.helper.HeartBeatServcice" />
         <!-- since 3.0.9 Required SDK 核心功能 -->
         <provider
             android:name="cn.jpush.android.service.DataProvider"
             android:authorities="com.axecom.smartweight.DataProvider"
             android:exported="false" />
 
-        <!--&lt;!&ndash; since 3.1.0 Required SDK 核心功能 &ndash;&gt;-->
-        <!--<provider-->
-            <!--android:name="cn.jpush.android.service.DownloadProvider"-->
-            <!--android:authorities="com.axecom.smartweight.DownloadProvider"-->
-            <!--android:exported="true" />-->
-        <!--&lt;!&ndash; Required SDK核心功能 &ndash;&gt;-->
-        <!--<receiver-->
-            <!--android:name="cn.jpush.android.service.PushReceiver"-->
-            <!--android:enabled="true"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter android:priority="1000">-->
-                <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> &lt;!&ndash; Required  显示通知栏 &ndash;&gt;-->
-                <!--<category android:name="com.axecom.iweight" />-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-            <!--</intent-filter>-->
-            <!--&lt;!&ndash; Optional &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.PACKAGE_ADDED" />-->
-                <!--<action android:name="android.intent.action.PACKAGE_REMOVED" />-->
 
-                <!--<data android:scheme="package" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-
-
-<!--        &lt;!&ndash; 替换原生极光推送接收器 &ndash;&gt;
-        <receiver
-            android:name="com.axecom.smartweight.net.MyReceiver"
-            android:enabled="true"
-            android:exported="false"
-            tools:node="replace">
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt;
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt;
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt;
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt;
-                <action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;
-                <category android:name="com.axecom.iweight" />
-            </intent-filter>
-        </receiver>-->
-
-
-        <receiver android:name="com.axecom.smartweight.manager.BootReceiver">
+        <receiver android:name=".manager.BootReceiver">
             <intent-filter>
 
                 <!-- 注册开机广播地址 -->
@@ -248,7 +228,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.axecom.smartweight.net.NetWorkReceiver">
+        <receiver android:name=".net.NetWorkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -258,17 +238,20 @@
 
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <!--<meta-data-->
-            <!--android:name="JPUSH_CHANNEL"-->
-            <!--android:value="developer-default" />-->
-        <!--<meta-data-->
-            <!--android:name="JPUSH_APPKEY"-->
-            <!--android:value="b032faec40fdd8fd898aaef0" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt;-->
-        <!---->
+        <!-- <meta-data -->
+        <!-- android:name="JPUSH_CHANNEL" -->
+        <!-- android:value="developer-default" /> -->
+        <!-- <meta-data -->
+        <!-- android:name="JPUSH_APPKEY" -->
+        <!-- android:value="b032faec40fdd8fd898aaef0" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt; -->
+        <!--  -->
 
-        <activity android:name="com.axecom.smartweight.my.LogActivity" />
-        <activity android:name="com.axecom.smartweight.ui.activity.TestActivity" />
-        <activity android:name="com.axecom.smartweight.ui.activity.datasummary.SummaryActivity"></activity>
+        <activity android:name=".my.LogActivity" />
+        <activity android:name=".ui.activity.TestActivity" />
+        <activity android:name=".ui.activity.datasummary.SummaryActivity" />
+        <activity android:name=".ui.activity.LockActivity" />
+        <activity android:name=".ui.activity.setting.LocalSettingActivity" />
+        <activity android:name=".ui.activity.setting.ErrorLogActivity"></activity>
     </application>
 
 </manifest>

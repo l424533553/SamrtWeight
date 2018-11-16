@@ -76,7 +76,7 @@ public class GoodMenuAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        
         Goods goods = list.get(position);
         holder.commodityBtn.setText(goods.getName());
         holder.tvIndex.setText(String.valueOf(position + 1));

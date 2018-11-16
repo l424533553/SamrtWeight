@@ -2,5 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="5dp"/>
     <solid android:color="@color/green_008B00" />
-    <stroke android:color="@color/black" android:width="0.5dp" />
+    <stroke android:color="@color/black" android:width="1dp" />
+
+    <!--  数据功能   测试结果   开始计数   -->
+
 </shape>

@@ -35,10 +35,10 @@ public interface IConstants_ST {
     int NOTIFY_DATA_CHANGE = 9777;
     int NOTIFY_TRACENO = 9999;
     int NOTIFY_JUMP = 9888;
-
+    int NOTIFY_TRACE_STATE = 9101;
+    int NOTIFY_CLOSE_DIALOG = 9102;
 
     String BASE_IP_ST = "http://119.23.43.64";
-
 
     /**
      * 市场 id
@@ -72,5 +72,14 @@ public interface IConstants_ST {
 //    private String seller;
 //    private int sellerid;
 
+    String ACTION_UNLOCK_SOFT = "com.axecom.smartweight.ui.activity.unlock";
+    String LOCK_STATE = "lockState";
 
+
+    /* 开机启动广播 */
+    String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";
+    String ACTION_START = "com.axecom.iweight.carouselservice.start";
+    String ACTION_DESTORY = "com.axecom.iweight.carouselservice.destroy";
+
+    String IMAGE_STATE = "screenImageState";
 }

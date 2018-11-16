@@ -62,7 +62,7 @@ public class OrderInfo implements Cloneable {
     private Timestamp timestamp;  //时间戳
 
     @DatabaseField
-    private int state;  // 订单状态
+    private int state;  // 0  已未上传  ，1上传
     @DatabaseField
     private String marketName;
 

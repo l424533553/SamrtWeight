@@ -1,7 +1,9 @@
 package com.axecom.smartweight.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +22,19 @@ import com.axecom.smartweight.bean.FastLoginInfo;
 import com.axecom.smartweight.manager.AccountManager;
 import com.axecom.smartweight.manager.SystemSettingManager;
 import com.axecom.smartweight.net.RetrofitFactory;
+import com.axecom.smartweight.ui.activity.setting.ErrorLogActivity;
 import com.axecom.smartweight.ui.view.ChooseDialog;
 import com.axecom.smartweight.ui.view.SoftKeyborad;
 import com.axecom.smartweight.utils.NetworkUtil;
 import com.axecom.smartweight.utils.SPUtils;
 import com.luofx.utils.common.MyToast;
+import com.luofx.utils.log.MyLog;
+import com.luofx.utils.text.MyTextUtils;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +44,14 @@ import io.reactivex.disposables.Disposable;
 public class SystemSettingsActivity2 extends BaseActivity implements IConstants_ST {
 
     private View rootView;
-    private Button  printerBtn, balanceRoundingBtn, priceingMethodBtn, weightRoundingBtn, weightUnitBtn;
+    private Button printerBtn, balanceRoundingBtn, priceingMethodBtn, weightRoundingBtn, weightUnitBtn;
     private TextView buyerNumberTv, sellerNumberTv;
-    private TextView  printerTv, balanceRoundingTv, priceingMethodTv, weightRoundingTv, weightUnitTv;
+    private TextView printerTv, balanceRoundingTv, priceingMethodTv, weightRoundingTv, weightUnitTv;
     private Button backBtn, saveBtn;
-    private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv, distinguishCtv, icCardSettlementCtv, stopPrintCtv, noPatchSettlementCtv, autoPrevCtv, cashRoundingCtv, stopCashCtv, stopAlipayCtv, stopweichatpayCtv;
+    private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv, distinguishCtv, icCardSettlementCtv, stopPrintCtv, noPatchSettlementCtv, autoPrevCtv, stopCashCtv, stopAlipayCtv, stopweichatpayCtv;
 
+
+    private Button cashRoundingCtv;
 
     List<Map<String, String>> loginTypeList = SystemSettingManager.getLoginTypeList();
     List<Map<String, String>> pricingModelList = SystemSettingManager.getDefaultPricingTypeList();
@@ -59,13 +67,13 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
     @Override
     public View setInitView() {
         rootView = LayoutInflater.from(this).inflate(R.layout.system_settings_activity, null);
-
         preferences = getSharedPreferences("preference", Context.MODE_PRIVATE);
         String baseWebIP = preferences.getString(BASE_WEB_IP, BASE_IP_ST);
         tvWebIP = rootView.findViewById(R.id.tvWebIP);
         tvWebIP.setHint(baseWebIP);
         tvWebIP.setText(baseWebIP);
         rootView.findViewById(R.id.btnSaveIP).setOnClickListener(this);
+        rootView.findViewById(R.id.btnCleanLog).setOnClickListener(this);
 
 
         printerBtn = rootView.findViewById(R.id.system_settings_printer_btn);
@@ -93,7 +101,7 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
         stopPrintCtv = rootView.findViewById(R.id.system_settings_stop_print_ctv);
         noPatchSettlementCtv = rootView.findViewById(R.id.system_settings_no_patch_settlement_ctv);
         autoPrevCtv = rootView.findViewById(R.id.system_settings_auto_prev_ctv);
-        cashRoundingCtv = rootView.findViewById(R.id.system_settings_cash_rounding_ctv);
+        cashRoundingCtv = rootView.findViewById(R.id.btnLookLog);
         stopCashCtv = rootView.findViewById(R.id.system_settings_stop_cash_ctv);
         stopAlipayCtv = rootView.findViewById(R.id.system_settings_stop_alipay_ctv);
         stopweichatpayCtv = rootView.findViewById(R.id.system_settings_stop_weichatpay_ctv);
@@ -140,14 +148,14 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
         SoftKeyborad.Builder softBuilder = new SoftKeyborad.Builder(this);
         switch (v.getId()) {
             case R.id.btnSaveIP://保存IP
-               String  baseWebIP=tvWebIP.getText().toString();
-               tvWebIP.setHint(baseWebIP);
-               boolean isWebSave =preferences.edit().putString(BASE_WEB_IP,baseWebIP).commit();
-               if(isWebSave){
-                   MyToast.toastShort(SystemSettingsActivity2.this,"IP保存成功");
-               }else {
-                   MyToast.toastShort(SystemSettingsActivity2.this,"IP保存失败");
-               }
+                String baseWebIP = tvWebIP.getText().toString();
+                tvWebIP.setHint(baseWebIP);
+                boolean isWebSave = preferences.edit().putString(BASE_WEB_IP, baseWebIP).commit();
+                if (isWebSave) {
+                    MyToast.toastShort(SystemSettingsActivity2.this, "IP保存成功");
+                } else {
+                    MyToast.toastShort(SystemSettingsActivity2.this, "IP保存失败");
+                }
 
                 break;
             case R.id.system_settings_printer_btn:
@@ -253,8 +261,14 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
             case R.id.system_settings_auto_prev_ctv:
                 autoPrevCtv.setChecked(!autoPrevCtv.isChecked());
                 break;
-            case R.id.system_settings_cash_rounding_ctv:
-                cashRoundingCtv.setChecked(!cashRoundingCtv.isChecked());
+            case R.id.btnLookLog:// 查看错误日志信息
+                Intent intent = new Intent(SystemSettingsActivity2.this, ErrorLogActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btnCleanLog:// 查看错误日志信息
+                //清空缓存目录
+                String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/log/error" + ".txt";
+                MyTextUtils.clearInfoForFile(fileName);
                 break;
             case R.id.system_settings_stop_cash_ctv:
                 stopCashCtv.setChecked(!stopCashCtv.isChecked());
@@ -297,7 +311,7 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
         SystemSettingManager.disable_printing_save(stopPrintCtv.isChecked());
         SystemSettingManager.allow_batchless_settlement_save(noPatchSettlementCtv.isChecked());
         SystemSettingManager.take_a_unit_price_save(autoPrevCtv.isChecked());
-        SystemSettingManager.cash_change_rounding_save(cashRoundingCtv.isChecked());
+
         SystemSettingManager.disable_cash_mode_save(stopCashCtv.isChecked());
         SystemSettingManager.disable_alipay_mode_save(stopAlipayCtv.isChecked());
         SystemSettingManager.disable_weixin_mode_save(stopweichatpayCtv.isChecked());
@@ -363,7 +377,8 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
         stopPrintCtv.setChecked(SystemSettingManager.disable_printing());
         noPatchSettlementCtv.setChecked(SystemSettingManager.allow_batchless_settlement());
         autoPrevCtv.setChecked(SystemSettingManager.allow_batchless_settlement());
-        cashRoundingCtv.setChecked(SystemSettingManager.cash_change_rounding());
+
+
         stopCashCtv.setChecked(SystemSettingManager.disable_cash_mode());
         stopAlipayCtv.setChecked(SystemSettingManager.disable_alipay_mode());
         stopweichatpayCtv.setChecked(SystemSettingManager.disable_weixin_mode());

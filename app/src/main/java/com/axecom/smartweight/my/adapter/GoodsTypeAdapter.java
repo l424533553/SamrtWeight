@@ -25,10 +25,18 @@ import java.util.List;
 public class GoodsTypeAdapter extends RecyclerView.Adapter<GoodsTypeAdapter.ViewHolder> {
     private List<GoodsType> goodsList;
     private LayoutInflater mInflater;
+    private int selected;
+
+    public void setSelected(int selected) {
+        this.selected = selected;
+    }
+
+    private Context context;
 
     public GoodsTypeAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         goodsList = new ArrayList<>();
+        this.context = context;
     }
 
     public void setDatas(List<GoodsType> goodsList) {
@@ -72,6 +80,14 @@ public class GoodsTypeAdapter extends RecyclerView.Adapter<GoodsTypeAdapter.View
                 myOnItemClickListener.myOnItemClick(position, 2);
             }
         });
+        if (selected == position) {
+            holder.tvGoodsName.setBackgroundResource(R.color.white);
+            holder.tvGoodsName.setTextColor(context.getResources().getColor(R.color.main_blue_color));
+        } else {
+            holder.tvGoodsName.setBackgroundResource(R.color.main_blue_color);
+            holder.tvGoodsName.setTextColor(context.getResources().getColor(R.color.white));
+        }
+
     }
 
     @Override

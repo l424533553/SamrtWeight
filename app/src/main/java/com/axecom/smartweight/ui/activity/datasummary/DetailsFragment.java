@@ -133,6 +133,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
 
                     totalMoney += Float.valueOf(orderInfo.getTotalamount());
                 }
+                data.clear();
                 data.addAll(list);
 
                 handler.sendEmptyMessage(914);
@@ -140,12 +141,22 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    // 数据 功能
+    private void test() {
+
+    }
+
+//    /**
+//     * 测试 数据功能
+//     */
+//    private void test() {
+//        // TODO 数据接口  使用功能
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnBefore:
-
                 calendar.add(Calendar.DATE, -1); //向
                 time = calendar.getTime();
                 date = DateUtils.getYYMMDD(time);
@@ -167,7 +178,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    Handler handler;
+    private Handler handler;
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
@@ -179,14 +190,13 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
                         for (int i = 0; i < adapter.getGroupCount(); i++) {
                             lvSearch.expandGroup(i);
                         }
-                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney)  + "元");
+                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
                         break;
                 }
                 return false;
             }
         });
     }
-
 
     /**
      * 说明：
@@ -214,7 +224,6 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
             this.data = data;
             this.context = context;
         }
-
 
         @Override
         public int getGroupCount() {
@@ -333,7 +342,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener {
 
         private class GroupHolder {
 
-            private TextView tvTotalAmount, tvOrderNo,tvTime;
+            private TextView tvTotalAmount, tvOrderNo, tvTime;
 
         }
 

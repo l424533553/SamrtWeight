@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter;
 public class LogUtils {
 
     public static boolean CHEAK = false;                    //开发阶段设置为true
-    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"; // 缓存根路径
+    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath() ; // 缓存根路径
     private static String TAG = "LogUtil";
     private static String logPath = null;                   //log日志存放路径
     private static final char VERBOSE = 'v';
@@ -36,13 +36,15 @@ public class LogUtils {
      * @param
      */
     public static void init() {
-        logPath = getFilePath() + "/log/";
+        logPath = getFilePath() ;
         File fileLog = new File(log);
         if (!fileLog.exists()) {
             fileLog.mkdirs();
             LogUtils.e(TAG, "文件夹不存在fileLog");
         }
-        clearCaches(log);
+        e("131321214","wocaca");
+        // 不清理
+//        clearCaches(log);
     }
 
     /**
@@ -119,7 +121,7 @@ public class LogUtils {
             Log.e(TAG, "logPath == null ，未初始化LogToFile");
             return;
         }
-        String fileName = logPath + "/debug_luofaxin" + ".txt";
+        String fileName = logPath + "/log/error" + ".txt";
         String log = DateUtil.getDate()+"------"+type + " " + tag + " " + msg + "\n";
         FileOutputStream fos = null;
         BufferedWriter bw = null;

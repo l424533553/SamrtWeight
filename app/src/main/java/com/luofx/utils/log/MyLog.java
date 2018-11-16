@@ -19,7 +19,6 @@ public class MyLog {
     }
 
     public static void logTest(String msg) {
-
         Log.i("111111", msg);
     }
 

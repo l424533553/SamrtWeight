@@ -41,13 +41,12 @@ public class HttpHelper implements IConstants_ST {
      * @param marketid     市场编号
      * @param terid        秤id
      * @param flag         设备状态   0正常/1异常
-     * @param requestIndex 请求索引
+     * @param requestIndex 请求索引    返回数据  data =0 正常  。data=1 禁用
      */
     public void upState(int marketid, int terid, int flag, int requestIndex) {
         String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
         application.volleyGet(url, listener, requestIndex);
     }
-
 
     /**
      * 订单信息
@@ -56,9 +55,9 @@ public class HttpHelper implements IConstants_ST {
      * @param flag      表示
      */
     public void commitDD(OrderInfo orderInfo, VolleyStringListener volleyStringListener, int flag) {
+//        String tt=JSON.toJSONString(orderInfo);
+
         String url = BASE_IP_ST + "/api/smart/commitszex?";
-
-
         Map<String, String> map = new HashMap<>();
         map.put("marketid", String.valueOf(orderInfo.getMarketid()));
         map.put("billcode", orderInfo.getBillcode());
@@ -77,6 +76,20 @@ public class HttpHelper implements IConstants_ST {
             String jsonItem = JSON.toJSONString(items);
             map.put("items", jsonItem);
         }
+        application.volleyPost(url, map, volleyStringListener, flag);
+    }
+
+    /**
+     * 提交批量信息
+     *
+     * @param orderInfosJson 订单信息
+     * @param flag           表示
+     */
+    public void commitDDs(String orderInfosJson, VolleyStringListener volleyStringListener, int flag) {
+        String url = BASE_IP_ST + "/api/smart/commitszexlist";
+
+        Map<String, String> map = new HashMap<>();
+        map.put("data", orderInfosJson);
         application.volleyPost(url, map, volleyStringListener, flag);
     }
 

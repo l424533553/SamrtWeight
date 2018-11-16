@@ -1,5 +1,10 @@
 package com.luofx.utils.text;
 
+import android.os.Environment;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -27,5 +32,28 @@ public class MyTextUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * 清空文件内容
+     * @param fileName
+     */
+    public static void clearInfoForFile(String fileName) {
+        File file =new File(fileName);
+        try {
+            if(file.exists()) {
+                FileWriter fileWriter =new FileWriter(file);
+                fileWriter.write("*********************暂无数据**********************");
+                fileWriter.flush();
+                fileWriter.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void test(){
+        File file=new File(Environment.getDataDirectory(),"数据");
+
     }
 }

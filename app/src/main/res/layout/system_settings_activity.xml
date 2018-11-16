@@ -449,16 +449,24 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_cash_rounding_ctv"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/btnLookLog"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
                 android:gravity="center"
-                android:text="现金找零四舍五入"
+                android:text="查看log"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnCleanLog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="删除log"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

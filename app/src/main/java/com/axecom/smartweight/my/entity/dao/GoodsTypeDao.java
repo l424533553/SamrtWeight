@@ -61,7 +61,7 @@ public class GoodsTypeDao {
     // 删除数据
     public int deleteAll() {
         try {
-            return   dao.deleteBuilder().delete();
+            return dao.deleteBuilder().delete();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -87,10 +87,11 @@ public class GoodsTypeDao {
         }
         return rows;
     }
+
     public int updates(List<GoodsType> datas) {
         int rows = -1;
         try {
-            for (GoodsType goodsType:datas) {
+            for (GoodsType goodsType : datas) {
                 rows += dao.update(goodsType);
             }
         } catch (SQLException e) {
@@ -134,7 +135,7 @@ public class GoodsTypeDao {
     public GoodsType queryById(int id) {
         GoodsType article = null;
         try {
-            article =  dao.queryForId(id);
+            article = dao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

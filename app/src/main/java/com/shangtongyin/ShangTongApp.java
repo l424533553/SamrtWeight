@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.axecom.smartweight.my.entity.UserInfo;
 import com.luofx.base.MyBaseApplication;
+import com.luofx.help.CrashHandler;
 import com.luofx.utils.log.ErrorLog;
 import com.luofx.utils.log.LogUtils;
 import com.shangtongyin.tools.serialport.EpsPrint;
@@ -17,7 +18,7 @@ import com.shangtongyin.tools.serialport.USB_Print;
  * Author：Linus_Xie
  * Date：2018/8/2 14:55
  */
-public class ShangTongApp extends MyBaseApplication  implements Thread.UncaughtExceptionHandler {
+public class ShangTongApp extends MyBaseApplication  {
 
 
     private int marketid;
@@ -51,8 +52,6 @@ public class ShangTongApp extends MyBaseApplication  implements Thread.UncaughtE
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.init();
-
 
         epsPrint = new EpsPrint();
         epsPrint.open();
@@ -61,6 +60,13 @@ public class ShangTongApp extends MyBaseApplication  implements Thread.UncaughtE
 //        SharedPreferences sharedPreferences = PreferenceUtils.getSp(this);
 
 //        Thread.setDefaultUncaughtExceptionHandler(this);
+
+
+        //TODO
+//        // 异常处理，不需要处理时注释掉这两句即可！
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        // 注册crashHandler
+//        crashHandler.init(getApplicationContext());
 
 
     }
@@ -74,28 +80,30 @@ public class ShangTongApp extends MyBaseApplication  implements Thread.UncaughtE
         }
     }
 
-   /**
-     * 获取到 未捕获的异常
-     *
-     * @param t 线程
-     * @param e 异常
-     */
-    @Override
-    public void uncaughtException(final Thread t, final Throwable e) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                ErrorLog.errorLog(Thread.currentThread().getName() + "");
-                ErrorLog.errorLog("Thread Id :" + t.getId());
-                ErrorLog.errorLog("Thread Ex :" + e.toString());
-                Looper.loop();
-            }
-        }).start();
 
-        SystemClock.sleep(3000);
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
+//
+//   /**
+//     * 获取到 未捕获的异常
+//     *
+//     * @param t 线程
+//     * @param e 异常
+//     */
+//    @Override
+//    public void uncaughtException(final Thread t, final Throwable e) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                ErrorLog.errorLog(Thread.currentThread().getName() + "");
+//                ErrorLog.errorLog("Thread Id :" + t.getId());
+//                ErrorLog.errorLog("Thread Ex :" + e.toString());
+//                Looper.loop();
+//            }
+//        }).start();
+//
+//        SystemClock.sleep(3000);
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//    }
 
 
 }

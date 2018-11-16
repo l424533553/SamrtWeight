@@ -9,10 +9,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.my.entity.ResultInfo;
+import com.axecom.smartweight.ui.activity.LockActivity;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.log.MyLog;
+import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.json.JSONObject;
 
@@ -22,7 +26,7 @@ import org.json.JSONObject;
  * email:424533553@qq.com
  * describe:
  */
-public class HeartBeatServcice extends Service implements VolleyListener {
+public class HeartBeatServcice extends Service implements VolleyListener, IConstants_ST {
     private boolean isLooper = true; //是否需要循环
     /**
      * 定义我们自己写的Binder对象
@@ -64,7 +68,7 @@ public class HeartBeatServcice extends Service implements VolleyListener {
     public void onCreate() {
         super.onCreate();
         SysApplication application = (SysApplication) this.getApplication();
-        
+
         initHandler();
         httpHelper = new HttpHelper(this, application);
 
@@ -74,9 +78,7 @@ public class HeartBeatServcice extends Service implements VolleyListener {
                 while (isLooper) {
                     try {
                         Thread.sleep(120000);//2分钟
-//                        MyLog.bluelog("心跳信息1234567");
                         handler.sendEmptyMessage(NOTIFY);
-
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -116,9 +118,27 @@ public class HeartBeatServcice extends Service implements VolleyListener {
 
     }
 
+    private boolean isDisable;
+
     @Override
     public void onResponse(JSONObject jsonObject, int flag) {
         MyLog.myInfo("成功" + jsonObject.toString());
+        ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
+        if (resultInfo.getStatus() == 0) {
+            if ("1".equals(resultInfo.getData())) {//禁用
+                if (!isDisable) {
+                    Intent intent = new Intent(this, LockActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                isDisable = true;
+            } else {
+                Intent intent = new Intent();
+                intent.setAction(ACTION_UNLOCK_SOFT);
+                sendBroadcast(intent);
+                isDisable = false;
+            }
+        }
     }
 
     /**
@@ -132,5 +152,4 @@ public class HeartBeatServcice extends Service implements VolleyListener {
         }
     }
 
-    //
 }

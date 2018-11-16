@@ -10,11 +10,27 @@ public class SettingsBean {
     private int icon;
     private String  title;
     private int  flag;
+    private  int color;
 
     public SettingsBean(int icon, String title, int flag) {
         this.icon = icon;
         this.title = title;
         this.flag = flag;
+    }
+
+    public SettingsBean(int icon, String title, int flag, int color) {
+        this.icon = icon;
+        this.title = title;
+        this.flag = flag;
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public int getIcon() {

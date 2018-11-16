@@ -3,6 +3,8 @@ package com.axecom.smartweight.my.entity.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.axecom.smartweight.carouselservice1.entity.AdImageInfo;
+import com.axecom.smartweight.carouselservice1.entity.AdUserBean;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
@@ -38,7 +40,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     // 数据库名称
     private static String DATABASE_NAME = "r2011.db";
 
-    public final static int version = 2;
+    public final static int version = 3;
 
     // 本类的单例实例
     private static OrmliteBaseHelper instance;
@@ -90,6 +92,10 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, GoodsType.class);
             TableUtils.createTable(connectionSource, AllGoods.class);
             TableUtils.createTable(connectionSource, TraceNoBean.class);
+
+            TableUtils.createTable(connectionSource, AdImageInfo.class);
+            TableUtils.createTable(connectionSource, AdUserBean.class);
+
 //            TableUtils.createTable(connectionSource, TimeBase.class);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,14 +106,13 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 //        try {
 
-        if(oldVersion==1){
+        if (oldVersion < 2) {
             try {
                 TableUtils.createTable(connectionSource, TraceNoBean.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
 
         //增加表 的列
 //        if (oldVersion == 2) {
@@ -127,7 +132,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 //            TableUtils.dropTable(connectionSource, Goods.class, true);
 //            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
 //            TableUtils.dropTable(connectionSource, OrderBean.class, true);
-//            TableUtils.dropTable(connectionSource, UserInfo.class, true);
+//            TableUtils.dropTable(connectionSource, AdUserInfo.class, true);
 //            TableUtils.dropTable(connectionSource, Goods.class, true);
 //            TableUtils.dropTable(connectionSource, GoodsType.class, true);
 //            TableUtils.dropTable(connectionSource, AllGoods.class, true);

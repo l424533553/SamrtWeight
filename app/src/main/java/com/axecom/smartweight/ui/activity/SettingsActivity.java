@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -39,8 +38,10 @@ import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.axecom.smartweight.my.entity.dao.UserInfoDao;
 import com.axecom.smartweight.my.net.NetHelper;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
+import com.axecom.smartweight.my.service.RoundedCornerImageView;
 import com.axecom.smartweight.ui.activity.datasummary.SummaryActivity;
 import com.axecom.smartweight.ui.activity.setting.GoodsSettingActivity;
+import com.axecom.smartweight.ui.activity.setting.LocalSettingActivity;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.common.MyToast;
 import com.shangtongyin.tools.serialport.IConstants_ST;
@@ -56,7 +57,6 @@ import java.util.List;
 
 public class SettingsActivity extends Activity implements VolleyListener, IConstants_ST {
 
-    public final String ACTION_NET_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
     public final String IS_RE_BOOT = "is_re_boot";
 
     private final int POSITION_PATCH = 1;
@@ -67,6 +67,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
     private final int POSITION_COMMODITY = 6;
     private final int POSITION_UPDATE = 7;
+    private final int POSITION_HOT = 15;
     private final int POSITION_RE_CONNECTING = 8;
     private final int POSITION_WIFI = 9;
     private final int POSITION_LOCAL = 10;
@@ -79,10 +80,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
 
     private GridView settingsGV;
-
     private WifiManager wifiManager;
-
-
     private Context context;
     private SysApplication sysApplication;
     private GoodsDao goodsDao;
@@ -114,7 +112,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         initView();
     }
 
+    //
     private Handler handler;
+    private int requestCount = 3;
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
@@ -126,100 +126,90 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                         sysApplication.getThreadPool().execute(new Runnable() {
                             @Override
                             public void run() {
-                                netHelper.initGoods(tid);
                                 netHelper.initGoodsType();
                                 netHelper.initAllGoods();
+                                List<Goods> goodsList = goodsDao.queryAll();
+                                if (goodsList == null || goodsList.size() == 0) {// 本地没数据则从网上拉取下来
+                                    netHelper.initGoods(tid, 2);
+                                    requestCount = 3;
+                                } else {
+                                    requestCount = 2;
+                                }
                             }
                         });
-
                         break;
                     case NOTIFY_SUCCESS:// 更新数据成功
-                        if (successFlag == 3)
+                        if (successFlag == requestCount)
                             baseDialog.closeLoading();
                         break;
                 }
                 return false;
             }
         });
-
     }
-
 
     public void setInitView() {
         settingsGV = findViewById(R.id.settings_grid_view);
-
         //当前版本
         TextView tvSystemVersion = findViewById(R.id.tvDataUpdate_SystemVersion);
-        tvSystemVersion.setText("当前版本号:" + ApkUtils.getVersionName(this));
-
+        tvSystemVersion.setText(ApkUtils.getVersionName(this));
     }
 
-
     private SettingsAdapter settingsAdapter;
-
-
     public void initView() {
         List<SettingsBean> settngsList = new ArrayList<>();
-
-        SettingsBean settingsBean1 = new SettingsBean(R.drawable.switching_setting, "补打上笔", POSITION_PATCH);
+        SettingsBean settingsBean1 = new SettingsBean(R.drawable.printer, "补打上笔", POSITION_PATCH, R.color.color_settings1);
         settngsList.add(settingsBean1);
-        SettingsBean settingsBean2 = new SettingsBean(R.drawable.patch_setting, "数据汇总", POSITION_REPORTS);
+        SettingsBean settingsBean2 = new SettingsBean(R.drawable.settings2, "数据汇总", POSITION_REPORTS, R.color.color_settings2);
         settngsList.add(settingsBean2);
-        SettingsBean settingsBean6 = new SettingsBean(R.drawable.commodity_setting, "商品设置", POSITION_COMMODITY);
+        SettingsBean settingsBean6 = new SettingsBean(R.drawable.settings3, "商品设置", POSITION_COMMODITY, R.color.color_settings3);
         settngsList.add(settingsBean6);
-        SettingsBean settingsBean7 = new SettingsBean(R.drawable.update_setting, "数据更新", POSITION_UPDATE);
+        SettingsBean settingsBean7 = new SettingsBean(R.drawable.settings4, "数据更新", POSITION_UPDATE, R.color.color_settings4);
         settngsList.add(settingsBean7);
-
-
-        SettingsBean settingsBean3 = new SettingsBean(R.drawable.server_setting, "服务器测试", POSITION_SERVER);
+        SettingsBean settingsBean16 = new SettingsBean(R.drawable.settings5, "热键更新", POSITION_HOT, R.color.color_settings1);
+        settngsList.add(settingsBean16);
+        SettingsBean settingsBean3 = new SettingsBean(R.drawable.settings6, "服务器测试", POSITION_SERVER, R.color.color_settings5);
         settngsList.add(settingsBean3);
 
+//      SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
+//      settngsList.add(settingsBean8);
 
-//        SettingsBean settingsBean8 = new SettingsBean(R.drawable.re_connecting, "一键重连", POSITION_RE_CONNECTING);
-//        settngsList.add(settingsBean8);
-
-        SettingsBean settingsBean9 = new SettingsBean(R.drawable.wifi_setting, "WIFI设置", POSITION_WIFI);
+        SettingsBean settingsBean9 = new SettingsBean(R.drawable.settings7, "WIFI设置", POSITION_WIFI, R.color.color_settings7);
         settngsList.add(settingsBean9);
-//        SettingsBean settingsBean10 = new SettingsBean(R.drawable.local_setting, "本机设置", POSITION_LOCAL);
-//        settngsList.add(settingsBean10);
+//      SettingsBean settingsBean10 = new SettingsBean(R.drawable.local_setting, "本机设置", POSITION_LOCAL);
+//      settngsList.add(settingsBean10);
 
+        SettingsBean settingsBean15 = new SettingsBean(R.drawable.settings8, "本机设置", POSITION_LOCAL, R.color.color_settings8);
+        settngsList.add(settingsBean15);
         if (type == 1) {
-            SettingsBean settingsBean4 = new SettingsBean(R.drawable.invalid, "异常订单", POSITION_INVALID);
+            SettingsBean settingsBean4 = new SettingsBean(R.drawable.settings13, "异常订单", POSITION_INVALID, R.color.color_settings13);
             settngsList.add(settingsBean4);
-
-            SettingsBean settingsBean5 = new SettingsBean(R.drawable.bd_setting, "订单作废", POSITION_BD);
+            SettingsBean settingsBean5 = new SettingsBean(R.drawable.settings14, "订单作废", POSITION_BD, R.color.color_settings14);
             settngsList.add(settingsBean5);
-
-            SettingsBean settingsBean11 = new SettingsBean(R.drawable.weight_setting, "标定管理", POSITION_WEIGHT);
+            SettingsBean settingsBean11 = new SettingsBean(R.drawable.settings12, "标定管理", POSITION_WEIGHT, R.color.color_settings12);
             settngsList.add(settingsBean11);
-            SettingsBean settingsBean13 = new SettingsBean(R.drawable.system_setting, "系统设置", POSITION_SYSTEM);
+            SettingsBean settingsBean13 = new SettingsBean(R.drawable.settings11, "系统设置", POSITION_SYSTEM, R.color.color_settings11);
             settngsList.add(settingsBean13);
         }
-
-
-        SettingsBean settingsBean12 = new SettingsBean(R.drawable.re_boot, "重启", POSITION_RE_BOOT);
+        SettingsBean settingsBean12 = new SettingsBean(R.drawable.settings10, "重启", POSITION_RE_BOOT, R.color.color_settings10);
         settngsList.add(settingsBean12);
-        SettingsBean settingsBean14 = new SettingsBean(R.drawable.re_boot, "返回", POSITION_BACK);
+        SettingsBean settingsBean14 = new SettingsBean(R.drawable.settings9, "返回", POSITION_BACK, R.color.color_settings9);
         settngsList.add(settingsBean14);
-
         settingsAdapter = new SettingsAdapter(this, settngsList);
         settingsGV.setAdapter(settingsAdapter);
         settingsGV.setOnItemClickListener(settingsOnItemClickListener);
     }
 
-
     @Override
     public void onResponse(VolleyError volleyError, int flag) {
         MyToast.toastShort(context, "网络请求失败");
-
+        handler.sendEmptyMessage(NOTIFY_CLOSE_DIALOG);
         switch (flag) {
             case 1:
                 break;
             case 2:
-
                 MyToast.toastShort(context, "初始化数据不完全");
                 break;
-
             default:
                 break;
         }
@@ -253,7 +243,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
                     break;
                 case 2:
-                    if (resultInfo != null) {
+                    if (resultInfo != null) { //
                         sysApplication.getThreadPool().execute(new Runnable() {
                             @Override
                             public void run() {
@@ -269,9 +259,25 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
                     }
-
-
-//                jumpActivity();
+//                  jumpActivity();
+                    break;
+                case 8:
+                    if (resultInfo != null) {
+                        sysApplication.getThreadPool().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (resultInfo.getStatus() == 0) {
+                                    goodsDao.deleteAll();
+                                    List<Goods> goodsList = JSON.parseArray(resultInfo.getData(), Goods.class);
+                                    if (goodsList != null && goodsList.size() > 0) {
+                                        goodsDao.insert(goodsList);
+                                        //
+                                    }
+                                    handler.sendEmptyMessage(NOTIFY_CLOSE_DIALOG);
+                                }
+                            }
+                        });
+                    }
                     break;
                 case 3:
                     if (resultInfo != null) {
@@ -291,10 +297,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                         successFlag++;
                         handler.sendEmptyMessage(NOTIFY_SUCCESS);
                     }
-
-
-//                jumpActivity();
+//                  jumpActivity();
                     break;
+
                 case 4:
                     if (resultInfo != null) {
 
@@ -325,6 +330,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
      * 是否更新成功
      */
     private int successFlag = 0;
+    private boolean isLocalChange;//本機設置 有变化
 
     AdapterView.OnItemClickListener settingsOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
@@ -368,8 +374,10 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     isDataChange = true;
                     startDDMActivity(GoodsSettingActivity.class, false);
                     break;
-                case POSITION_LOCAL:
-                    startDDMActivity(LocalSettingsActivity.class, false);
+                case POSITION_LOCAL://本机操作 ，当地操作
+                    isLocalChange = true;
+                    Intent intent2 = new Intent(SettingsActivity.this, LocalSettingActivity.class);
+                    startActivity(intent2);
                     break;
                 case POSITION_SYSTEM:
                     isDataChange = true;
@@ -392,6 +400,18 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     break;
                 case POSITION_WEIGHT:
                     finish();
+                    break;
+                case POSITION_HOT:
+                    //TODO  热键  ，强制更新热键
+                    baseDialog.showLoading();
+                    isDataChange = true;
+                    UserInfo userInfo = sysApplication.getUserInfo();
+                    if (userInfo != null) {
+                        int tid = userInfo.getTid();
+                        netHelper.initGoods(tid, 8);//热键更新
+                    }
+
+
                     break;
                 case POSITION_BACK:
                     finishActivity();
@@ -448,61 +468,13 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
     private void finishActivity() {
         Intent intentData = new Intent();
         intentData.putExtra("isDataChange", isDataChange); //将计算的值回传回去
+        intentData.putExtra("isLocalChange", isLocalChange); //将计算的值回传回去
         //通过intent对象返回结果，必须要调用一个setResult方法，
         //setResult(resultCode, data);第一个参数表示结果返回码，一般只要大于1就可以，但是
         setResult(RESULT_OK, intentData);
         finish();
     }
 
-    //    private void updateScalesId() {
-//        RetrofitFactory.getInstance().API()
-//                .getScalesIdByMac(MacManager.getInstace(this).getMac())
-//                .compose(this.<BaseEntity<WeightBean>>setThread())
-//                .subscribe(new Observer<BaseEntity<WeightBean>>() {
-//                    @Override
-//                    public void onSubscribe(@NonNull Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(final BaseEntity<WeightBean> baseEntity) {
-//                        if (baseEntity.isSuccess()) {
-//                            AccountManager.getInstance().saveScalesId(baseEntity.getData().getId() + "");
-//                        } else {
-//                            showLoading(baseEntity.getMsg());
-//                        }
-//                    }
-//
-//
-//                    @Override
-//                    public void onError(@NonNull Throwable e) {
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        closeLoading();
-//                    }
-//                });
-//    }
-
-//    private BroadcastReceiver netWorkReceiver = new BroadcastReceiver() {
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (ACTION_NET_CHANGE.equals(intent.getAction())) {
-//                closeLoading();
-//                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//                NetworkInfo networkInfo = null;
-//                if (connectivityManager != null) {
-//                    networkInfo = connectivityManager.getActiveNetworkInfo();
-//                }
-//                if (networkInfo != null && networkInfo.isAvailable()) {
-//                    Toast.makeText(context, "连接成功", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(context, "连接失败", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }
-//    };
 
     public WifiConfiguration IsExsits(String SSID) {
         List<WifiConfiguration> existingConfigs = wifiManager
@@ -558,7 +530,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.settings_item, null);
                 holder = new ViewHolder();
-                holder.iconIv = convertView.findViewById(R.id.settings_item_icon_iv);
+//                holder.iconIv = convertView.findViewById(R.id.roundedCornerImageView);
+//                holder.lladapter = convertView.findViewById(R.id.lladapter);
+                holder.roundedCornerImageView = convertView.findViewById(R.id.roundedCornerImageView);
                 holder.titleTv = convertView.findViewById(R.id.settings_item_title_tv);
                 convertView.setTag(holder);
             } else {
@@ -566,14 +540,20 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
             }
 
             SettingsBean item = settingList.get(position);
-            holder.iconIv.setImageDrawable(SettingsActivity.this.getResources().getDrawable(item.getIcon()));
+            holder.roundedCornerImageView.setImageResource(item.getIcon());
             holder.titleTv.setText(item.getTitle());
+
+//            holder.lladapter.setBackgroundColor(context.getResources().getColor(R.color.main_cyan_color));
+            holder.roundedCornerImageView.setBackgroundColor(context.getResources().getColor(item.getColor()));
+
             return convertView;
         }
 
-        class ViewHolder {
-            ImageView iconIv;
-            TextView titleTv;
+        private class ViewHolder {
+            //            ImageView iconIv;
+            // LinearLayout lladapter;
+            private RoundedCornerImageView roundedCornerImageView;
+            private TextView titleTv;
         }
     }
 }

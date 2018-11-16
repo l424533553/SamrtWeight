@@ -7,40 +7,30 @@
     android:orientation="horizontal"
     tools:context="com.axecom.smartweight.ui.activity.MainActivity">
 
+    <GridView
+        android:id="@+id/gvGoodMenu"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="9"
+        android:background="@drawable/shape_bg"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:numColumns="3"
+        android:padding="9dp"
+        android:verticalSpacing="5dp" />
+
     <LinearLayout
+        android:id="@+id/llorder"
         style="@style/layout_style"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="10"
         android:orientation="vertical"
-        android:padding="5dp">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/black"
-            android:visibility="gone" />
-
-        <GridView
-            android:id="@+id/gvGoodMenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:horizontalSpacing="2dp"
-            android:numColumns="3"
-            android:verticalSpacing="2dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        style="@style/layout_style"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:paddingBottom="2dp">
 
         <!--    <TextView
                 android:layout_width="match_parent"
@@ -48,7 +38,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/black"
                 android:visibility="visible" />-->
-
 
         <!--      <com.sunfusheng.marqueeview.MarqueeView
                   android:id="@+id/marqueeView"
@@ -71,9 +60,7 @@
                   android:marqueeRepeatLimit="marquee_forever"
                   android:focusable="true"
                   android:focusableInTouchMode="true"
-
                   android:text="HHHHfafasfafaggdfg"
-
                   />
 
               <com.luofx.view.ScrollTextView
@@ -112,13 +99,12 @@
             mvGravity    left center  right
         -->
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/shape_weight_display_bg"
+            android:layout_height="100dp"
+            android:background="@color/color_middle_title"
             android:gravity="center"
+
             android:paddingTop="10dp"
             android:paddingBottom="10dp">
 
@@ -126,37 +112,61 @@
                 android:id="@+id/main_weight_top_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
                 android:gravity="center"
                 android:text="0.000"
-                android:textColor="@color/black"
+                android:textColor="@color/color_white"
                 android:textSize="40sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/main_weight_msg_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:gravity="center"
+                android:text="@string/kilogram"
+                android:textColor="@color/color_white"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tvCatty"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="40dp"
+                android:gravity="bottom"
+                android:text="0.000"
+                android:textColor="@color/color_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
-                android:gravity="center"
-                android:text="@string/kilogram"
+                android:gravity="bottom"
+                android:text="斤"
                 android:textColor="@color/black"
-                android:textSize="40sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
             android:layout_marginTop="5dp"
-            >
+
+            android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:paddingStart="10dp"
-                android:layout_height="wrap_content">
+                android:paddingStart="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,10 +186,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/main_weight_layout"
                 android:layout_width="0dp"
-                android:layout_weight="4"
                 android:layout_height="wrap_content"
+                android:layout_weight="4"
                 android:paddingLeft="10dp"
                 android:visibility="visible">
 
@@ -198,18 +207,15 @@
                     android:text="0.000"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
-
             </LinearLayout>
-
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -223,17 +229,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-
                 android:orientation="horizontal">
-
-
-               <!-- android:background="@drawable/shape_white_btn_bg"-->
+                <!-- android:background="@drawable/shape_white_btn_bg"-->
+                <!--          style="@style/mytextEdit"-->
                 <EditText
                     android:id="@+id/main_commodity_price_et"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:hint="0.00"
-                    style="@style/mytextEdit"
+
                     android:inputType="numberDecimal"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -250,52 +254,13 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
             </LinearLayout>
-
         </LinearLayout>
-
-
-
-        <!--  <LinearLayout
-              android:id="@+id/main_count_layout"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
-              android:layout_weight="6"
-              android:orientation="horizontal"
-              android:visibility="gone">
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="数量："
-                  android:textColor="@color/black"
-                  android:textSize="20sp" />
-
-              <EditText
-                  android:id="@+id/main_count_et"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_weight="1"
-                  android:singleLine="true"
-                  android:text="0"
-                  android:textColor="@color/black"
-                  android:textSize="20sp" />
-
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginRight="20dp"
-                  android:text="件"
-                  android:textColor="@color/black"
-                  android:textSize="20sp" />
-          </LinearLayout>-->
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -325,16 +290,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_ccc"
+            android:background="@color/color_middle_title"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_marginStart="25dp"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="商品"
-                android:textColor="@color/black"
+                android:textColor="@color/color_white"
                 android:textSize="20sp" />
 
             <TextView
@@ -343,7 +309,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="单价"
-                android:textColor="@color/black"
+                android:textColor="@color/color_white"
                 android:textSize="20sp" />
 
             <TextView
@@ -352,36 +318,34 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="重量"
-                android:textColor="@color/black"
+                android:textColor="@color/color_white"
                 android:textSize="20sp" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="小计"
-                android:textColor="@color/black"
+                android:textColor="@color/color_white"
                 android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="操作"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:visibility="gone" />
         </LinearLayout>
 
+        <!-- android:listSelector="@color/gray_ccc" -->
         <ListView
             android:id="@+id/main_commoditys_list_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:listSelector="@color/gray_ccc" />
+            android:layout_weight="1" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/shape_dotted_line"
+            android:layerType="software" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -407,7 +371,6 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/main_weight_total_msg_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -444,61 +407,146 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="0dp"
             android:background="@drawable/shape_dotted_line"
             android:layerType="software" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        style="@style/layout_style"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvmarketName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/string_compony_name"
-                android:textColor="@color/black"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/tvTid"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_green_bg"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="深圳市安鑫宝科技发展有限公司"
+                android:textSize="10sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="V"
+                android:textSize="10sp" />
+            <TextView
+                android:id="@+id/tvVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llKey"
+        style="@style/layout_style"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        android:paddingBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/color_right_title"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvTid"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:drawableStart="@mipmap/tidno"
+                android:gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvmarketName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"
+                    android:text="h"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="15sp" />
+                    <!--          <TextView
+                                  android:id="@+id/week"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:text="ff"
+                                  android:textSize="20sp"
+                                  />-->
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/main_settings_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/settings8"
+                android:gravity="center_horizontal"
+                android:padding="15dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/color_right_title"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/string_stall_number"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -506,7 +554,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="A005"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -515,11 +563,10 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/tv_login_type_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/string_operator"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
@@ -527,7 +574,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="张三"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -535,110 +582,119 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/shape_dotted_line" />
+            android:background="@drawable/shape_dotted_line"
+            android:visibility="gone" />
 
         <GridView
             android:id="@+id/main_digital_keys_grid_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+
+            android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:horizontalSpacing="2dp"
+            android:horizontalSpacing="6dp"
             android:listSelector="@null"
             android:numColumns="3"
-            android:verticalSpacing="2dp" />
+            android:padding="3dp"
+            android:verticalSpacing="6dp" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
 
             <Button
                 android:id="@+id/btnAdd"
                 android:layout_width="0dp"
-                android:layout_height="75dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/selector_btn_click"
+                android:background="@drawable/selector_btn_add"
                 android:text="@string/string_grand_total_txt"
-                android:textColor="@color/black"
+                android:textColor="@color/selector_btn_text"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnClearn"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="75dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="1dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_btn_click"
-                android:text="@string/string_clear_txt"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:layout_marginStart="3dp"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/btnClearn"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/selector_btn_clean"
+                    android:text="@string/string_clear_txt"
+                    android:textColor="@color/selector_btn_text"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    tools:ignore="NestedWeights" />
+
+                <Button
+                    android:id="@+id/main_clear_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+
+                    android:background="@drawable/selector_btn_zero"
+                    android:text="@string/string_clear"
+                    android:textColor="@color/selector_btn_text"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="2dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/main_settings_btn"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_btn_click"
-                android:text="@string/string_settings"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/main_clear_btn"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_btn_click"
-                android:text="@string/string_clear"
-                android:textColor="@color/black"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
 
 
             <Button
                 android:id="@+id/main_scan_pay"
                 android:layout_width="0dp"
-                android:layout_height="75dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
 
-                android:background="@drawable/selector_btn_carsh_click"
+                android:background="@drawable/selector_btn_epay"
                 android:text="@string/string_scan_pay"
-                android:textColor="@color/black"
+                android:textColor="@color/selector_btn_text"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/main_cash_btn"
                 android:layout_width="0dp"
-                android:layout_height="75dp"
+                android:layout_height="70dp"
                 android:layout_marginStart="3dp"
                 android:layout_marginTop="2dp"
                 android:layout_weight="1"
-                android:background="@drawable/selector_btn_carsh_click"
+                android:background="@drawable/selector_btn_carsh"
                 android:text="@string/string_pay_cash"
-                android:textColor="@color/black"
+                android:textColor="@color/selector_btn_text"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 

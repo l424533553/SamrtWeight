@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
-        versionName "3.1"
+        versionName "3.937"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -59,9 +59,8 @@ android {
                             path "src/main/jni/Android.mk"
                         }
             }
-
-
 }
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -74,7 +73,6 @@ dependencies {
     /* 总线框架 */
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     // 针对rxjava2.x（adapter-rxjava2的版本要 >= 2.2.0）
@@ -83,6 +81,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.14.0'
     implementation 'com.inuker.bluetooth:library:1.4.0'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
@@ -90,9 +89,8 @@ dependencies {
     /* 网络通信 框架 */
     implementation files('libs/xUtils-2.6.14.jar')
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    implementation 'com.intentfilter:android-wificonnect:0.1.2'
 
+    implementation 'com.intentfilter:android-wificonnect:0.1.2'
     /*  微信 生成二维码  jar包 */
     implementation 'com.google.zxing:core:3.3.3'
     implementation 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
@@ -105,4 +103,8 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
     implementation 'com.bigkoo:convenientbanner:2.0.5'
     implementation 'com.allenliu.versionchecklib:library:2.0.8'
+    implementation 'com.youth.banner:banner:1.4.10'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    implementation 'com.sunfusheng:marqueeview:1.3.3'
 }

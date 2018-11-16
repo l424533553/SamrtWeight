@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants"
-    android:gravity="center">
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/commodity_class_name_tv"
+    android:layout_width="140dp"
+    android:layout_height="90dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:background="@drawable/selector_btn_click"
+    android:clickable="false"
+    android:gravity="center"
+    android:padding="5dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:singleLine="true"
+    android:text="白菜"
+    android:textSize="22sp">
 
-    <Button
-        android:padding="5dp"
-        android:id="@+id/commodity_class_name_tv"
-        android:layout_width="140dp"
-        android:singleLine="true"
-        android:layout_height="70dp"
-        android:textSize="22sp"
-        android:background="@drawable/shape_weight_display_bg"
-        android:clickable="false"
-        android:text="白菜" />
-</LinearLayout>
+</TextView>

@@ -68,6 +68,7 @@ public class OrderAdapter extends BaseAdapter {
             }
 
             holder = new ViewHolder();
+            holder.tvIndex = convertView.findViewById(R.id.tvIndex);
             holder.nameTv = convertView.findViewById(R.id.commodity_name_tv);
             holder.priceTv = convertView.findViewById(R.id.commodity_price_tv);
 //                holder.countTv = convertView.findViewById(R.id.commodity_count_tv);
@@ -81,6 +82,7 @@ public class OrderAdapter extends BaseAdapter {
 
         OrderBean orderBean = list.get(position);
         holder.nameTv.setText(orderBean.getName());
+        holder.tvIndex.setText(String.valueOf(position + 1));
 
         if ((orderBean.getWeight()).indexOf('.') == -1 || orderBean.getWeight().length() - (orderBean.getWeight().indexOf(".") + 1) <= 1) {
             holder.weightTv.setText(Float.parseFloat(orderBean.getWeight()) / 1000 + "");
@@ -100,6 +102,7 @@ public class OrderAdapter extends BaseAdapter {
         TextView priceTv;
         TextView weightTv;
         TextView subtotalTv;
+        TextView tvIndex;
 //        Button deleteBtn;
 
     }

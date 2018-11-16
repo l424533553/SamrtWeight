@@ -112,7 +112,7 @@ public class AllGoodsDao {
     //    // 通过条件查询文章集合（通过用户ID查找）
     public List<AllGoods> queryByName(String name) {
         try {
-            return dao.queryBuilder().where().eq("Status", 0).and().like("SpellCode", "%" + name + "%").query();
+            return dao.queryBuilder().where().like("name", "%" + name + "%").query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

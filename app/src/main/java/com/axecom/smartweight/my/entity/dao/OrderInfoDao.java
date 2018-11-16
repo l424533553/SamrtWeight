@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -89,6 +90,19 @@ public class OrderInfoDao {
         return rows;
     }
 
+    // 修改数据
+    public int update(String billcode) {
+        int rows = -1;
+        try {
+            UpdateBuilder updateBuilder = dao.updateBuilder();
+            updateBuilder.where().eq("billcode", billcode);
+            return updateBuilder.updateColumnValue("state", 1).update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
     // 修改或者插入数据
     public boolean updateOrInsert(OrderInfo data) {
         try {
@@ -111,9 +125,10 @@ public class OrderInfoDao {
     }
 
     //    // 通过条件查询文章集合（通过用户ID查找）
-    public List<OrderInfo> queryByName(String name) {
+    public List<OrderInfo> queryByState() {
         try {
-            return dao.queryBuilder().where().eq("Status", 0).and().like("SpellCode", "%" + name + "%").query();
+//            return dao.queryBuilder().where().eq("Status", 0).and().like("SpellCode", "%" + name + "%").query();
+            return dao.queryBuilder().where().eq("state", 0).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

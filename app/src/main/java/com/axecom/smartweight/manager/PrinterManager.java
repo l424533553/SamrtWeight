@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import com.axecom.smartweight.bean.LocalSettingsBean;
 import com.axecom.smartweight.bean.OrderListResultBean;
-import com.axecom.smartweight.ui.activity.LocalSettingsActivity;
 import com.axecom.smartweight.utils.SPUtils;
 import com.gprinter.command.EscCommand;
 import com.gprinter.command.LabelCommand;
@@ -51,21 +50,7 @@ public class PrinterManager {
 //        }
 //    }
 
-    public void usbConn() {
-        LocalSettingsBean.Value.PrinterPort printerPort = (LocalSettingsBean.Value.PrinterPort) SPUtils.readObject(context, LocalSettingsActivity.KEY_PRINTER_PORT);
-        usbName = printerPort.val.split("：")[1];
-        UsbDevice usbDevice = Utils.getUsbDeviceFromName(context, usbName);
-        if (usbDevice != null) {
-            usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
-            if (usbManager.hasPermission(usbDevice)) {
-                usbConn(usbDevice);
-            } else {//请求权限
-                mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
-                usbManager.requestPermission(usbDevice, mPermissionIntent);
-            }
-        }
 
-    }
 
     /**
      * usb连接

@@ -2,9 +2,12 @@ package com.axecom.smartweight.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 
-
+import com.axecom.smartweight.carouselservice1.service.CarouselService;
+import com.axecom.smartweight.carouselservice1.service.JobWakeUpService;
 import com.shangtongyin.ShangTongApp;
 
 import java.util.LinkedList;
@@ -23,9 +26,6 @@ public class SysApplication extends ShangTongApp {
 //    private List<String> mSerachHistoryList;
     public static int mWidthPixels;
     public static int mHeightPixels;
-
-
-
 
 //    private static ImageLoader mImageLoader;
 
@@ -46,14 +46,22 @@ public class SysApplication extends ShangTongApp {
 
     @Override
     public void onCreate() {// 程序的入口方法
-
+        super.onCreate();
         instance = this;
-
         // 1.上下文
         mContext = getApplicationContext();
 
         // 2.主线程的Handler
         mHandler = new Handler();
+
+//        Intent intentService = new Intent(getApplicationContext(), CarouselService.class);
+//        startService(intentService);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            //版本必须大于5.0
+//            getApplicationContext().startService(new Intent(getApplicationContext(), JobWakeUpService.class));
+//        }
+
+
 
         // 3.得到主线程的id
 //        mMainThreadId = android.os.Process.myTid();
@@ -76,7 +84,17 @@ public class SysApplication extends ShangTongApp {
 //        JPushInterface.init(this);
 
 //        options02 = new DisplayImageOptions.Builder().resetViewBeforeLoading(true).displayer(new FadeInBitmapDisplayer(100)).displayer(new RoundedBitmapDisplayer(10)).cacheInMemory(true).cacheOnDisk(true).showImageOnLoading(R.drawable.shape_bg_for_home_head).build();
-        super.onCreate();
+
+        // 测试 功能
+
+        Intent intentService = new Intent(getApplicationContext(), CarouselService.class);
+        startService(intentService);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //版本必须大于5.0
+            startService(new Intent(getApplicationContext(), JobWakeUpService.class));
+        }
+
+
     }
 
     public static SysApplication getInstances() {
