@@ -64,11 +64,12 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
         });
     }
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         SysApplication application = (SysApplication) this.getApplication();
-
         initHandler();
         httpHelper = new HttpHelper(this, application);
 
@@ -77,6 +78,8 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
             public void run() {
                 while (isLooper) {
                     try {
+                        // TODO
+
                         Thread.sleep(120000);//2分钟
                         handler.sendEmptyMessage(NOTIFY);
                     } catch (InterruptedException e) {
@@ -85,6 +88,8 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
                 }
             }
         }).start();
+
+        // 数据
     }
 
     @Override
