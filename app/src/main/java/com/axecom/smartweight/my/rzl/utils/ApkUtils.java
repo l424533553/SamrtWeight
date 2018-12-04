@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 /**
- * 说明：从com.luofx.base。apk文件夹中复制再改造的
+ * 说明：从com.luofx.base。apkROUND_UP中复制再改造的
  * by rzl
  */
 public class ApkUtils implements  VolleyListener{

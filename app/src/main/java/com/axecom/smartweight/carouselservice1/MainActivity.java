@@ -23,7 +23,7 @@
 //import java.util.List;
 //
 //
-///**
+///*
 // * 测试功能
 // */
 //public class MainActivity extends AppCompatActivity implements IConstants, OnBannerListener {

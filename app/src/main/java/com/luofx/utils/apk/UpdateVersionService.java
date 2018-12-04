@@ -17,7 +17,7 @@ package com.luofx.utils.apk;//package com.luofx.utils.apk;//package com.coolshow
 //import com.lidroid.xutils.http.HttpHandler;
 //import com.lidroid.xutils.http.ResponseInfo;
 //import com.lidroid.xutils.http.callback.RequestCallBack;
-//import com.luofx.utils.PreferenceUtils;
+//import com.luofx.utils.MyPreferenceUtils;
 //import com.luofx.utils.UpdateVersionUtil;
 //import com.luofx.utils.log.MyLog;
 //import com.shangtongyin.tools.serialport.R;
@@ -93,7 +93,7 @@ package com.luofx.utils.apk;//package com.luofx.utils.apk;//package com.coolshow
 /////storage/emulated/0/Download/TraceBack-v1.0.apk
 //
 //
-//            PreferenceUtils.setString(UpdateVersionService.this, "apkDownloadurl", url);
+//            MyPreferenceUtils.setString(UpdateVersionService.this, "apkDownloadurl", url);
 //            nm.notify(titleId, notification);
 //            downLoadFile(url);
 //        }

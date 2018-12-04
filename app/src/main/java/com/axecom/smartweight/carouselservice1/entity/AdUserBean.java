@@ -9,7 +9,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * email:424533553@qq.com
  * describe:
  */
-@DatabaseTable(tableName = "userbean")
+@DatabaseTable(tableName = "AdUserbean")
 public class AdUserBean {
 
     /**

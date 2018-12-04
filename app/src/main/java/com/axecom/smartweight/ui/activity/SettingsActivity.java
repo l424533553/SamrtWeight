@@ -41,6 +41,7 @@ import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.my.service.RoundedCornerImageView;
 import com.axecom.smartweight.ui.activity.datasummary.SummaryActivity;
 import com.axecom.smartweight.ui.activity.setting.GoodsSettingActivity;
+import com.axecom.smartweight.ui.activity.setting.HelpActivity;
 import com.axecom.smartweight.ui.activity.setting.LocalSettingActivity;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.common.MyToast;
@@ -74,6 +75,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
 
     private final int POSITION_WEIGHT = 11;
     private final int POSITION_RE_BOOT = 12;
+    private final int POSITION_HELP = 17;
     private final int POSITION_BACK = 16;
     private final int POSITION_BD = 13;
     private final int POSITION_SYSTEM = 14;
@@ -156,6 +158,7 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
     }
 
     private SettingsAdapter settingsAdapter;
+
     public void initView() {
         List<SettingsBean> settngsList = new ArrayList<>();
         SettingsBean settingsBean1 = new SettingsBean(R.drawable.printer, "补打上笔", POSITION_PATCH, R.color.color_settings1);
@@ -193,6 +196,8 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
         }
         SettingsBean settingsBean12 = new SettingsBean(R.drawable.settings10, "重启", POSITION_RE_BOOT, R.color.color_settings10);
         settngsList.add(settingsBean12);
+        SettingsBean settingsBean17 = new SettingsBean(R.drawable.settings17, "帮助", POSITION_HELP, R.color.color_settings17);
+        settngsList.add(settingsBean17);
         SettingsBean settingsBean14 = new SettingsBean(R.drawable.settings9, "返回", POSITION_BACK, R.color.color_settings9);
         settngsList.add(settingsBean14);
         settingsAdapter = new SettingsAdapter(this, settngsList);
@@ -290,7 +295,6 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                                     if (goodsList != null && goodsList.size() > 0) {
                                         goodsTypeDao.insert(goodsList);
                                     }
-
                                 }
                             }
                         });
@@ -366,6 +370,9 @@ public class SettingsActivity extends Activity implements VolleyListener, IConst
                     break;
                 case POSITION_BD:
                     startDDMActivity(CalibrationActivity.class, false);
+                    break;
+                case POSITION_HELP:
+                    startDDMActivity(HelpActivity.class, false);
                     break;
                 case POSITION_WIFI:
                     startDDMActivity(WifiSettingsActivity.class, false);

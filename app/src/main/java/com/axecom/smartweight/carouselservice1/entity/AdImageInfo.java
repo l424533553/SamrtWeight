@@ -3,7 +3,7 @@ package com.axecom.smartweight.carouselservice1.entity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "imageInfo")
+@DatabaseTable(tableName = "AdImageInfo")
 public class AdImageInfo {
 
     @DatabaseField(generatedId = true)

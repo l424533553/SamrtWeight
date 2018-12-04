@@ -5,7 +5,8 @@
     <color name="colorAccent">#009966</color>
 
     <color name="default_bg">#F1F1F1</color>
-    <color name="green_3CB371">#009966</color>
+    <color name="btn_clicked">#03B48A</color>
+    <color name="green_3CB371">#03B48A</color>
     <color name="green_008B00">#008B00</color>
     <color name="white">#ffffff</color>
     <color name="black">#000</color>
@@ -22,6 +23,7 @@
 
     <color name="transparent">#01000000</color>
     <color name="red_000">#FF0000</color>
+    <color name="red_text">#EE4011</color>
 
     <color name="color_black_text">#000223</color>
     <color name="color_black">#000000</color>
@@ -38,9 +40,8 @@
 
     <color name="color_clean">#EF6B66</color>
 
-    <color name="color_button">#A6E1B1</color>
+    <color name="color_button">#A3E3B1</color>
     <color name="color_button_text">#E58716</color>
-
 
     <color name="color_settings1">#95D17B</color>
     <color name="color_settings2">#2A3F6E</color>
@@ -48,7 +49,6 @@
     <color name="color_settings4">#7B7DD0</color>
 
     <color name="color_settings5">#EE6865</color>
-    <color name="color_settings6">#03B48A</color>
     <color name="color_settings7">#AA0EE7</color>
     <color name="color_settings8">#A1B4A9</color>
     <color name="color_settings10">#018BD6</color>
@@ -57,6 +57,9 @@
     <color name="color_settings12">#0EE7D0</color>
     <color name="color_settings13">#F31440</color>
     <color name="color_settings14">#DBDE74</color>
+    <color name="color_settings17">#99F4E9</color>
 </resources>
+
+
 
 

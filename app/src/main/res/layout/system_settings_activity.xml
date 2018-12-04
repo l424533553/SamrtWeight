@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:background="@color/green_3CB371">
+    android:background="@color/green_3CB371"
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,18 +42,18 @@
                         android:gravity="center|left"
                         android:text="服务器IP："
                         android:textColor="@color/black"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <EditText
                         android:id="@+id/tvWebIP"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:textSize="20sp"
+                        android:background="@drawable/shape_white_btn_bg"
+                        android:gravity="center_vertical"
                         android:hint="http://119.23.43.64"
                         android:textColor="@color/black"
-                        android:background="@drawable/shape_white_btn_bg"
-                        android:gravity="center_vertical" />
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/btnSaveIP"
@@ -87,17 +87,17 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/system_settings_printer_btn"
                         android:layout_width="wrap_content"
-                        android:enabled="false"
-                        android:background="@drawable/green_btn_selector"
                         android:layout_height="match_parent"
+                        android:background="@drawable/green_btn_selector"
+                        android:enabled="false"
                         android:text="@string/string_choose"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
@@ -127,18 +127,18 @@
                         android:background="@drawable/shape_white_btn_bg"
                         android:gravity="center_vertical"
                         android:paddingLeft="5dp"
-                        android:textSize="20sp"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -152,12 +152,12 @@
                     <TextView
                         android:id="@+id/system_settings_balance_rounding_tv"
                         android:layout_width="0dp"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/system_settings_balance_rounding_btn"
@@ -181,9 +181,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:layout_marginLeft="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -200,10 +200,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/system_settings_default_priceing_method_btn"
@@ -218,8 +218,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
@@ -238,10 +238,10 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/system_settings_weight_rounding_btn"
@@ -252,11 +252,12 @@
                         android:textColor="@color/white"
                         android:textSize="20sp" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
@@ -277,18 +278,18 @@
                         android:background="@drawable/shape_white_btn_bg"
                         android:gravity="center_vertical"
                         android:paddingLeft="5dp"
-                        android:textSize="20sp"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:layout_marginTop="20dp"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0dp"
@@ -304,17 +305,17 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:textSize="20sp"
-                        android:textColor="@color/black"
                         android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical" />
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/system_settings_weight_unit_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:enabled="false"
                         android:background="@drawable/green_btn_selector"
+                        android:enabled="false"
                         android:text="@string/string_choose"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
@@ -327,195 +328,205 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="30dp">
-
-            <CheckedTextView
-                android:id="@+id/system_settings_not_clear_price_ctv"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="保存后不清空价格"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="40dp"
+                android:gravity="center">
 
-            <CheckedTextView
-                android:id="@+id/system_settings_save_weight_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="重量稳定后才能确认保存"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_not_clear_price_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="保存后不清空价格"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_auto_obtain_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="默认自动获取买卖方"
-                android:textColor="@color/gray_ccc"
-                android:enabled="false"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_save_weight_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="重量稳定后才能确认保存"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_cash_ettlement_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="联机结算(现金结算)"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_auto_obtain_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="默认自动获取买卖方"
+                    android:textColor="@color/gray_ccc"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_distinguish_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="客户开秤后不区分买卖方"
-                android:textColor="@color/gray_ccc"
-                android:enabled="false"
-                android:textSize="16sp" />
-        </LinearLayout>
+                <CheckedTextView
+                    android:id="@+id/system_settings_cash_ettlement_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="联机结算(现金结算)"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp">
+                <CheckedTextView
+                    android:id="@+id/system_settings_distinguish_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="客户开秤后不区分买卖方"
+                    android:textColor="@color/gray_ccc"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-            <CheckedTextView
-                android:id="@+id/system_settings_ic_card_settlement_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="IC卡结算时再刷卡"
-                android:textColor="@color/gray_ccc"
-                android:enabled="false"
-                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="40dp"
+                android:gravity="center">
 
-            <CheckedTextView
-                android:id="@+id/system_settings_stop_print_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="停用打印功能"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_ic_card_settlement_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:enabled="false"
+                    android:gravity="center"
+                    android:text="IC卡结算时再刷卡"
+                    android:textColor="@color/gray_ccc"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_no_patch_settlement_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="允许无批次结算"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_stop_print_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="停用打印功能"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_auto_prev_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="自动取上一笔单价"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_no_patch_settlement_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="允许无批次结算"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btnLookLog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="查看log"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <CheckedTextView
+                    android:id="@+id/system_settings_auto_prev_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="自动取上一笔单价"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btnCleanLog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="删除log"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                <Button
+                    android:id="@+id/btnLookLog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="查看log"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp">
+                <Button
+                    android:id="@+id/btnCleanLog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="删除log"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
-            <CheckedTextView
-                android:id="@+id/system_settings_stop_cash_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="停用现金模式"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+            </LinearLayout>
 
-            <CheckedTextView
-                android:id="@+id/system_settings_stop_alipay_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="停用支付宝模式"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="40dp"
+                android:gravity="center">
 
-            <CheckedTextView
-                android:id="@+id/system_settings_stop_weichatpay_ctv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                android:gravity="center"
-                android:text="停用微信模式"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
+                <CheckedTextView
+                    android:id="@+id/system_settings_stop_cash_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="停用现金模式"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <CheckedTextView
+                    android:id="@+id/system_settings_stop_alipay_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="停用支付宝模式"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <CheckedTextView
+                    android:id="@+id/system_settings_stop_weichatpay_ctv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:gravity="center"
+                    android:text="停用微信模式"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnDeleteAdImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="删除轮播图片"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <ImageView
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/black"/>
+            android:layout_marginTop="10dp"
+            android:background="@color/black" />
 
 
         <LinearLayout

@@ -3,22 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_3CB371"
+    android:background="@color/btn_clicked"
     android:orientation="horizontal"
     tools:context="com.axecom.smartweight.ui.activity.MainActivity">
 
     <GridView
         android:id="@+id/gvGoodMenu"
-        android:layout_width="0dp"
+        android:layout_width="400dp"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:layout_weight="9"
         android:background="@drawable/shape_bg"
         android:gravity="center"
-        android:horizontalSpacing="5dp"
+        android:horizontalSpacing="4dp"
         android:numColumns="3"
         android:padding="9dp"
-        android:verticalSpacing="5dp" />
+        android:verticalSpacing="4dp" />
 
     <LinearLayout
         android:id="@+id/llorder"
@@ -101,7 +100,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:background="@color/color_middle_title"
             android:gravity="center"
 
@@ -120,6 +119,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvKg"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
@@ -237,13 +237,13 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:hint="0.00"
-
                     android:inputType="numberDecimal"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:textColor="@color/black"
                     android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="Autofill" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -349,59 +349,84 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginTop="0dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            tools:ignore="DisableBaselineAlignment">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="总重："
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/main_weight_total_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="kg"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_weight="3"
+                android:gravity="start|center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="合计："
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="总重："
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/main_price_total_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.00"
-                android:textColor="@color/red_000"
-                android:textSize="25sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/main_weight_total_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="0.000"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="kg"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" 元"
-                android:textColor="@color/red_000"
-                android:textSize="20sp" />
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="end|center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="合计："
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/main_price_total_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="top"
+                    android:text="0.00"
+                    android:textColor="@color/red_000"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text=" 元"
+                    android:textColor="@color/red_000"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <ImageView
@@ -430,6 +455,7 @@
                 android:layout_marginStart="10dp"
                 android:text="V"
                 android:textSize="10sp" />
+
             <TextView
                 android:id="@+id/tvVersion"
                 android:layout_width="wrap_content"
@@ -439,144 +465,168 @@
 
         </LinearLayout>
 
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llKey"
         style="@style/layout_style"
-        android:layout_width="0dp"
+        android:layout_width="400dp"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:layout_weight="9"
+
         android:orientation="vertical"
         android:paddingBottom="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="90dp"
             android:background="@color/color_right_title"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tvTid"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:drawableStart="@mipmap/tidno"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:background="@color/color_right_title"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tvmarketName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="center"
-                    android:text="h"
+                    android:id="@+id/tvTid"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="20dp"
+                    android:drawableStart="@mipmap/tidno"
+                    android:gravity="center_vertical"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/date"
+                        android:id="@+id/tvmarketName"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="24dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="10dp"
-                        android:text=""
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="h"
                         android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-                    <!--          <TextView
-                                  android:id="@+id/week"
-                                  android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:text="ff"
-                                  android:textSize="20sp"
-                                  />-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="18dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                        <!--          <TextView
+                                      android:id="@+id/week"
+                                      android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
+                                      android:text="ff"
+                                      android:textSize="20sp"
+                                      />-->
+                    </LinearLayout>
+
                 </LinearLayout>
+
+
+                <ImageView
+                    android:id="@+id/main_settings_btn"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/settings8"
+                    android:gravity="center_horizontal"
+                    android:padding="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="6dp"
+                android:background="#4277B5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
 
-            <ImageView
-                android:id="@+id/main_settings_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/settings8"
-                android:gravity="center_horizontal"
-                android:padding="15dp"
-                android:layout_marginEnd="10dp"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:gravity="center"
+                    android:text="@string/string_stall_number"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/tvNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:gravity="center"
+                    android:text="A005"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:gravity="center"
+                    android:text="@string/string_operator"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/tvSeller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="16dp"
+                    android:gravity="center"
+                    android:text="张三"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </LinearLayout>
 
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="@color/color_right_title"
-            android:orientation="horizontal"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/string_stall_number"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="A005"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/string_operator"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvSeller"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="张三"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -589,27 +639,24 @@
             android:id="@+id/main_digital_keys_grid_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="5dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
-            android:horizontalSpacing="6dp"
+            android:horizontalSpacing="4dp"
             android:listSelector="@null"
             android:numColumns="3"
-            android:padding="3dp"
-            android:verticalSpacing="6dp" />
+            android:verticalSpacing="4dp"
+            tools:ignore="NestedWeights" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal"
-            android:paddingStart="3dp"
-            android:paddingEnd="3dp">
+
+
+            >
 
             <Button
                 android:id="@+id/btnAdd"
@@ -625,8 +672,8 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="140dp"
-                android:layout_weight="1"
                 android:layout_marginStart="3dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
 
@@ -663,13 +710,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal"
-            android:paddingStart="3dp"
-            android:paddingEnd="3dp">
+
+            >
 
 
             <Button

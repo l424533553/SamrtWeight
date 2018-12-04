@@ -63,7 +63,7 @@ public class NetHelper implements IConstants_ST {
     }
 
     public void initAllGoods() {
-        String url = "http://119.23.43.64/api/smartsz/getproducts";
+        String url = BASE_IP_ST+"/api/smartsz/getproducts";
         application.volleyGet(url, volleyListener, 4);
     }
 
@@ -81,3 +81,7 @@ public class NetHelper implements IConstants_ST {
 }
 
 
+
+//"http://119.23.43.64/api/smart/getinfobymac?mac=10:d0:7a:6e:ad:1b" + mac;
+
+// 数据量 + 数据功能 选项

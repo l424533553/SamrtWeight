@@ -40,7 +40,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     // 数据库名称
     private static String DATABASE_NAME = "r2011.db";
 
-    public final static int version = 3;
+    public final static int version = 4;
 
     // 本类的单例实例
     private static OrmliteBaseHelper instance;
@@ -109,6 +109,14 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
         if (oldVersion < 2) {
             try {
                 TableUtils.createTable(connectionSource, TraceNoBean.class);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(oldVersion ==3){
+            try {
+                TableUtils.createTable(connectionSource, AdImageInfo.class);
+                TableUtils.createTable(connectionSource, AdUserBean.class);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

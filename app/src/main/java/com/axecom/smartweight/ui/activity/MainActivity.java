@@ -2,6 +2,7 @@ package com.axecom.smartweight.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.Selection;
@@ -38,10 +40,12 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.manager.ActivityController;
+import com.axecom.smartweight.my.CustomDialog123;
 import com.axecom.smartweight.my.MyEPSPrinter;
 import com.axecom.smartweight.my.adapter.BackgroundData;
 import com.axecom.smartweight.my.adapter.DigitalAdapter;
 import com.axecom.smartweight.my.adapter.OrderAdapter;
+import com.axecom.smartweight.my.entity.AdResultBean;
 import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
@@ -62,6 +66,7 @@ import com.axecom.smartweight.my.helper.TimeThreadUtil;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.my.rzl.utils.DownloadDialog;
 import com.axecom.smartweight.my.rzl.utils.Version;
+import com.axecom.smartweight.my.service.CustomAlertDialog;
 import com.axecom.smartweight.ui.adapter.GoodMenuAdapter;
 import com.luofx.help.CashierInputFilter;
 import com.luofx.listener.VolleyListener;
@@ -76,6 +81,7 @@ import com.shangtongyin.tools.serialport.WeightHelper;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -120,8 +126,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     /************************************************************************************/
     private DownloadDialog downloadDialog;
 
-    // 市场名    售卖者   秤号
-    private TextView tvmarketName, tvSeller, tvTid;
+    // 市场名    售卖者   秤号  kg
+    private TextView tvmarketName, tvSeller, tvTid, tvKg;
     private LinearLayout llKey, llorder;
 
     private void initViewFirst() {
@@ -137,6 +143,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
 //      countEt = findViewById(R.id.main_count_et);
         tvGoodsName = findViewById(R.id.tvGoodsName);
+        tvKg = findViewById(R.id.tvKg);
         tvgrandTotal = findViewById(R.id.main_grandtotal_tv);
         tvTotalWeight = findViewById(R.id.main_weight_total_tv);
 //      weightTotalMsgTv = findViewById(R.id.main_weight_total_msg_tv);
@@ -259,7 +266,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         askOrderState();
         initDate();
 
-
         orderInfoDao = new OrderInfoDao(context);
         orderBeanDao = new OrderBeanDao(context);
         getTraceNo(userInfo);
@@ -269,7 +275,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private void initDate() {
         date = findViewById(R.id.date);
         time = findViewById(R.id.time);
-//        week = findViewById(R.id.week);
+//      week = findViewById(R.id.week);
         dateTimeUtil = DateTimeUtil.getInstance();
         new TimeThreadUtil(this).start();
     }
@@ -281,7 +287,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //        week.setText(dateTimeUtil.getCurrentWeekDay(0));//显示星期几
     }
 
-
+    /**
+     * @param userInfo 用户信息
+     */
     private void getTraceNo(UserInfo userInfo) {
         if (NetWorkJudge.isNetworkAvailable(context)) {
             String url = BASE_IP_ST + "/api/smartsz/gettracenolist?shid=" + userInfo.getSellerid();
@@ -310,6 +318,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction("com.axecom.smartweight.ui.activity.setting.background.change");
+        intentFilter.addAction(NOTIFY_MESSAGE_CHANGE);
+
+
+        //当网络发生变化的时候，系统广播会发出值为android.net.conn.CONNECTIVITY_CHANGE这样的一条广播
+        registerReceiver(recevier, intentFilter);
+
+
     }
 
     /**
@@ -422,8 +437,15 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                                     Selection.selectAll(etPrice.getText());
                                     isEdSelect = true;
                                 }
+                            }
 
+                            if (weightFloat == 0.000f) {
 //                              etPrice.getText().clear();
+                                weightTopTv.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
+                                tvKg.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
+                            } else {
+                                weightTopTv.setTextColor(context.getResources().getColor(R.color.white));
+                                tvKg.setTextColor(context.getResources().getColor(R.color.white));
                             }
                             oldFloat = weightFloat;
                             String weight2 = decimalFormat.format(weightFloat * 2);//format 返回的是字符串
@@ -599,12 +621,15 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 float count = 0;
 
                 if (switchSimpleOrComplex) {
-                    tvgrandTotal.setText(String.format("%.2f", parseFloat(selectedGoods.getPrice()) * count));
+                    float weightOriginal1 = Float.valueOf(selectedGoods.getPrice()) * count;
+                    tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                 } else {
                     if (weightTopTv.getText().toString().indexOf('.') == -1 || weightTopTv.getText().length() - (weightTopTv.getText().toString().indexOf(".") + 1) <= 1) {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(selectedGoods.getPrice()) * parseFloat(weightTopTv.getText().toString()) / 1000));
+                        float weightOriginal1 = parseFloat(selectedGoods.getPrice()) * parseFloat(weightTopTv.getText().toString()) / 1000;
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     } else {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(selectedGoods.getPrice()) * parseFloat(weightTopTv.getText().toString())));
+                        float weightOriginal1 = parseFloat(selectedGoods.getPrice()) * parseFloat(weightTopTv.getText().toString());
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     }
                 }
                 goodMenuAdapter.setCheckedAtPosition(position);
@@ -658,23 +683,28 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
             if (switchSimpleOrComplex) {
                 if (!TextUtils.isEmpty(etPrice.getText())) {
-                    tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getText().toString()) * count));
+                    float weightOriginal1 = parseFloat(etPrice.getText().toString()) * count;
+                    tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                 } else if (!TextUtils.isEmpty(etPrice.getHint())) {
-                    tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getHint().toString()) * count));
+                    float weightOriginal1 = parseFloat(etPrice.getHint().toString()) * count;
+                    tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                 }
-
             } else {
                 if (!TextUtils.isEmpty(etPrice.getText())) {
                     if (weightTopTv.getText().toString().indexOf('.') == -1 || weightTopTv.getText().length() - (weightTopTv.getText().toString().indexOf(".") + 1) <= 1) {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getText().toString()) * parseFloat(weightTopTv.getText().toString()) / 1000));
+                        float weightOriginal1 = parseFloat(etPrice.getText().toString()) * parseFloat(weightTopTv.getText().toString()) / 1000;
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     } else {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getText().toString()) * parseFloat(weightTopTv.getText().toString())));
+                        float weightOriginal1 = parseFloat(etPrice.getText().toString()) * parseFloat(weightTopTv.getText().toString());
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     }
                 } else if (!TextUtils.isEmpty(etPrice.getHint())) {
                     if (weightTopTv.getText().toString().indexOf('.') == -1 || weightTopTv.getText().length() - (weightTopTv.getText().toString().indexOf(".") + 1) <= 1) {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getHint().toString()) * parseFloat(weightTopTv.getText().toString()) / 1000));
+                        float weightOriginal1 = parseFloat(etPrice.getHint().toString()) * parseFloat(weightTopTv.getText().toString()) / 1000;
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     } else {
-                        tvgrandTotal.setText(String.format("%.2f", parseFloat(etPrice.getHint().toString()) * parseFloat(weightTopTv.getText().toString())));
+                        float weightOriginal1 = parseFloat(etPrice.getHint().toString()) * parseFloat(weightTopTv.getText().toString());
+                        tvgrandTotal.setText(String.valueOf(new BigDecimal(weightOriginal1).setScale(2, BigDecimal.ROUND_UP).floatValue()));
                     }
                 }
             }
@@ -699,6 +729,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             banner = null;
         }
 
+        if (recevier != null) {
+            unregisterReceiver(recevier);
+        }
         super.onDestroy();
     }
 
@@ -844,7 +877,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //        }
 //    }
 
-
     private void appendCurrentGood() {
         if (orderBeans.size() == 0)
             accumulative(true);
@@ -912,7 +944,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     public void clear(int type, boolean b) {
         if (type == 0) {
             //置零
-            if (oldFloat <= 5.0f) {
+            if (oldFloat <= 1.2f) {
                 weighUtils.resetBalance();
             }
         }
@@ -955,17 +987,12 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     @Override
     protected void onResume() {
         super.onResume();
-        //当网络发生变化的时候，系统广播会发出值为android.net.conn.CONNECTIVITY_CHANGE这样的一条广播
-        registerReceiver(recevier, intentFilter);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (recevier != null) {
-            unregisterReceiver(recevier);
-        }
-
     }
 
     private class NetBroadcastReceiver extends BroadcastReceiver {
@@ -974,17 +1001,25 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         @Override
         public void onReceive(Context context, Intent intent) {
             //如果相等的话就说明网络状态发生了变化
-            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
                 int netWorkState = NetUtil.getNetWorkState(context);
                 if (netWorkState >= 0) {// 0 用流量  ，1  wifi
                     // TODO 开启上传模式
                     updateData(context);
                 }
                 MyLog.myInfo("网络转态" + netWorkState);
-            }
-
-            if (intent.getAction().equals("com.axecom.smartweight.ui.activity.setting.background.change")) {
+            } else if (BACKGROUND_CHANGE.equals(intent.getAction())) {
                 setBackground();
+            } else if (NOTIFY_MESSAGE_CHANGE.equals(intent.getAction())) {
+
+                AdResultBean.DataBean dataBean = (AdResultBean.DataBean) intent.getSerializableExtra("data");
+                CustomAlertDialog alertDialog = new CustomAlertDialog(context, dataBean);
+
+                MyLog.bluelog("收到  通告信息  ");
+                alertDialog.show();
+
+//                showAdDialog(context, dataBean);
+
             }
         }
 
@@ -1016,12 +1051,15 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         //4.同步调用会阻塞主线程,这边在子线程进行
                         okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
                             @Override
-                            public void onFailure(okhttp3.Call call, IOException e) {
+                            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                                 MyLog.blue(e.getMessage());
                             }
 
+                            /**
+                             * @param response  返回结果
+                             */
                             @Override
-                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                                 // 注：该回调是子线程，非主线程
 //                                Log.i("wxy", "callback thread id is " + Thread.currentThread().getId());
 //                                Log.i("wxy", response.body().string());
@@ -1055,27 +1093,27 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         //2.创建Request对象，设置一个url地址（百度地址）,设置请求方式。
         okhttp3.Request request = new okhttp3.Request.Builder().url(BASE_IP_ST + "/api/smart/commitszexlist").method("POST", body).build();
         //3.创建一个call对象,参数就是Request请求对象
-        Call call = okHttpClient.newCall(request);
+//        Call call = okHttpClient.newCall(request);
         //4.同步调用会阻塞主线程,这边在子线程进行
         okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
+            public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
                 MyLog.blue(e.getMessage());
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                 // 注：该回调是子线程，非主线程
                 Log.i("wxy", "callback thread id is " + Thread.currentThread().getId());
-                Log.i("wxy", response.body().string());
+                if (response.body() != null) {
+                    Log.i("wxy", response.body().string());
+                }
             }
         });
 
 
     }
 
-
-    private boolean isOrderSuccess;
 
     /**
      * @param payType 0:現金   1：微信支付
@@ -1143,20 +1181,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             }
         });
 
-
         clearnContext(0);
 //        askInfos.add(orderInfo);
         banner.notifyData(orderInfo);
-        isOrderSuccess = true;
-
-//        if (payType == 1) {
-////         String baseUrl  = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
-//            //TODO
-//            banner.addData(orderInfo);
-////            askInfos.add(orderInfo);
-////            banner.notifyData(askInfos);
-//        }
-
 
     }
 
@@ -1322,6 +1349,46 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 break;
         }
         return false;
+    }
+
+
+    private Dialog dialog;
+    //TODO 测试
+
+    /**
+     * @param context  上下文对象
+     * @param dataBean 数据
+     */
+    private void showAdDialog(Context context, AdResultBean.DataBean dataBean) {
+        if (dialog != null) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            dialog = null;
+        }
+        CustomDialog123.Builder builder = new CustomDialog123.Builder(context);
+
+//          .style(R.style.Dialog123)
+        dialog = builder
+                .style(R.style.Dialog123)
+                .heightDimenRes(R.dimen.y320)
+                .widthDimenRes(R.dimen.x560)
+                .cancelTouchout(false)
+                .view(R.layout.dialog_admessage)
+                .addViewOnclick(R.id.btnAdSubmit, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                })
+//                .addViewOnclick(R.id.btnAdCancle, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                })
+                .build();
+        dialog.show();
     }
 
 }

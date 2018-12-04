@@ -20,51 +20,32 @@
             android:layout_weight="3"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             tools:ignore="NestedWeights">
 
             <ImageView
                 android:id="@+id/ivPhoto"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:layout_marginTop="10dp"
-                android:scaleType="centerCrop"
-                android:layout_marginBottom="2dp" />
+                android:layout_height="278dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="3dp"
+                android:src="@drawable/head"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="摊  位  号："
-                    android:textColor="@color/color_black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/companyno"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@color/color_black"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="商户名称："
                     android:textColor="@color/color_black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/companyname"
@@ -79,17 +60,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="商户编号："
+                    android:text="摊  位  号："
                     android:textColor="@color/color_black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/companyid"
+                    android:id="@+id/companyno"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
@@ -98,17 +79,40 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="摊位介绍："
+                    android:textColor="@color/color_black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/introduce"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textColor="@color/color_black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="联系电话："
                     android:textColor="@color/color_black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/linkphone"
@@ -123,21 +127,67 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:gravity="center_vertical"
+                android:padding="1dp">
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="摊位介绍："
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="top"
+                    android:text="信用等级："
+
+                    android:textColor="@color/color_black"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+
+                    android:src="@drawable/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/introduce"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:text="开发反馈发卡方可"
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:src="@drawable/love"
+                    android:textColor="@color/color_black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:src="@drawable/love"
+                    android:textColor="@color/color_black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:src="@drawable/love"
+                    android:textColor="@color/color_black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:src="@drawable/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -159,21 +209,21 @@
             android:focusable="false"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            app:image_scale_type="center_inside"
+            app:delay_time="9000"
+            app:image_scale_type="fit_center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </LinearLayout>
 
     <com.sunfusheng.marqueeview.MarqueeView
         android:id="@+id/marqueeView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@color/green_3CB371"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@color/green_3CB371"
         android:paddingBottom="5dp"
-        app:mvAnimDuration="8000"
+        app:mvAnimDuration="7000"
         app:mvDirection="bottom_to_top"
         app:mvInterval="8500"
         app:mvSingleLine="true"

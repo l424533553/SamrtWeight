@@ -74,8 +74,10 @@ public class DigitalAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.digitalBtn.setText(list.get(position));
-        if (position == 9) {
-//            holder.digitalBtn.setTextSize(30);
+        if (position == 1) {
+//            holder.digitalBtn.setGravity(cen);
+
+
         }
 //        convertView.setOnClickListener(new View.OnClickListener() {
 //            @Override

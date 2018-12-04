@@ -7,16 +7,17 @@
 
     <TextView
         android:id="@+id/main_grid_item_btn"
-        android:layout_width="match_parent"
-        android:layout_height="73dp"
+
         android:background="@drawable/shape_weight_display_bg"
-        android:clickable="false"
-        android:gravity="center"
-        android:singleLine="true"
+
         android:text="白菜"
-        android:textColor="@color/black"
+
         android:textSize="22sp"
-        android:textStyle="bold" />
+
+
+        style="@style/btnClick"
+
+        />
 
     <ImageView
         android:id="@+id/img_tag"

@@ -11,7 +11,7 @@ import com.axecom.smartweight.base.BaseEntity;
 import com.axecom.smartweight.bean.VersionBean;
 import com.axecom.smartweight.net.RetrofitFactory;
 import com.axecom.smartweight.utils.CommonUtils;
-import com.luofx.utils.PreferenceUtils;
+import com.luofx.utils.MyPreferenceUtils;
 
 
 import io.reactivex.Observer;
@@ -28,7 +28,7 @@ public class UpdateManager {
         void onResult(boolean hasUpdate);
     }
     public static void getNewVersion(final Activity context, final UpdateResult updateResult) {
-        String id = PreferenceUtils.getInt(context, MARKET_ID, -1) + "";
+        String id = MyPreferenceUtils.getInt(context, MARKET_ID, -1) + "";
         if("-1".equals(id))return;
         RetrofitFactory.getInstance().API()
                 .getVersion(id)

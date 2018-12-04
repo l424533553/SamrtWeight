@@ -1,7 +1,7 @@
 package com.luofx.base;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
  * 邮箱：424533553@qq.com
  * 需要导入Volley.jar 或者  远程依赖
  */
-public class MyBaseApplication extends Application  {
+public class MyBaseApplication extends MultiDexApplication {
 
     String TAG = "网络不可用，请检查网络";
 
@@ -317,3 +317,16 @@ public class MyBaseApplication extends Application  {
 
 
 }
+
+
+//{"status":0,"msg":"ok",
+//        "data":{"licence":"ups\/uploads\/file\/20181114\/B018_\u526f\u672c.jpg;",
+//        "ad":"ups\/uploads\/file\/20181120\/default3.jpg" +
+//        ";ups\/uploads\/file\/20181120\/default2.jpg;" +
+//        "ups\/uploads\/file\/20181120\/default1.jpg;","photo":"assets\/files\/20181122102525919.jpg",
+//        "companyno":"A066","introduce":"\u852c\u83dc\u6863","adcontent":"\u6d4b\u8bd5 \u76ae\u4e00\u4e0b",
+//        "companyname":"\u80e1\u542f\u57ce","linkphone":"15818546414","companyid":"1126","status":"0",
+//        "baseurl":"https:\/\/data.axebao.com\/smartsz\/"}}
+//
+//
+//        https://data.axebao.com/smartsz/assets/files/20181122102525919.jpg

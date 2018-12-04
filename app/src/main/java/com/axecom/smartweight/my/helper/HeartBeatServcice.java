@@ -12,9 +12,11 @@ import android.support.annotation.Nullable;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.my.entity.AdResultBean;
 import com.axecom.smartweight.my.entity.ResultInfo;
 import com.axecom.smartweight.ui.activity.LockActivity;
 import com.luofx.listener.VolleyListener;
+import com.luofx.utils.MyPreferenceUtils;
 import com.luofx.utils.log.MyLog;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
@@ -32,9 +34,11 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
      * 定义我们自己写的Binder对象
      */
     private HttpHelper httpHelper;
-    private int marketid;   // 市场编号
-    private int terid;     // 秤/编号
+    private int marketid = -1;   // 市场编号
+    private int terid = -1;     // 秤/编号
     private int NOTIFY = 555;
+    private int NOTIFY_MESSAGE = 666;
+
 
     public void setMarketid(int marketid) {
         this.marketid = marketid;
@@ -58,13 +62,13 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
             public boolean handleMessage(Message msg) {
                 if (msg.what == NOTIFY) {
                     httpHelper.upState(marketid, terid, 0, 1);  // scalesId 秤的编号     1 正常    1 请求索引
+                } else if (msg.what == NOTIFY_MESSAGE) {
+                    httpHelper.upAdMessage(marketid, 2);  // scalesId 秤的编号
                 }
                 return false;
             }
         });
     }
-
-
 
     @Override
     public void onCreate() {
@@ -78,8 +82,7 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
             public void run() {
                 while (isLooper) {
                     try {
-                        // TODO
-
+                        handler.sendEmptyMessage(NOTIFY_MESSAGE);
                         Thread.sleep(120000);//2分钟
                         handler.sendEmptyMessage(NOTIFY);
                     } catch (InterruptedException e) {
@@ -88,8 +91,6 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
                 }
             }
         }).start();
-
-        // 数据
     }
 
     @Override
@@ -97,12 +98,10 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
         return super.onStartCommand(intent, flags, startId);
     }
 
-
     @Override
     public void onDestroy() {
         isLooper = false;
         super.onDestroy();
-
     }
 
     @Override
@@ -120,29 +119,49 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
     @Override
     public void onResponse(VolleyError volleyError, int flag) {
         MyLog.myInfo("错误" + volleyError.getMessage());
-
     }
 
-    private boolean isDisable;
+    private boolean isDisable;// 是否消失
 
     @Override
     public void onResponse(JSONObject jsonObject, int flag) {
-        MyLog.myInfo("成功" + jsonObject.toString());
-        ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
-        if (resultInfo.getStatus() == 0) {
-            if ("1".equals(resultInfo.getData())) {//禁用
-                if (!isDisable) {
-                    Intent intent = new Intent(this, LockActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+        switch (flag) {
+            case 1:
+                MyLog.myInfo("成功" + jsonObject.toString());
+                ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
+                if (resultInfo.getStatus() == 0) {
+                    if ("1".equals(resultInfo.getData())) {//禁用
+                        if (!isDisable) {
+                            Intent intent = new Intent(this, LockActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                        isDisable = true;
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setAction(ACTION_UNLOCK_SOFT);
+                        sendBroadcast(intent);
+                        isDisable = false;
+                    }
                 }
-                isDisable = true;
-            } else {
-                Intent intent = new Intent();
-                intent.setAction(ACTION_UNLOCK_SOFT);
-                sendBroadcast(intent);
-                isDisable = false;
-            }
+                break;
+            case 2:// 获得消息
+                AdResultBean adResultBean = JSON.parseObject(jsonObject.toString(), AdResultBean.class);
+                if (adResultBean != null && adResultBean.getStatus() == 0) {
+                    AdResultBean.DataBean dataBean = adResultBean.getData();
+                    if (dataBean != null) {
+                        int saveId = MyPreferenceUtils.getSp(this).getInt("AdId", -1);
+                        int id = dataBean.getId();
+                        if (saveId != id) {
+                            MyPreferenceUtils.getSp(this).edit().putInt("AdId", id).apply();
+                            Intent intent = new Intent();
+                            intent.setAction(NOTIFY_MESSAGE_CHANGE);
+                            intent.putExtra("data", dataBean);
+                            sendBroadcast(intent);
+                        }
+                    }
+                }
+                break;
         }
     }
 

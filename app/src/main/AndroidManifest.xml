@@ -34,6 +34,9 @@
     <!-- 允许系统 弹框 ，想要在Service 和 application中启动弹框，需要添加 改权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- 息屏不被锁死 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!--
         <uses-feature
             android:name="android.hardware.usb.host"
@@ -150,7 +153,7 @@
 
         <service android:name="com.inuker.bluetooth.library.BluetoothService" />
 
-<!--
+        <!--
         <service
             android:name=".my.service.CarouselService"
             android:enabled="true"
@@ -169,12 +172,15 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
                 <action android:name="android.intent.action.PACKAGE_RESTARTED" />&lt;!&ndash; 应用状态改变 &ndash;&gt;
             </intent-filter>
-        </service>-->
+        </service>
+        -->
 
-<!--        <service
+
+        <!--
+            <service
             android:name=".my.service.JobWakeUpService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />-->
-
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        -->
 
         <activity
             android:name="cn.jpush.android.ui.PopWinActivity"
@@ -217,7 +223,6 @@
             android:authorities="com.axecom.smartweight.DataProvider"
             android:exported="false" />
 
-
         <receiver android:name=".manager.BootReceiver">
             <intent-filter>
 
@@ -251,7 +256,33 @@
         <activity android:name=".ui.activity.datasummary.SummaryActivity" />
         <activity android:name=".ui.activity.LockActivity" />
         <activity android:name=".ui.activity.setting.LocalSettingActivity" />
-        <activity android:name=".ui.activity.setting.ErrorLogActivity"></activity>
+        <activity android:name=".ui.activity.setting.ErrorLogActivity" />
+
+        <service
+            android:name=".carouselservice1.service.CarouselService"
+            android:enabled="true"
+            android:exported="true">
+
+            <!-- android:process="@string/networkprocess" -->
+
+            <intent-filter android:priority="1000">
+
+                <!-- 系统启动完成后会调用 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" /> <!-- 用户开机广播 -->
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.USER_PRESENT" /> <!-- 用户使用 唤醒 -->
+                <action android:name="android.intent.action.ACTION_TIME_TICK" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" /> <!-- 应用状态改变 -->
+            </intent-filter>
+        </service>
+        <service
+            android:name=".carouselservice1.service.JobWakeUpService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <activity android:name=".ui.activity.setting.HelpActivity"></activity>
     </application>
 
 </manifest>

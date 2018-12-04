@@ -1,15 +1,11 @@
 package com.shangtongyin;
 
 import android.content.Context;
-import android.os.Looper;
-import android.os.SystemClock;
 import android.support.multidex.MultiDex;
 
 import com.axecom.smartweight.my.entity.UserInfo;
 import com.luofx.base.MyBaseApplication;
 import com.luofx.help.CrashHandler;
-import com.luofx.utils.log.ErrorLog;
-import com.luofx.utils.log.LogUtils;
 import com.shangtongyin.tools.serialport.EpsPrint;
 import com.shangtongyin.tools.serialport.USB_Print;
 
@@ -57,18 +53,13 @@ public class ShangTongApp extends MyBaseApplication  {
         epsPrint.open();
 //        registerBroadcast();
         USB_Print.initPrinter(this);
-//        SharedPreferences sharedPreferences = PreferenceUtils.getSp(this);
-
+//        SharedPreferences sharedPreferences = MyPreferenceUtils.getSp(this);
 //        Thread.setDefaultUncaughtExceptionHandler(this);
 
-
-        //TODO
-//        // 异常处理，不需要处理时注释掉这两句即可！
-//        CrashHandler crashHandler = CrashHandler.getInstance();
-//        // 注册crashHandler
-//        crashHandler.init(getApplicationContext());
-
-
+        // 异常处理，不需要处理时注释掉这两句即可！
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        // 注册crashHandler
+        crashHandler.init(getApplicationContext());
     }
 
     /**

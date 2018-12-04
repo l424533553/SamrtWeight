@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.luofx.utils.log.LogUtils;
 
@@ -118,7 +115,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         } else {
             SystemClock.sleep(3000);
             android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(10);
+            System.exit(0);
         }
     }
 
@@ -162,9 +159,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
 
 //        LogUtils.e("my123456",msg);//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("message==", ex.getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("cause==", ex.getCause().getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("localmessage==", ex.getLocalizedMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
+        LogUtils.e("123456message==", ex.getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
+        LogUtils.e("123456cause==", ex.getCause().getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
+        LogUtils.e("123456localmessage==", ex.getLocalizedMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
 
         //收集设备信息
         collectCrashDeviceInfo(mContext);

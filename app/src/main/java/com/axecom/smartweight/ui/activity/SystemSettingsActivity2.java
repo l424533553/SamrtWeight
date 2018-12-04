@@ -25,16 +25,15 @@ import com.axecom.smartweight.net.RetrofitFactory;
 import com.axecom.smartweight.ui.activity.setting.ErrorLogActivity;
 import com.axecom.smartweight.ui.view.ChooseDialog;
 import com.axecom.smartweight.ui.view.SoftKeyborad;
+import com.axecom.smartweight.utils.FileUtils;
 import com.axecom.smartweight.utils.NetworkUtil;
 import com.axecom.smartweight.utils.SPUtils;
 import com.luofx.utils.common.MyToast;
-import com.luofx.utils.log.MyLog;
 import com.luofx.utils.text.MyTextUtils;
 import com.shangtongyin.tools.serialport.IConstants_ST;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
     private Button printerBtn, balanceRoundingBtn, priceingMethodBtn, weightRoundingBtn, weightUnitBtn;
     private TextView buyerNumberTv, sellerNumberTv;
     private TextView printerTv, balanceRoundingTv, priceingMethodTv, weightRoundingTv, weightUnitTv;
-    private Button backBtn, saveBtn;
+    private Button backBtn, saveBtn, btnDeleteAdImage;
     private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv, distinguishCtv, icCardSettlementCtv, stopPrintCtv, noPatchSettlementCtv, autoPrevCtv, stopCashCtv, stopAlipayCtv, stopweichatpayCtv;
 
 
@@ -132,8 +131,7 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
         stopAlipayCtv.setOnClickListener(this);
         stopweichatpayCtv.setOnClickListener(this);
         icCardSettlementCtv.setOnClickListener(this);
-
-
+        rootView.findViewById(R.id.btnDeleteAdImage).setOnClickListener(this);
         return rootView;
     }
 
@@ -281,6 +279,17 @@ public class SystemSettingsActivity2 extends BaseActivity implements IConstants_
                 break;
             case R.id.system_settings_back_btn:
                 finish();
+                break;
+            case R.id.btnDeleteAdImage:// 删除广告图片
+
+                String dir = FileUtils.getDownloadDir(this, FileUtils.DOWNLOAD_DIR);
+                boolean isDeleteSuccess = FileUtils.deleteDir(dir);
+                if(isDeleteSuccess){
+                    MyToast.toastShort(this,"删除成功");
+                }else {
+                    MyToast.toastShort(this,"删除失败");
+                }
+
                 break;
             case R.id.system_settings_save_btn:
                 saveSettingsToSP();

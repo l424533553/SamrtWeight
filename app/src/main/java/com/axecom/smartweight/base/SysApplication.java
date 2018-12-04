@@ -27,9 +27,6 @@ public class SysApplication extends ShangTongApp {
     public static int mWidthPixels;
     public static int mHeightPixels;
 
-//    private static ImageLoader mImageLoader;
-
-
     public static Context getContext() {
         return mContext;
     }

@@ -11,11 +11,8 @@ import android.os.Message;
  */
 public class TimeThreadUtil extends Thread {
 
-
     private static final int CURRENTDATETIME = 1;
-    private static TimeThreadUtil timeThreadUtil;
     private OnGetCurrentDateTimeListener listener;
-
 
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override

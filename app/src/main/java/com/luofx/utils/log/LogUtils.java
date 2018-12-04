@@ -7,7 +7,6 @@ import com.luofx.utils.system.DateUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -17,8 +16,8 @@ import java.io.OutputStreamWriter;
  */
 public class LogUtils {
 
-    public static boolean CHEAK = false;                    //开发阶段设置为true
-    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath() ; // 缓存根路径
+    public final static boolean CHEAK = false;                    //开发阶段设置为true
+    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath(); // 缓存根路径
     private static String TAG = "LogUtil";
     private static String logPath = null;                   //log日志存放路径
     private static final char VERBOSE = 'v';
@@ -36,15 +35,11 @@ public class LogUtils {
      * @param
      */
     public static void init() {
-        logPath = getFilePath() ;
+        logPath = getFilePath();
         File fileLog = new File(log);
         if (!fileLog.exists()) {
             fileLog.mkdirs();
-            LogUtils.e(TAG, "文件夹不存在fileLog");
         }
-        e("131321214","wocaca");
-        // 不清理
-//        clearCaches(log);
     }
 
     /**
@@ -57,14 +52,11 @@ public class LogUtils {
 
     /**
      * 获得文件存储路径
-     *
-     * @return
      */
     private static String getFilePath() {
         if (isMounted()) {
             return SDCARD;
         } else {
-            CHEAK = true;
             return SDCARD;
         }
     }
@@ -122,15 +114,13 @@ public class LogUtils {
             return;
         }
         String fileName = logPath + "/log/error" + ".txt";
-        String log = DateUtil.getDate()+"------"+type + " " + tag + " " + msg + "\n";
+        String log = DateUtil.getDate() + "------" + type + " " + tag + " " + msg + "\n";
         FileOutputStream fos = null;
         BufferedWriter bw = null;
         try {
             fos = new FileOutputStream(fileName, true);//这里的第二个参数代表追加还是覆盖，true为追加，flase为覆盖
             bw = new BufferedWriter(new OutputStreamWriter(fos));
             bw.write(log);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

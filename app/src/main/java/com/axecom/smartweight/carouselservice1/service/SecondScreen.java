@@ -16,15 +16,16 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.carouselservice1.entity.ImageDao;
-import com.axecom.smartweight.carouselservice1.entity.UserDao;
 import com.axecom.smartweight.carouselservice1.entity.AdImageInfo;
 import com.axecom.smartweight.carouselservice1.entity.AdUserBean;
 import com.axecom.smartweight.carouselservice1.entity.AdUserInfo;
+import com.axecom.smartweight.carouselservice1.entity.ImageDao;
+import com.axecom.smartweight.carouselservice1.entity.UserDao;
 import com.axecom.smartweight.utils.FileUtils;
 import com.bumptech.glide.Glide;
 import com.luofx.listener.VolleyStringListener;
-import com.luofx.utils.PreferenceUtils;
+import com.luofx.utils.DateUtils;
+import com.luofx.utils.MyPreferenceUtils;
 import com.luofx.utils.log.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
 import com.shangtongyin.tools.serialport.IConstants_ST;
@@ -68,7 +69,6 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
     private ArrayList<String> paths;
     private ArrayList<String> imageTitle;
 
-
     private String url = "http://119.23.43.64/api/smartsz/getadinfo?companyid=";
 
     @Override
@@ -82,6 +82,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
     }
 
     private SysApplication myApplication;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         userDao = new UserDao(context);
         initData();
         initHandler();
-        questImage();
+//        questImage();
 
 
 //        info.add(text);
@@ -108,9 +109,11 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
 //        marqueeView.startWithList(info, R.anim.anim_right_in, R.anim.anim_left_out);
     }
 
+    /**
+     *
+     */
     public void questImage() {
         if (NetWorkJudge.isNetworkAvailable(context)) {
-
             Context sharedAppContext = null;
             try {
                 sharedAppContext = context.createPackageContext("com.axecom.smartweight", 0);
@@ -119,6 +122,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                 int shellerid = share.getInt("shellerid", 0);
                 if (shellerid > 0) {
                     String path = url + shellerid;
+//                    String path = url + 1017;
                     myApplication.volleyStringGet(path, this, 1);
                 }
             } catch (PackageManager.NameNotFoundException e) {
@@ -127,7 +131,11 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         }
     }
 
-    private Handler handler;// 数据
+
+    /**
+     * 消息推送
+     */
+    private Handler handler;
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
@@ -139,6 +147,9 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         });
     }
 
+    /**
+     * 路径
+     */
     private String dir;
     private ImageDao imageDao;
     private UserDao userDao;
@@ -154,13 +165,14 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         List<AdImageInfo> list = imageDao.queryAll();
         List<AdImageInfo> photos = imageDao.queryPhoto();
         List<AdUserBean> userBeans = userDao.queryById2(1);
-        if (photos.size() > 0) {
+        if (photos != null && photos.size() > 0) {
             String photo = photos.get(0).getLocalPath();
-
             Glide.with(context).load(photo).into(ivPhoto);
+
 //            ivPhoto.setImageURI(Uri.parse(photo));
         }
-        if (dir == null || list.size() == 0) {
+
+        if (dir == null || list == null || list.size() == 0) {
             imagePath.clear();
             imagePath.add(R.drawable.default1);
             imagePath.add(R.drawable.default2);
@@ -182,22 +194,22 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         mBanner.setDelayTime(3000);
         mBanner.start();
 
-        if (userBeans.size() > 0) {
+        if (userBeans != null && userBeans.size() > 0) {
             AdUserBean AdUserBean = userBeans.get(0);
             companyno.setText(AdUserBean.getCompanyno());
             introduce.setText(AdUserBean.getIntroduce());
             companyname.setText(AdUserBean.getCompanyname());
             linkphone.setText(AdUserBean.getLinkphone());
-            companyid.setText(AdUserBean.getCompanyid());
+//            companyid.setText(AdUserBean.getCompanyid());
             String text = AdUserBean.getAdcontent();
             info.add(text);
             info.add(text);
             marqueeView.startWithList(info, R.anim.anim_right_in, R.anim.anim_left_out);
         }
-
     }
 
-    private TextView companyno, introduce, companyname, linkphone, companyid;
+    private TextView companyno, introduce, companyname, linkphone;
+    //    , companyid;
     private MarqueeView marqueeView;
 
     private void initView() {
@@ -207,10 +219,9 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         introduce = findViewById(R.id.introduce);
         companyname = findViewById(R.id.companyname);
         linkphone = findViewById(R.id.linkphone);
-        companyid = findViewById(R.id.companyid);
+//        companyid = findViewById(R.id.companyid);
 
         ivPhoto = findViewById(R.id.ivPhoto);
-
         mBanner = findViewById(R.id.banner22);
 
         //设置样式，里面有很多种样式可以自己都看看效果
@@ -222,7 +233,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         //轮播图片的文字
 //        mBanner.setBannerTitles(imageTitle);
         //设置轮播间隔时间
-        mBanner.setDelayTime(3000);
+        mBanner.setDelayTime(9000);
         //设置是否为自动轮播，默认是true
         mBanner.isAutoPlay(true);
         //设置指示器的位置，小点点，居中显示
@@ -262,43 +273,65 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
         }
     }
 
-
     @Override
     public void onResponse(String response, int flag) {
-        AdUserInfo netImageInfo = JSON.parseObject(response, AdUserInfo.class);
-        if (netImageInfo != null) {
-            if (netImageInfo.getStatus() == 0) {
-                AdUserBean adUserBean = netImageInfo.getData();
-                if (adUserBean != null) {
-                    String screenImageState = PreferenceUtils.getSp(context).getString(IMAGE_STATE, "default");
-                    if (!screenImageState.equals(adUserBean.getStatus())) {
-                        new ImageDownThread(adUserBean).start();
-                        PreferenceUtils.getSp(context).edit().putString(IMAGE_STATE, screenImageState).apply();
-                    }
-                }
-            }
-        }
+//        AdUserInfo netImageInfo = JSON.parseObject(response, AdUserInfo.class);
+//        if (netImageInfo != null) {
+//            if (netImageInfo.getStatus() == 0) {
+//                AdUserBean adUserBean = netImageInfo.getData();
+//                if (adUserBean != null) {
+//                    String screenImageState = MyPreferenceUtils.getSp(context).getString(IMAGE_STATE, "default");
+//                    if (!screenImageState.equals(adUserBean.getStatus())) {
+//
+//                        MyPreferenceUtils.getSp(context).edit().putString(IMAGE_STATE, screenImageState).apply();
+//                    }
+//                }
+//            }
+//        }
+
+        new ImageDownThread(response).start();
+
+
     }
 
     //为了下载图片资源，开辟一个新的子线程
     private class ImageDownThread extends Thread {
-        private AdUserBean AdUserBean;
+        private String response;
 
-        public ImageDownThread(AdUserBean AdUserBean) {
-            this.AdUserBean = AdUserBean;
+        public ImageDownThread(String response) {
+            this.response = response;
         }
 
         public void run() {
+
+            AdUserInfo netImageInfo = JSON.parseObject(response, AdUserInfo.class);
+            if (netImageInfo != null) {
+                if (netImageInfo.getStatus() == 0) {
+                    AdUserBean adUserBean = netImageInfo.getData();
+                    if (adUserBean != null) {
+                        String screenImageState = MyPreferenceUtils.getSp(context).getString(IMAGE_STATE, "default");
+                        if (!screenImageState.equals(adUserBean.getStatus())) {
+                            downImage(adUserBean);
+                            MyPreferenceUtils.getSp(context).edit().putString(IMAGE_STATE, screenImageState).apply();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void downImage(AdUserBean adUserBean) {
+
             //下载图片的路径
             String iPath;
             FileOutputStream fileOutputStream = null;
             InputStream inputStream = null;
             try {
-                String baseUrl = AdUserBean.getBaseurl();
+                String baseUrl = adUserBean.getBaseurl();
                 List<AdImageInfo> imageInfos = new ArrayList<>();
-                String licences = AdUserBean.getLicence();
+                String licences = adUserBean.getLicence();
                 boolean issuccess = FileUtils.deleteDir(dir);
 
+                String prefix = DateUtils.getSampleNo();
                 if (licences != null) {
                     String[] adArray = licences.split(";");
                     if (adArray.length > 0) {
@@ -307,7 +340,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                             URL url = new URL(netUrl);
                             //再一次打开
                             inputStream = url.openStream();
-                            String localPath = dir + "licence" + i + ".png";
+                            String localPath = dir + prefix + "licence" + i + ".png";
                             File file = new File(localPath);
                             fileOutputStream = new FileOutputStream(file);
                             int hasRead = 0;
@@ -323,7 +356,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                     }
                 }
 
-                String ads = AdUserBean.getAd();
+                String ads = adUserBean.getAd();
                 if (ads != null) {
                     String[] adArray = ads.split(";");
                     if (adArray.length > 0) {
@@ -332,7 +365,7 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                             URL url = new URL(netUrl);
                             //再一次打开
                             inputStream = url.openStream();
-                            String localPath = dir + "ad" + i + ".png";
+                            String localPath = dir + prefix + "ad" + i + ".png";
                             File file = new File(localPath);
                             fileOutputStream = new FileOutputStream(file);
                             int hasRead = 0;
@@ -348,13 +381,13 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                     }
                 }
 
-                String photo = AdUserBean.getPhoto();
+                String photo = adUserBean.getPhoto();
                 if (photo != null) {
                     String netUrl = baseUrl + photo;
                     URL url = new URL(netUrl);
                     //再一次打开
                     inputStream = url.openStream();
-                    String localPath = dir + "photo.png";
+                    String localPath = dir + prefix + "photo.png";
                     File file = new File(localPath);
                     fileOutputStream = new FileOutputStream(file);
                     int hasRead = 0;
@@ -370,10 +403,12 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
 
                 imageDao.deleteAll();
                 imageDao.inserts(imageInfos);
+
                 userDao.deleteAll();
-                AdUserBean.setId(1);
-                userDao.insert(AdUserBean);
+                adUserBean.setId(1);
+                userDao.insert(adUserBean);
                 handler.sendEmptyMessage(1002);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -389,5 +424,8 @@ public class SecondScreen extends Presentation implements VolleyStringListener, 
                 }
             }
         }
+
     }
+
+
 }

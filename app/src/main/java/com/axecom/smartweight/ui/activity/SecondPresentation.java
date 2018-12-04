@@ -16,7 +16,7 @@ import com.axecom.smartweight.my.adapter.OrderAdapter;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.luofx.help.QRHelper;
-import com.luofx.utils.PreferenceUtils;
+import com.luofx.utils.MyPreferenceUtils;
 
 import java.util.List;
 
@@ -64,8 +64,8 @@ public class SecondPresentation extends Presentation {
         }
 
         if (orderInfoFirst.getSettlemethod() > 0) {
-            key = PreferenceUtils.getString(context, KEY, null);
-            mchid = PreferenceUtils.getString(context, MCHID, null);
+            key = MyPreferenceUtils.getString(context, KEY, null);
+            mchid = MyPreferenceUtils.getString(context, MCHID, null);
             baseUrl = "http://pay.axebao.com/payInterface_gzzh/pay?key=" + key + "&mchid=" + mchid;
             int newPrice = (int) (Float.valueOf(orderInfoFirst.getTotalamount()) * 100);
             String urlFirst = baseUrl + "&orderno=" + orderInfoFirst.getBillcode() + "&fee=" + newPrice;

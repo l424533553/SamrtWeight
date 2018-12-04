@@ -59,6 +59,7 @@ public interface IConstants_ST {
     String MCHID = "mchid";
     String BASE_WEB_IP = "base_web_ip";
 
+
     String BASE_COMPANY_NAME = "深圳市安鑫宝科技发展有限公司";
 
     String KET_SWITCH_SIMPLE_OR_COMPLEX = "key_switch_simple_or_complex";
@@ -80,6 +81,17 @@ public interface IConstants_ST {
     String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";
     String ACTION_START = "com.axecom.iweight.carouselservice.start";
     String ACTION_DESTORY = "com.axecom.iweight.carouselservice.destroy";
+    String NOTIFY_MESSAGE_CHANGE = "com.axecom.smartweight.my.helper.notify.message";
+
+    String BACKGROUND_CHANGE = "com.axecom.smartweight.ui.activity.setting.background.change";
 
     String IMAGE_STATE = "screenImageState";
+
 }
+
+
+//        {"status":0,"msg":"ok","data":
+//        {"id":1,"marketid":11,"title":"test","content":"1212121",
+//        "vdate":"2018-11-21","nickname":"axecom","marketname":"\u516c\u660e\u5e02\u573a"}}
+
+

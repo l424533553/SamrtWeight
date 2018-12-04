@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.shangtongyin.tools.serialport.IConstants_ST.BASE_IP_ST;
-
 /**
  * author: luofaxin
  * date： 2018/9/10 0010.
@@ -44,7 +42,19 @@ public class HttpHelper implements IConstants_ST {
      * @param requestIndex 请求索引    返回数据  data =0 正常  。data=1 禁用
      */
     public void upState(int marketid, int terid, int flag, int requestIndex) {
+        if(marketid<0||terid<0){
+            return;
+        }
         String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
+        application.volleyGet(url, listener, requestIndex);
+    }
+
+    public void upAdMessage(int marketid, int requestIndex) {
+        if(marketid<0){
+            return;
+        }
+//        String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
+        String url = BASE_IP_ST + "/api/smartsz/getvbroadcasbymarketid?marketid=" + marketid;
         application.volleyGet(url, listener, requestIndex);
     }
 

@@ -7,13 +7,10 @@
 
     <Button
         android:id="@+id/main_digitial_btn"
-        android:layout_width="0dp"
-        android:layout_height="65dp"
-        android:layout_weight="1"
-        android:gravity="center"
         android:background="@drawable/selector_btn_click"
-        android:clickable="false"
         android:text="1"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        style="@style/btnClick"
+        />
+
 </LinearLayout>

@@ -154,8 +154,15 @@ public class HomeActivity extends Activity implements View.OnClickListener, Voll
                 jumpActivity();
             }
         } else {
-            sysApplication.setUserInfo(userInfo);
-            jumpActivity();
+
+            if (userInfo == null) {
+                MyToast.showError(context,"请先联网获取用户信息");
+                this.finish();
+            }else {
+                sysApplication.setUserInfo(userInfo);
+                jumpActivity();
+
+            }
         }
     }
 

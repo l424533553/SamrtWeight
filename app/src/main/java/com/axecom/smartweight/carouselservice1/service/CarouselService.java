@@ -33,15 +33,11 @@ public class CarouselService extends Service implements IConstants_ST {
     @Override
     public void onCreate() {
         super.onCreate();
-
-
         //动态接受网络变化的广播接收器
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.axecom.iweight.carouselservice.datachange");
-
         networkChangeReceiver = new NetworkChangeReceiver();
         registerReceiver(networkChangeReceiver, intentFilter);
-
     }
 
     //自定义接受网络变化的广播接收器
@@ -59,7 +55,6 @@ public class CarouselService extends Service implements IConstants_ST {
         DisplayManager displayManager = (DisplayManager) getApplicationContext().getSystemService(Context.DISPLAY_SERVICE);
         //获取屏幕数量
         Display[] presentationDisplays = displayManager.getDisplays();
-
         if (presentationDisplays.length > 1) {
             if (banner == null) {
                 banner = new SecondScreen(getApplicationContext(), presentationDisplays[1]);
