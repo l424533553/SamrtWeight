@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray_eee"
@@ -12,16 +13,13 @@
         android:layout_margin="15dp"
         android:layout_weight="1"
         android:background="@color/color_white"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#4594F1"
-            android:orientation="horizontal"
-
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
@@ -75,7 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:divider="@null" />
+            android:divider="@null"
+            tools:ignore="NestedWeights" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -88,12 +87,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="end|center_vertical"
-                android:text="总计:"
 
+                android:layout_marginStart="50dp"
+                android:gravity="end|center_vertical"
+                android:text="金额总计:"
+                android:textColor="@color/red_text"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -104,8 +104,48 @@
                 android:layout_weight="1"
                 android:gravity="start|center_vertical"
                 android:textColor="@color/black"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+
+                android:gravity="end|center_vertical"
+                android:text="现金总计:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCarshMoney"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:gravity="end|center_vertical"
+                android:text="电子总计:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvEPayMoney"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:layout_width="0dp"
@@ -113,27 +153,20 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textColor="@color/green_3CB371"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvMonth"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:text="2018-01-01"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/green_3CB371"
-                android:textSize="22sp"
-                android:textStyle="bold" />
         </LinearLayout>
 
         <ImageView
@@ -153,22 +186,10 @@
         android:paddingBottom="15dp">
 
         <Button
-            android:id="@+id/btnPrinter"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="50dp"
-
-            android:background="@drawable/shape_weight_display_bg55"
-            android:text="打印"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <Button
             android:id="@+id/btnBefore"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
+            android:layout_marginStart="50dp"
 
             android:background="@drawable/shape_weight_display_bg33"
             android:text="前一天"
@@ -179,8 +200,8 @@
             android:id="@+id/btnNext"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="50dp"
 
             android:background="@drawable/shape_weight_display_bg44"
             android:text="后一天"

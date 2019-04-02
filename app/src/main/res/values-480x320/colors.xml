@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#218868</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#009966</color>
+
+    <color name="default_bg">#F1F1F1</color>
+    <color name="btn_clicked">#03B48A</color>
+    <color name="green_3CB371">#03B48A</color>
+    <color name="green_008B00">#008B00</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000</color>
+
+    <color name="gray_eee">#EEEEEE</color>
+    <color name="gray_ccc">#CCCCCC</color>
+    <color name="gray_bbb">#BBBBBB</color>
+    <color name="gray_aaa">#AAAAAA</color>
+
+    <color name="gray_888">#888888</color>
+    <color name="gray_555">#555555</color>
+    <color name="gray_e3">#E3E3E3</color>
+
+
+    <color name="transparent">#01000000</color>
+    <color name="red_000">#FF0000</color>
+    <color name="red_text">#EE4011</color>
+
+    <color name="color_black_text">#000223</color>
+    <color name="color_black">#000000</color>
+    <color name="color_red">#E72816</color>
+    <color name="color_gray">#BCBCBC</color>
+    <color name="color_gray2_text">#999999</color>
+    <color name="color_white">#ffffff</color>
+    <color name="color_huyan">#CBEBCA</color>
+
+    <color name="color_middle_title">#7B7DD0</color>
+
+
+    <color name="color_right_title">#5294D0</color>
+    <color name="color_carsh_pay">#FAB033</color>
+    <color name="color_add2">#5492E5</color>
+    <color name="color_add_pressed">#165FE5</color>
+
+    <color name="color_clean">#EF6B66</color>
+
+    <color name="color_button">#A3E3B1</color>
+    <color name="color_button_text">#E58716</color>
+
+    <color name="color_settings1">#95D17B</color>
+    <color name="color_settings2">#2A3F6E</color>
+    <color name="color_settings3">#FDAE2F</color>
+    <color name="color_settings4">#7B7DD0</color>
+
+    <color name="color_settings5">#EE6865</color>
+    <color name="color_settings7">#AA0EE7</color>
+    <color name="color_settings8">#A1B4A9</color>
+    <color name="color_settings10">#018BD6</color>
+    <color name="color_settings9">#D69E6D</color>
+    <color name="color_settings11">#E7670E</color>
+    <color name="color_settings12">#0EE7D0</color>
+    <color name="color_settings13">#F31440</color>
+    <color name="color_settings14">#DBDE74</color>
+    <color name="color_settings17">#99F4E9</color>
+    <color name="jglsjglg">#C0D5F4</color>
+    <color name="color_zero_pressed">#9B4FDB</color>
+    <color name="color_carsh_pressed">#019865</color>
+    
+</resources>
+
+
+
+

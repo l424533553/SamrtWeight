@@ -52,7 +52,7 @@ public class CashierInputFilter implements InputFilter {
 
 
         String sourceText = source.toString();
-        String destText11 = dest.toString();
+        String destText = dest.toString();
 
 
 

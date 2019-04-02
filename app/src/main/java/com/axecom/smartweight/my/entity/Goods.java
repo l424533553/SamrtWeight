@@ -37,16 +37,6 @@ public class Goods {
     @DatabaseField
     private String batchCode; // 批次號
 
-
-
-
-
-//    @DatabaseField
-//    private String weight;
-//
-//    @DatabaseField
-//    private String ;
-
     public Goods() {
     }
 

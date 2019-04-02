@@ -3,15 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.LockActivity">
+    android:background="@drawable/lockbg"
+    android:alpha="1"
+    tools:context=".my.activity.common.LockActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_marginTop="227dp"
         android:text="软件锁定中，请联系管理员解锁"
         android:textColor="@color/color_red"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

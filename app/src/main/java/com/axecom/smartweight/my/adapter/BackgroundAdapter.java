@@ -6,12 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.my.entity.OrderBean;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +20,6 @@ import java.util.List;
 public class BackgroundAdapter extends BaseAdapter {
     private Context context;
     private List<Integer> list;
-    private boolean isSecondLayout;
 
 
     public BackgroundAdapter(Context context) {
@@ -31,11 +27,10 @@ public class BackgroundAdapter extends BaseAdapter {
         list = BackgroundData.getData();
     }
 
-    public BackgroundAdapter(Context context, boolean isSecondLayout) {
-        this.context = context;
-        this.isSecondLayout = isSecondLayout;
-    }
-
+//    public BackgroundAdapter(Context context, boolean isSecondLayout) {
+//        this.context = context;
+//        boolean isSecondLayout1 = isSecondLayout;
+//    }
 
     @Override
     public int getCount() {
@@ -52,13 +47,13 @@ public class BackgroundAdapter extends BaseAdapter {
         return position;
     }
 
-    public int getPosition(int position) {
-        return list.get(position);
-    }
+//    public int getPosition(int position) {
+//        return list.get(position);
+//    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_background, null);
             holder = new ViewHolder();

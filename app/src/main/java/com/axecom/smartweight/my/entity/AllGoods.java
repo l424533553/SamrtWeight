@@ -37,10 +37,6 @@ public class AllGoods {
     @DatabaseField
     private String batchCode; // 批次號
 
-
-
-
-
 //    @DatabaseField
 //    private String weight;
 //

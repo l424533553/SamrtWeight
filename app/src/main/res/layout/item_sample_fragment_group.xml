@@ -2,10 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#C0D5F4"
-    android:layout_marginTop="5dp"
+
+    android:background="@color/jglsjglg"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    >
+    android:paddingStart="5dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="6dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,44 +17,82 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:drawablePadding="1dp"
-        android:text="订单号：" />
+        android:text="订单号:"
+        android:textSize="@dimen/sp16" />
 
     <TextView
         android:id="@+id/tvOrderNo"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+
         android:drawablePadding="1dp"
-        android:text="合同号" />
+        android:text="HT345656646546654"
+        android:textSize="@dimen/sp18" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
         android:drawablePadding="1dp"
-        android:text="时间：" />
+        android:text="时间:"
+        android:textSize="@dimen/sp16" />
 
     <TextView
         android:id="@+id/tvTime"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="HT345656646546654" />
+
+        android:text="HT345656646546654"
+        android:textSize="@dimen/sp18" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
         android:drawablePadding="1dp"
-        android:text="总额：" />
+        android:text="总额:"
+        android:textSize="@dimen/sp16" />
 
     <TextView
         android:id="@+id/tvTotalAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="HT345656646546654" />
 
+        android:layout_weight="1"
+        android:text="0.000"
+        android:textSize="@dimen/sp18" />
+
+    <ImageView
+        android:id="@+id/imPayWay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/x10"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+
+        />
+
+    <ImageView
+        android:id="@+id/tvUploadStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/x10"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:text="已上传" />
+
+    <TextView
+        android:id="@+id/btnPrinter"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/x4"
+        android:background="@drawable/shape_weight_display_bg55"
+        android:gravity="center"
+        android:padding="@dimen/x4"
+        android:text="打印"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp20" />
 
 </LinearLayout>

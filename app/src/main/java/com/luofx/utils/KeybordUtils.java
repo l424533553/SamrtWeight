@@ -22,7 +22,7 @@ public class KeybordUtils {
     public static void openKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm!=null){
+        if (imm != null) {
             imm.showSoftInput(mEditText, InputMethodManager.RESULT_SHOWN);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
                     InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -38,16 +38,34 @@ public class KeybordUtils {
     public static void closeKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm!=null) {
+        if (imm != null) {
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
         }
     }
 
+
+    /**
+     * 隐藏键盘
+     */
+//    public void hintKeyBoard(Context context, View view) {
+//        //拿到InputMethodManager
+//        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        //如果window上view获取焦点 && view不为空
+//        if (imm.isActive() &&   getCurrentFocus() != null) {
+//            //拿到view的token 不为空
+//            if (getCurrentFocus().getWindowToken() != null) {
+//                //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
+//                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//            }
+//        }
+//    }
+
+
     /**
      * 判断当前软键盘是否打开
      *
-     * @param activity  activity
-     * @return  是否是打开的
+     * @param activity activity
+     * @return 是否是打开的
      */
     public static boolean isSoftInputShow(Activity activity) {
 
@@ -58,7 +76,7 @@ public class KeybordUtils {
             InputMethodManager inputmanger = (InputMethodManager) activity
                     .getSystemService(Activity.INPUT_METHOD_SERVICE);
 //       inputmanger.hideSoftInputFromWindow(view.getWindowToken(),0);
-            if(inputmanger!=null){
+            if (inputmanger != null) {
                 return inputmanger.isActive() && activity.getWindow().getCurrentFocus() != null;
             }
 

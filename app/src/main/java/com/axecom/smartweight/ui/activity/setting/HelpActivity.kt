@@ -8,8 +8,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import com.axecom.smartweight.R
 import com.axecom.smartweight.base.SysApplication
-import com.axecom.smartweight.utils.FileUtils
 import com.luofx.utils.MyPreferenceUtils
+import com.luofx.utils.file.FileUtils
 import org.apache.poi.hwpf.HWPFDocument
 import org.apache.poi.hwpf.converter.PicturesManager
 import org.apache.poi.hwpf.converter.WordToHtmlConverter
@@ -42,8 +42,8 @@ class HelpActivity : AppCompatActivity() {
             val sysApplication = application as SysApplication
             sysApplication.threadPool.execute {
                 convert2Html(docName, "$savePath$name.html")
-                val editor = MyPreferenceUtils.getSp(this) as SharedPreferences.Editor
-                editor.putBoolean("isNotFirst", true)
+                val myPreferenceUtils = MyPreferenceUtils.getSp(this) as SharedPreferences
+                myPreferenceUtils.edit().putBoolean("isNotFirst", true).apply()
             }
         } else {//第二次
             showHelp()
@@ -72,13 +72,10 @@ class HelpActivity : AppCompatActivity() {
         webView.loadUrl("file://$savePath$name.html")//必须是//才可以找到file
     }
 
-
     /**
      * word文档转成html格式
      */
-
     private fun convert2Html(fileName: String, outPutFile: String) {
-
         try {
             val wordDocument = HWPFDocument(resources.assets.open(fileName))
             val wordToHtmlConverter = WordToHtmlConverter(
@@ -115,7 +112,6 @@ class HelpActivity : AppCompatActivity() {
             out.close()
             //保存html文件
             writeFile(String(out.toByteArray()), outPutFile)
-
             handler!!.sendEmptyMessage(4431)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -129,7 +125,6 @@ class HelpActivity : AppCompatActivity() {
 //        File fileseg=new File("你的目录");
 //        File  fileres=new File("你的输出目录");
 //        BufferedReader readerseg=new BufferedReader(new FileReader(fileseg));
-//
 //        PrintStream ps=new PrintStream(new FileOutputStream(fileres));
 //        while((s=readerseg.readLine())!=null){
 //            s=s.replaceAll("@","");
@@ -169,5 +164,5 @@ class HelpActivity : AppCompatActivity() {
         }
     }
 
-
+    //数据
 }

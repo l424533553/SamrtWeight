@@ -28,17 +28,17 @@
 //import com.axecom.smartweight.base.BusEvent;
 //import com.axecom.smartweight.base.SysApplication;
 //import com.axecom.smartweight.impl.ItemDragHelperCallback;
-//import com.axecom.smartweight.my.adapter.GoodsAdapter;
+//import com.axecom.smartweight.my.adapter.HotGoodsAdapter;
 //import com.axecom.smartweight.my.adapter.GoodsTypeAdapter;
 //import com.axecom.smartweight.my.entity.AllGoods;
 //import com.axecom.smartweight.my.entity.Goods;
 //import com.axecom.smartweight.my.entity.GoodsType;
 //import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
-//import com.axecom.smartweight.my.entity.dao.GoodsDao;
+//import com.axecom.smartweight.my.entity.dao.HotGoodsDao;
 //import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
 //import com.luofx.listener.MyOnItemClickListener2;
-//import com.luofx.utils.common.MyToast;
-//import com.shangtongyin.tools.serialport.IConstants_ST;
+//import com.xuanyuan.xinyu.MyToast;
+//import com.axecom.smartweight.my.config.IConstants;
 //
 //import org.greenrobot.eventbus.EventBus;
 //
@@ -56,14 +56,14 @@
 //import io.reactivex.android.schedulers.AndroidSchedulers;
 //import io.reactivex.schedulers.Schedulers;
 //
-//public class GoodsSettingActivity22 extends Activity implements View.OnClickListener, MyOnItemClickListener2, IConstants_ST {
+//public class GoodsSettingActivity22 extends Activity implements View.OnClickListener, MyOnItemClickListener2, IConstants {
 //
 //    private RecyclerView rvGoods;
 //    private RecyclerView rvGoodsType;
 //    private GridView rvGoodsSelect;
 //
 //
-//    private GoodsAdapter goodsAdapter;
+//    private HotGoodsAdapter goodsAdapter;
 //    //    private GoodsSelectAdapter goodsSelectAdapter;
 //    private GoodsTypeAdapter goodsTypeAdapter;
 //
@@ -71,7 +71,7 @@
 //    private boolean isShowDelTv = false;
 //    protected SysApplication sysApplication;
 //
-//    private GoodsDao goodsDao;
+//    private HotGoodsDao goodsDao;
 //    private AllGoodsDao allGoodsDao;
 //    private GoodsTypeDao goodsTypeDao;
 //    private Context context;
@@ -96,7 +96,7 @@
 //
 //        initHander();
 //
-//        goodsDao = new GoodsDao(context);
+//        goodsDao = new HotGoodsDao(context);
 //        goodsTypeDao = new GoodsTypeDao(context);
 //        allGoodsDao = new AllGoodsDao(context);
 //        initRecycle();
@@ -201,7 +201,7 @@
 //            }
 //        });
 //        helper.attachToRecyclerView(rvGoods);
-//        goodsAdapter = new GoodsAdapter(context);
+//        goodsAdapter = new HotGoodsAdapter(context);
 //        goodsAdapter.setMyOnItemClickListener(this);
 //        rvGoods.setAdapter(goodsAdapter);
 //

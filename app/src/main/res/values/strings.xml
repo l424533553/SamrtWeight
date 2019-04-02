@@ -51,6 +51,37 @@
     <string name="str_printer_error">打印机出错</string>
     <string name="str_state">状态：</string>
     <string name="kilogram">kg</string>
-    <string name="Administrators_pwd">123456</string>
+    <string name="Administrators_pwd">852640</string>
     <string name="string_login_auto_txt">自动登录</string>
+    <string name="Default_Initial_Price">0.00</string>
+    <string name="btnSysSet">系统设置按钮</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="showToast">显示结果</string>
+    <string name="loadPatch">加载补丁</string>
+    <string name="loadLibrary">加载so库</string>
+    <string name="userDownload">手动下载补丁包</string>
+    <string name="checkUpgrade">检查更新</string>
+    <string name="userPatch">手动合成补丁</string>
+    <string name="default_weight">0.000</string>
+    <string name="product_name">品名：</string>
+    <string name="Net_weight">净重：</string>
+    <string name="price">单价：</string>
+    <string name="default_price">0.00</string>
+    <string name="rmb">元</string>
+    <string name="subtotal">小计：</string>
+    <string name="item_price">单价</string>
+    <string name="product">商品</string>
+    <string name="weight">重量</string>
+    <string name="item_total">小计</string>
+    <string name="v">V</string>
+    <string name="axb">深圳市安鑫宝科技发展有限公司</string>
+    <string name="kg">kg</string>
+    <string name="Total">合计：</string>
+    <string name="gross_weight">总重：</string>
+    <string name="baseUrl">http://119.23.43.64</string>
+
 </resources>

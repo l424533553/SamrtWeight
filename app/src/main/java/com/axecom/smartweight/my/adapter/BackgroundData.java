@@ -24,6 +24,15 @@ public class BackgroundData {
         list.add(R.color.gray_aaa);
         list.add(R.color.color_huyan);
         list.add(R.color.default_bg);
+
+        list.add(R.color.color_background1);
+        list.add(R.color.color_background2);
+        list.add(R.color.color_background3);
+        list.add(R.color.color_background4);
+        list.add(R.color.color_background5);
+        list.add(R.color.color_background6);
+        list.add(R.color.color_background7);
+
         return list;
     }
 }

@@ -92,6 +92,16 @@ public class TraceNoDao {
         }
     }
 
+    // 删除数据
+    public int deleteAll() {
+        try {
+            return dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     // 删除数据,不是删除表
     public void deleteTableData() {
         ormliteBaseHelper.getWritableDatabase().execSQL("DELETE FROM traceNo");

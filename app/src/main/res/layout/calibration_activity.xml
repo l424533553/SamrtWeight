@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="@drawable/shape_weight_display_bg"
         android:orientation="vertical"
         android:padding="5dp">
@@ -133,9 +132,9 @@
             <Button
                 android:id="@+id/calibration_back_btn"
                 android:layout_width="180dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_weight_display_bg"
                 android:text="@string/string_settings_back_txt"
                 android:textSize="20sp" />
@@ -143,15 +142,14 @@
             <Button
                 android:id="@+id/calibration_next_step_btn"
                 android:layout_width="180dp"
-                android:layout_height="80dp"
-                android:layout_marginBottom="20dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="100dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_weight_display_bg"
                 android:text="下一步"
                 android:textSize="20sp" />
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/calibration_second_layout"

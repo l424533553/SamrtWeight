@@ -19,7 +19,7 @@ import com.axecom.smartweight.bean.ReportResultBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.luofx.utils.DateUtils;
-import com.luofx.utils.log.LogUtils;
+import com.luofx.utils.log.LogWriteUtils;
 import com.luofx.utils.match.MyMatch;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
             initView(view);
             initHandler();
             getData(true);
-            LogUtils.e(TAG, "测试专用");
+            LogWriteUtils.e(TAG, "测试专用");
         }
         return view;
     }
@@ -188,7 +188,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 }
             });
         } catch (Exception e) {
-//            LogUtils.e(TAG, e.getCause().toString());
+//            LogWriteUtils.e(TAG, e.getCause().toString());
         }
 
 
@@ -220,7 +220,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
             }
         } catch (Exception e) {
-//            LogUtils.e(TAG, e.getCause().toString());
+//            LogWriteUtils.e(TAG, e.getCause().toString());
         }
 
     }
@@ -274,7 +274,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
                 holder.grandTotalTv.setText(MyMatch.accurate2(item.getTotal_amount()));
                 holder.weightTv.setText(MyMatch.accurate3(item.getTotal_weight()));
             } catch (Exception e) {
-//                LogUtils.e(TAG, e.getCause().toString());
+//                LogWriteUtils.e(TAG, e.getCause().toString());
             }
 
             return convertView;

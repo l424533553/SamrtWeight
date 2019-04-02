@@ -3,6 +3,9 @@ package com.axecom.smartweight.utils;
 import java.io.UnsupportedEncodingException;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 ///** AES对称加密解密类 **/
@@ -125,4 +128,30 @@ public class AESHelper {
         }
         return result;
     }
+
+    /**
+     * 采用3DES 加密  Android 中默认的加密方法就是 ECB模式，该模式事实上是不安全的
+     * ECB模式中  只有PKCS5Padding 模式在Android中被支持，PKCS7Padding会报错
+     *
+     * @param src 加密数据源
+     * @param key 加密秘钥
+     * @return 返回16进制的加密数据
+     * @throws Exception 数据格式异常 和 转换异常
+     */
+    public static String encryptDESedeECB(final String src, final String key) {
+        try {
+            final DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));
+            final SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");
+            final SecretKey securekey = keyFactory.generateSecret(dks);
+
+            final Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, securekey);
+            byte[] b = cipher.doFinal(src.getBytes());
+            return byte2hex(b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

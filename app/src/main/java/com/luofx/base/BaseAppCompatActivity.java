@@ -1,138 +1,100 @@
-//package com.luofx.base;
-//
-//import android.Manifest;
-//import android.app.AlertDialog;
-//import android.content.DialogInterface;
-//import android.content.Intent;
-//import android.content.pm.PackageManager;
-//import android.net.Uri;
-//import android.os.Build;
-//import android.os.Bundle;
-//import android.provider.Settings;
-//import android.support.v4.app.ActivityCompat;
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.app.AppCompatActivity;
-//
-//public class BaseAppCompatActivity extends AppCompatActivity {
-//
-//    /**
-//     * 是否已经权限授权
-//     */
-////    private boolean isAllGranted;
-//    private static final int MY_PERMISSION_REQUEST_CODE = 10000;
-//    /**
-//     * 权限访问请求CODE
-//     */
-//    private static final int MY_PERMISSION_SET_REQUEST_CODE = 10010;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            checkPermissions();
-//        }
-//
-//    }
-//
-//    private void checkPermissions() {
-//        String[] arr = new String[]{
-//                Manifest.permission.MODIFY_AUDIO_SETTINGS,
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-//                Manifest.permission.READ_EXTERNAL_STORAGE,
-//                Manifest.permission.READ_PHONE_STATE,
-//                Manifest.permission.ACCESS_NETWORK_STATE,
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.VIBRATE,
-//                Manifest.permission.CAMERA
-//        };
-//
-//        /*
-//         * 第 1 步: 检查是否有相应的权限
-//         */
-//        boolean isAllGranted = checkPermissionAllGranted(arr);
-//        // 如果这3个权限全都拥有, 则直接执行备份代码
-//        if (!isAllGranted) {
-//            /*
-//             * 第 2 步: 请求权限
-//             */
-//            // 一次请求多个权限, 如果其他有权限是已经授予的将会自动忽略掉
-//
-//
-//            ActivityCompat.requestPermissions(this, arr, MY_PERMISSION_REQUEST_CODE);
-//        }
-//    }
-//
-//
-//    /**
-//     * 检查是否拥有指定的所有权限
-//     */
-//    private boolean checkPermissionAllGranted(String[] permissions) {
-//        for (String permission : permissions) {
-//            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-//                // 只要有一个权限没有被授予, 则直接返回 false
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-//
-//    /**
-//     * 第 3 步: 申请权限结果返回处理
-//     */
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == MY_PERMISSION_REQUEST_CODE) {
-//            boolean isAllGranted = true;
-//            // 判断是否所有的权限都已经授予了
-//            for (int grant : grantResults) {
-//                if (grant != PackageManager.PERMISSION_GRANTED) {
-//                    isAllGranted = false;
-//                    break;
-//                }
-//            }
-////            this.isAllGranted = isAllGranted;
-//            if (!isAllGranted) {
-//                // 弹出对话框告诉用户需要权限的原因, 并引导用户去应用权限管理中手动打开权限按钮
-//                openAppDetails();
-//            }
-//        }
-//    }
-//
-//    /*
-//     */
-//
-//    /**
-//     * 打开 APP 的详情设置
-//     */
-//
-//    private void openAppDetails() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("请到 “应用信息 -> 权限” 中授予！");
-//        builder.setPositiveButton("去手动授权", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                Intent intent = new Intent();
-//                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-//                intent.addCategory(Intent.CATEGORY_DEFAULT);
-//                intent.setData(Uri.parse("package:" + getPackageName()));
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//
-////                startActivityForResult(intent,MY_PERMISSION_SET_REQUEST_CODE);
-//                startActivity(intent);
-//            }
-//        });
-//        builder.setNegativeButton("取消", null);
-//        builder.show();
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == MY_PERMISSION_SET_REQUEST_CODE) {
-//            checkPermissions();
-//        }
-//
-//    }
-//}
+package com.luofx.base;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+import com.axecom.smartweight.R;
+import com.axecom.smartweight.base.BusEvent;
+import com.luofx.newclass.ActivityController;
+import com.xuanyuan.library.MyLog;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+@SuppressLint("Registered")
+public abstract class BaseAppCompatActivity extends AppCompatActivity implements IBaseConstants {
+
+    //是否 需要注册事件总线
+    protected boolean isNeedRgEventBus;
+
+    /**
+     * true Or false 是否需要注册事件总线机制
+     * 1.需要在 子类 的  super.onCreate(savedInstanceState); 之前调用
+     * 2.需要写 有      @Subscribe 关键字的 事件接收处理方法，否则报错异常
+     * void onEventMain(BusEvent event);
+     * 3.設置 this.isNeedRgEventBus=  true or  false
+     */
+    protected abstract void setNeedRgEventBus();
+
+    protected abstract void onEventMainBack(BusEvent event);
+
+    @Subscribe
+    public void onEventMain(BusEvent event) {
+        onEventMainBack(event);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // 加入到 Activity管理中
+        ActivityController.addActivity(this);
+        setNeedRgEventBus();
+        if (isNeedRgEventBus) {
+            MyLog.blue("开启注册");
+            EventBus.getDefault().register(this);
+        } else {
+            MyLog.blue("未开启注册");
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isNeedRgEventBus) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    /**
+     * 返回点击  退出时间
+     */
+    protected long backTime;
+
+    /**
+     * 是否可以点击
+     * 超过两秒 才能进行下一次点击操作
+     */
+    protected boolean isClickAble() {
+        if (System.currentTimeMillis() - backTime > BACK_TIME_DEFAULT) {
+            backTime = System.currentTimeMillis();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+    }
+
+    /**
+     * Activity 的带平滑动画 跳转
+     */
+    protected void startActivityWith(Intent intent, boolean isAinmain) {
+        startActivity(intent);
+        //是否需要开启动画(目前只有这种x轴平移动画,后续可以添加):
+        if (isAinmain) {
+            this.overridePendingTransition(R.anim.activity_translate_x_in, R.anim.activity_translate_x_out);
+        }
+    }
+}
+
+
+
+
+
+
+

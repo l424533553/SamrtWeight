@@ -7,14 +7,10 @@
 
     <TextView
         android:id="@+id/main_grid_item_btn"
-
         android:background="@drawable/shape_weight_display_bg"
 
         android:text="白菜"
-
-        android:textSize="22sp"
-
-
+        android:textSize="@dimen/sp22"
         style="@style/btnClick"
 
         />

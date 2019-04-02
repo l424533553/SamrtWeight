@@ -8,7 +8,16 @@ import android.os.SystemClock;
 import android.text.format.Time;
 import android.util.Log;
 
-import com.luofx.utils.log.LogUtils;
+import com.alibaba.fastjson.JSON;
+import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.my.config.IConstants;
+import com.axecom.smartweight.my.entity.UserInfo;
+import com.luofx.entity.Deviceinfo;
+import com.luofx.entity.Errorinfo;
+import com.luofx.entity.ExceptionInfo;
+import com.luofx.listener.OkHttpListener;
+import com.luofx.utils.DateUtils;
+import com.luofx.utils.log.LogWriteUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +27,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Properties;
 import java.util.TreeSet;
 
@@ -27,7 +37,13 @@ import java.util.TreeSet;
  * email:424533553@qq.com
  * describe:
  */
-public class CrashHandler implements Thread.UncaughtExceptionHandler {
+public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants {
+
+//    private OkHttpListener okHttpListener;
+//
+//    public void setOkHttpListener(OkHttpListener okHttpListener) {
+//        this.okHttpListener = okHttpListener;
+//    }
 
     /**
      * Debug Log tag
@@ -37,7 +53,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 是否开启日志输出,在Debug状态下开启,
      * 在Release状态下关闭以提示程序性能
      */
-    public static final boolean DEBUG = true;
+    private static final boolean DEBUG = true;
     /**
      * 系统默认的UncaughtException处理类
      */
@@ -62,12 +78,15 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      */
     private static final String CRASH_REPORTER_EXTENSION = ".cr";
 
-    private static Object syncRoot = new Object();
+    private static final Object syncRoot = new Object();
+
+    private OkHttpListener okHttpListener;
 
     /**
      * 保证只有一个CrashHandler实例
      */
     private CrashHandler() {
+
     }
 
     /**
@@ -94,14 +113,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 初始化,注册Context对象,
      * 获取系统默认的UncaughtException处理器,
      * 设置该CrashHandler为程序的默认处理器
-     *
-     * @param ctx
      */
-    public void init(Context ctx) {
+    public void init(Context ctx ) {
         mContext = ctx;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        LogUtils.init();
+        LogWriteUtils.init();
     }
 
     /**
@@ -109,11 +126,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+
+
         if (!handleException(ex) && mDefaultHandler != null) {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-            SystemClock.sleep(3000);
+            SystemClock.sleep(5000);
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         }
@@ -124,10 +143,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 发送错误报告等操作均在此完成.
      * 开发者可以根据自己的情况来自定义异常处理逻辑
      *
-     * @param ex
      * @return true:如果处理了该异常信息;否则返回false
      */
-    private boolean handleException(Throwable ex) {
+    private boolean handleException(final Throwable ex) {
         if (ex == null) {
             Log.w(TAG, "handleException --- ex==null");
             return true;
@@ -136,32 +154,29 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (msg == null) {
             return false;
         }
-//        //使用Toast来显示异常信息
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                Looper.prepare();
-//
-//                if(DEBUG){
-//                    Log.d(TAG, "异常信息->"+msg);
-//                    Toast toast = Toast.makeText(mContext, "程序出错，即将退出:\r\n" + msg,
-//                            Toast.LENGTH_LONG);
-//                    toast.setGravity(Gravity.CENTER, 0, 0);
-//                    toast.show();
-//
-//                    //保存错误报告文件
-//                    LogToFile.w("my",msg);//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-//                }
-////              MsgPrompt.showMsg(mContext, "程序出错啦", msg+"\n点确认退出");
-//                Looper.loop();
-//            }
-//        }.start();
 
+        //TODO 开启线程收集并上传个给服务器
+        final SysApplication myBaseApplication = (SysApplication) mContext.getApplicationContext();
 
-//        LogUtils.e("my123456",msg);//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("123456message==", ex.getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("123456cause==", ex.getCause().getMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
-        LogUtils.e("123456localmessage==", ex.getLocalizedMessage());//这句话可以先注释掉，这是我单独写的一个log写入类,下面已提供了该类
+        // 准备上传的异常日志
+        ExceptionInfo exceptionInfo = new ExceptionInfo();
+        exceptionInfo.setSteelyardtype(0);
+
+        UserInfo userInfo = myBaseApplication.getUserInfo();
+        exceptionInfo.setUserinfo(userInfo);
+
+        Deviceinfo deviceinfo = myBaseApplication.getDeviceinfo();
+        exceptionInfo.setDeviceinfo(deviceinfo);
+
+        Errorinfo errorinfo = new Errorinfo();
+
+        errorinfo.setErrormessage(ex.getLocalizedMessage());
+        errorinfo.setErrortime(DateUtils.getYY_TO_ss(new Date()));
+        exceptionInfo.setErrorinfo(errorinfo);
+
+        String url = BASE_IP_ST + "/api/smartsz/addapplog";
+        String stringBody = JSON.toJSONString(exceptionInfo);
+        myBaseApplication.okHttpPost(url, stringBody, myBaseApplication);
 
         //收集设备信息
         collectCrashDeviceInfo(mContext);
@@ -171,6 +186,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         //sendCrashReportsToServer(mContext);
         return true;
     }
+
 
     /**
      * 在程序启动时候, 可以调用该函数来发送以前没有发送的报告
@@ -220,8 +236,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 保存错误信息到文件中
      *
-     * @param ex
-     * @return
+     * @param ex 異常
      */
     private String saveCrashInfoToFile(Throwable ex) {
         Writer info = new StringWriter();
@@ -258,16 +273,15 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     /**
      * 收集程序崩溃的设备信息
      *
-     * @param ctx
+     * @param ctx 上下文
      */
-    public void collectCrashDeviceInfo(Context ctx) {
+    private void collectCrashDeviceInfo(Context ctx) {
         try {
             PackageManager pm = ctx.getPackageManager();
             PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(),
                     PackageManager.GET_ACTIVITIES);
             if (pi != null) {
-                mDeviceCrashInfo.put(VERSION_NAME,
-                        pi.versionName == null ? "not set" : pi.versionName);
+                mDeviceCrashInfo.put(VERSION_NAME, pi.versionName == null ? "not set" : pi.versionName);
                 mDeviceCrashInfo.put(VERSION_CODE, "" + pi.versionCode);
             }
         } catch (PackageManager.NameNotFoundException e) {
@@ -289,4 +303,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
         }
     }
+
+
 }

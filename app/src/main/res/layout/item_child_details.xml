@@ -5,52 +5,64 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="商品名"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp16"
+            />
 
         <TextView
             android:id="@+id/tvPrice"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="0.000"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp16"
+            />
 
         <TextView
             android:id="@+id/tvWeight"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="0.266"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp16"
+            />
 
         <TextView
             android:id="@+id/tvMoney"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="15.64"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp16"
+            />
 
         <TextView
             android:id="@+id/tvUnit"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
+            android:text="kg"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="@dimen/sp16"
+
+            />
+
     </LinearLayout>
 </LinearLayout>

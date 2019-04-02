@@ -3,8 +3,6 @@ package com.axecom.smartweight.my.entity;
 import java.io.Serializable;
 
 public class AdResultBean {
-
-
     /**
      * status : 0
      * msg : ok

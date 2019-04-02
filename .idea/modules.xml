@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SmartWeight.iml" filepath="$PROJECT_DIR$/SmartWeight.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../CommonLibrary/CommonLibrary.iml" filepath="$PROJECT_DIR$/../CommonLibrary/CommonLibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SmartWeightTest.iml" filepath="$PROJECT_DIR$/.idea/SmartWeightTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../CommonLibrary/library/library.iml" filepath="$PROJECT_DIR$/../CommonLibrary/library/library.iml" />
     </modules>
   </component>
 </project>

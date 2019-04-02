@@ -1,6 +1,7 @@
 package com.axecom.smartweight.manager;
 
-import com.axecom.smartweight.base.SysApplication;
+import android.content.Context;
+
 import com.inuker.bluetooth.library.BluetoothClient;
 
 /**
@@ -10,11 +11,11 @@ public class ClientManager {
 
     private static BluetoothClient mClient;
 
-    public static BluetoothClient getClient() {
+    public static BluetoothClient getClient(Context context) {
         if (mClient == null) {
             synchronized (ClientManager.class) {
                 if (mClient == null) {
-                    mClient = new BluetoothClient(SysApplication.getContext());
+                    mClient = new BluetoothClient(context);
                 }
             }
         }

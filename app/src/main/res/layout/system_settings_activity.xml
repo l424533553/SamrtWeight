@@ -1,327 +1,360 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/green_3CB371"
-    android:padding="10dp">
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_clean"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="系统设置"
+        android:textColor="@color/color_white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:onClick="doBack"
+        android:src="@mipmap/back96"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape_weight_display_bg"
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="10dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black" />
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-            <LinearLayout
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="服务器IP："
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/tvWebIP"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/shape_white_btn_bg"
+                android:gravity="center_vertical"
+                android:hint="@string/baseUrl"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnSaveIP"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:text="确定"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvHardwareInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="硬件信息"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/btnApiTest"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:background="@drawable/selector_btn_epay"
+                android:text="API调试测试"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnDeleteAdImage"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_epay"
+                android:text="删除轮播图片"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="服务器IP："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+            <Button
+                android:id="@+id/btnLookLog"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_epay"
+                android:text="查看log"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                    <EditText
-                        android:id="@+id/tvWebIP"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:background="@drawable/shape_white_btn_bg"
-                        android:gravity="center_vertical"
-                        android:hint="http://119.23.43.64"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+            <Button
+                android:id="@+id/btnCleanLog"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_epay"
+                android:text="删除log"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
+        </LinearLayout>
 
-                    <Button
-                        android:id="@+id/btnSaveIP"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/shape_green_bg"
-                        android:text="确定"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
+        <RadioGroup
+            android:id="@+id/rgWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/shape_light_green_bg"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="标定重量:"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                    <TextView
+            <RadioButton
+                android:id="@+id/rbWeight10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="10kg砝码"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="打印机配置："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+            <RadioButton
+                android:id="@+id/rbWeight20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="20kg砝码"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
+        </RadioGroup>
 
-                    <TextView
-                        android:id="@+id/system_settings_printer_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp"
 
-                    <Button
-                        android:id="@+id/system_settings_printer_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/green_btn_selector"
-                        android:enabled="false"
-                        android:text="@string/string_choose"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
+            >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="默认买方编号："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/system_settings_default_buyer_number_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:background="@drawable/shape_white_btn_bg"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="5dp"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|right"
-                        android:text="余额取整："
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/system_settings_balance_rounding_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <Button
-                        android:id="@+id/system_settings_balance_rounding_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/green_btn_selector"
-                        android:enabled="false"
-                        android:text="@string/string_choose"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <Button
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:background="@drawable/shape_light_green_bg"
+                android:clickable="false"
+                android:enabled="false"
+                android:text="标定流程："
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnZeroSetting"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn_epay"
+                android:text="第一步\n清空置零"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="默认计价模式："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_light_green_bg"
+                android:enabled="false"
+                android:text="第二步\n放置砝码"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/system_settings_default_priceing_method_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+            <Button
+                android:id="@+id/btnCalibration"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/shape_light_green_bg"
+                android:text="第三步\n标定"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-                    <Button
-                        android:id="@+id/system_settings_default_priceing_method_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/shape_green_bg"
-                        android:text="@string/string_choose"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
+        </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
 
-                    <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="重量取整："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+            <!-- <Button
+                 android:id="@+id/btnApiTest"
+                 android:layout_width="match_parent"
+                 android:layout_height="60dp"
+                 android:layout_marginStart="10dp"
+                 android:layout_marginEnd="10dp"
+                 android:layout_weight="1"
+                 android:background="@drawable/selector_btn_epay"
+                 android:text="API调试测试"
+                 android:textColor="@color/selector_btn_text"
+                 android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/system_settings_weight_rounding_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+             <Button
+                 android:id="@+id/btnDeleteAdImage"
+                 android:layout_width="match_parent"
+                 android:layout_height="60dp"
+                 android:layout_marginStart="10dp"
+                 android:layout_marginEnd="10dp"
+                 android:layout_weight="1"
+                 android:background="@drawable/selector_btn_epay"
+                 android:text="删除轮播图片"
+                 android:textColor="@color/selector_btn_text"
+                 android:textSize="20sp" />
 
-                    <Button
-                        android:id="@+id/system_settings_weight_rounding_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/shape_green_bg"
-                        android:text="@string/string_choose"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
+             <Button
+                 android:id="@+id/btnLookLog"
+                 android:layout_width="match_parent"
+                 android:layout_height="60dp"
+                 android:layout_marginStart="10dp"
+                 android:layout_marginEnd="10dp"
+                 android:layout_weight="1"
+                 android:background="@drawable/selector_btn_epay"
+                 android:text="查看log"
+                 android:textColor="@color/selector_btn_text"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                 android:textSize="20sp" />-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|left"
-                        android:text="默认卖方编号："
-                        android:textColor="@color/black"
-                        android:textSize="16sp" />
+            <Button
+                android:id="@+id/btnRemoveSign"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:text="去除拆机标识"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
 
-                    <TextView
-                        android:id="@+id/system_settings_default_seller_number_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:background="@drawable/shape_white_btn_bg"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="5dp"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+            <Button
+                android:id="@+id/btnHardwareInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:text="测试硬件信息"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp" />
+        </LinearLayout>
 
-                </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:padding="10dp"
+            android:background="@drawable/shape_light_green_bg"
+            >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+            <TextView
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="打印二维码"
+                android:textSize="@dimen/sp18"
+                android:textColor="@color/color_white"
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center|right"
-                        android:text="计重单位："
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
+                />
 
-                    <TextView
-                        android:id="@+id/system_settings_weight_unit_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:drawableBottom="@drawable/shape_black_line"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <Button
-                        android:id="@+id/system_settings_weight_unit_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/green_btn_selector"
-                        android:enabled="false"
-                        android:text="@string/string_choose"
-                        android:textColor="@color/white"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-            </LinearLayout>
+            <Switch
+                android:id="@+id/stPrintQR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:showText="true"
+                android:textColor="@color/color_white"
+                android:switchMinWidth="@dimen/x100"
+                android:textOff="关闭"
+                android:textOn="开启"
+                android:shadowColor="@color/color_white"
+                android:textSize="@dimen/sp16"
+                android:thumb="@drawable/thumb"
+                android:track="@drawable/track" />
 
         </LinearLayout>
 
@@ -330,6 +363,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -355,7 +389,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="重量稳定后才能确认保存"
                     android:textColor="@color/black"
@@ -383,18 +417,6 @@
                     android:text="联机结算(现金结算)"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
-                <CheckedTextView
-                    android:id="@+id/system_settings_distinguish_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="客户开秤后不区分买卖方"
-                    android:textColor="@color/gray_ccc"
-                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -410,7 +432,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:enabled="false"
                     android:gravity="center"
                     android:text="IC卡结算时再刷卡"
@@ -422,7 +444,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="停用打印功能"
                     android:textColor="@color/black"
@@ -433,7 +455,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="允许无批次结算"
                     android:textColor="@color/black"
@@ -444,29 +466,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="自动取上一笔单价"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
-                <Button
-                    android:id="@+id/btnLookLog"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="查看log"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btnCleanLog"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="删除log"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -483,7 +488,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="停用现金模式"
                     android:textColor="@color/black"
@@ -494,7 +499,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="停用支付宝模式"
                     android:textColor="@color/black"
@@ -505,53 +510,31 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                    android:drawableStart="?android:listChoiceIndicatorMultiple"
                     android:gravity="center"
                     android:text="停用微信模式"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/btnDeleteAdImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="删除轮播图片"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/black" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/system_settings_save_btn"
-                android:layout_width="120dp"
-                android:layout_height="60dp"
-                android:layout_marginRight="80dp"
-                android:background="@drawable/shape_weight_display_bg"
-                android:text="@string/save_txt"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/system_settings_back_btn"
-                android:layout_width="120dp"
-                android:layout_height="60dp"
-                android:background="@drawable/shape_weight_display_bg"
-                android:text="@string/string_settings_back_txt"
-                android:textSize="20sp" />
-        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <TextView
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:background="@color/color_clean"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_clean"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+</android.support.constraint.ConstraintLayout>

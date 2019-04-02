@@ -2,7 +2,6 @@ package com.axecom.smartweight.net;
 
 
 import com.axecom.smartweight.base.BaseEntity;
-import com.axecom.smartweight.bean.Advertis;
 import com.axecom.smartweight.bean.CalibrationBean;
 import com.axecom.smartweight.bean.FastLoginInfo;
 import com.axecom.smartweight.bean.LocalSettingsBean;
@@ -259,8 +258,8 @@ public interface RequestInterface {
      * 状态码：200
      * @return
      */
-    @GET("advertising")
-    Observable<BaseEntity<Advertis>> advertising();
+//    @GET("advertising")
+//    Observable<BaseEntity<Advertis>> advertising();
 
     /**
      * 批量提交订单

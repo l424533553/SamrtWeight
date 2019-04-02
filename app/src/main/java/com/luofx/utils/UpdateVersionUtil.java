@@ -14,7 +14,7 @@ package com.luofx.utils;//package com.luofx.utils;//package com.coolshow.mybmobt
 //import com.luofx.entity.OutputInfo;
 //import com.luofx.listener.MyOnClickListener;
 //import com.luofx.utils.apk.MyApkUtils;
-//import com.shangtongyin.tools.serialport.R;
+//import com.shangtongyin.serialport.R;
 //
 ///**
 // * @author wenjie 版本更新的工具类

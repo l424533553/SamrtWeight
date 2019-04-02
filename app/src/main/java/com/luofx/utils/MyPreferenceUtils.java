@@ -17,7 +17,6 @@ public class MyPreferenceUtils {
      * 获得sharePreference内存对象
      *
      * @param context  上下文内容
-     * @return
      */
     public static SharedPreferences getSp(Context context) {
         if (mSp == null) {
@@ -32,11 +31,9 @@ public class MyPreferenceUtils {
      * @param context  上下文
      * @param key      对应的键
      * @param defValue 如果没有对应的值，
-     * @return
      */
     public static boolean getBoolean(Context context, String key, boolean defValue) {
-        SharedPreferences sp = getSp(context);
-        return sp.getBoolean(key, defValue);
+       return getSp(context).getBoolean(key, defValue);
     }
 
     /**
@@ -44,7 +41,6 @@ public class MyPreferenceUtils {
      *
      * @param context 上下文
      * @param key     对应的键
-     * @return
      */
     public static boolean getBoolean(Context context, String key) {
         return getBoolean(context, key, false);
@@ -53,14 +49,9 @@ public class MyPreferenceUtils {
 
     /**
      * 设置int类型的值
-     *
-     * @param context
-     * @param key
-     * @param value
      */
     public static void setInt(Context context, String key, int value) {
-        SharedPreferences sp = getSp(context);
-        Editor editor = sp.edit();
+        Editor editor = getSp(context).edit();
         editor.putInt(key, value);
         editor.apply();
     }
@@ -68,16 +59,11 @@ public class MyPreferenceUtils {
 
     /**
      * 设置boolean类型的值
-     *
-     * @param context
-     * @param key
-     * @param value
      */
     public static void setBoolean(Context context, String key, boolean value) {
-        SharedPreferences sp = getSp(context);
-        Editor editor = sp.edit();
+        Editor editor = getSp(context).edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -86,11 +72,9 @@ public class MyPreferenceUtils {
      * @param context  上下文
      * @param key      对应的键
      * @param defValue 如果没有对应的值，
-     * @return
      */
     public static String getString(Context context, String key, String defValue) {
-        SharedPreferences sp = getSp(context);
-        return sp.getString(key, defValue);
+        return getSp(context).getString(key, defValue);
     }
 
     /**
@@ -99,11 +83,9 @@ public class MyPreferenceUtils {
      * @param context  上下文
      * @param key      对应的键
      * @param defValue 如果没有对应的值，
-     * @return
      */
     public static int getInt(Context context, String key, int defValue) {
-        SharedPreferences sp = getSp(context);
-        return sp.getInt(key, defValue);
+        return getSp(context).getInt(key, defValue);
     }
 
     /**
@@ -111,7 +93,6 @@ public class MyPreferenceUtils {
      *
      * @param context 上下文
      * @param key     对应的键
-     * @return
      */
     public static String getString(Context context, String key) {
         return getString(context, key, null);
@@ -119,16 +100,11 @@ public class MyPreferenceUtils {
 
     /**
      * 设置String类型的值
-     *
-     * @param context
-     * @param key
-     * @param value
      */
     public static void setString(Context context, String key, String value) {
-        SharedPreferences sp = getSp(context);
-        Editor editor = sp.edit();
+        Editor editor =  getSp(context).edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -137,11 +113,9 @@ public class MyPreferenceUtils {
      * @param context  上下文
      * @param key      对应的键
      * @param defValue 如果没有对应的值，
-     * @return
      */
     public static long getLong(Context context, String key, long defValue) {
-        SharedPreferences sp = getSp(context);
-        return sp.getLong(key, defValue);
+        return  getSp(context).getLong(key, defValue);
     }
 
     /**
@@ -149,7 +123,6 @@ public class MyPreferenceUtils {
      *
      * @param context 上下文
      * @param key     对应的键
-     * @return
      */
     public static Long getLong(Context context, String key) {
         return getLong(context, key, 0);
@@ -157,28 +130,20 @@ public class MyPreferenceUtils {
 
     /**
      * 设置Long类型的值
-     *
-     * @param context
-     * @param key
-     * @param value
      */
     public static void setLong(Context context, String key, long value) {
-        SharedPreferences sp = getSp(context);
-        Editor editor = sp.edit();
+        Editor editor = getSp(context).edit();
         editor.putLong(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
      * 根据key值删除指定的数据
      *
-     * @param context
-     * @param key
      */
     public static void remove(Context context, String key) {
-        SharedPreferences sp = getSp(context);
-        Editor editor = sp.edit();
+        Editor editor = getSp(context).edit();
         editor.remove(key);
-        editor.commit();
+        editor.apply();
     }
 }

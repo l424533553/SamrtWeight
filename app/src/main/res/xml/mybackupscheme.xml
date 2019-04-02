@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TODO Remove the following "exclude" elements to make them a part of the auto backup -->
+    <!-- Exclude the shared preferences file that contains the GCM registrationId -->
+    <exclude
+        domain="sharedpref"
+        path="share.xml" />
+    <exclude
+        domain="sharedpref"
+        path="config.xml" />
+    <exclude
+        domain="sharedpref"
+        path="fn.xml" />
+    <exclude
+        domain="sharedpref"
+        path="user.xml" />
+    <exclude
+        domain="sharedpref"
+        path="preference.xml" />
+    <exclude
+        domain="sharedpref"
+        path="share_data.xml" />
+
+    <!--在安装更新中 ，将不备份数据库文件-->
+   <!-- <exclude
+        domain="database"
+        path="r2011.db" />-->
+
+</full-backup-content>

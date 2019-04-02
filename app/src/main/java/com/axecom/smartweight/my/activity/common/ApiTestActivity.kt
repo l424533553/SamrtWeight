@@ -1,0 +1,115 @@
+package com.axecom.smartweight.my.activity.common
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.Uri
+import android.net.wifi.WifiManager
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.ListView
+import com.axecom.smartweight.R
+import com.axecom.smartweight.my.activity.AdImageFragment
+import com.axecom.smartweight.my.activity.UserInfoFragment
+
+
+/**
+ * luofaxin
+ * Api 调试测试
+ */
+class ApiTestActivity : AppCompatActivity(), UserInfoFragment.OnFragmentInteractionListener {
+    override fun onFragmentInteraction(uri: Uri) {
+        //TODO
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    lateinit var listView: ListView
+    lateinit var fragment: Fragment
+    fun initView() {
+        listView = findViewById(R.id.listView)
+        var frameLayout = findViewById<FrameLayout>(R.id.frameLayout)
+        fragment = UserInfoFragment()
+
+    }
+
+    fun initData() {
+        val USER_INFO = "用户信息"
+        val OTHER_INFO = "其他信息"
+        val apiName = arrayOf(USER_INFO, OTHER_INFO, "北京", "上海", "香港", "澳门", "天津")  //定义一个数组，作为数据源
+        val arrayAdapter: ArrayAdapter<String>    //定义一个数组适配器对象
+        //创建数组适配器对象，并且通过参数设置类item项的布局样式和数据源
+        arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, apiName)
+        //把数组适配器加载到ListView控件中
+
+        listView.adapter = arrayAdapter
+        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+
+            var transaction = fragmentManager.beginTransaction()
+            transaction.remove(fragment)
+            when (apiName[position]) {
+                USER_INFO -> fragment = UserInfoFragment()
+                OTHER_INFO -> fragment = AdImageFragment()
+                else -> null
+            }
+            transaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.frameLayout, fragment)
+            transaction.commit()
+        }
+    }
+
+    // 支持者
+    val fragmentManager = supportFragmentManager
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_api_test)
+
+
+        initView()
+        initData()
+    }
+
+
+//    private var listView: ListView? = null    //定义ListView用来获取到，布局文件中的ListView控件
+//    private val city = arrayOf("广州", "深圳", "北京", "上海", "香港", "澳门", "天津")  //定义一个数组，作为数据源
+//    private var arrayAdapter: ArrayAdapter<String>? = null    //定义一个数组适配器对象
+//
+//     fun onCreate111(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+//        listView = findViewById<View>(R.id.listView) as ListView //获取布局文件中的ListView控件对象
+//
+//
+//        /*
+//         * Context context,  上下文对象
+//         * int resource,    items项显示的布局样式，一般是系统的布局文  android.R.layout.** (但是需要选择和ListView相适合的布局文件否则运行报错)
+//         * String[] objects  数组对象（数据源）
+//         *
+//         * */
+//
+//        //创建数组适配器对象，并且通过参数设置类item项的布局样式和数据源
+//        arrayAdapter = ArrayAdapter(this@MyBuglyActivity, android.R.layout.simple_list_item_1, city)
+//
+//        //把数组适配器加载到ListView控件中
+//        listView!!.setAdapter(arrayAdapter)
+//
+//    }
+
+    /**
+     * 获取  设备的唯一标识
+     *
+     * @param context 上下文
+     * @return 唯一标识 mac
+     */
+
+    @SuppressLint("HardwareIds")
+    fun getIMEI(context: Context): String {
+        // 94:a1:a2:a4:70:66
+        val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        return wm.connectionInfo.macAddress
+    }
+
+
+}

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:gravity="center"
+    android:padding="5dp"
     android:orientation="vertical">
 
-
     <com.axecom.smartweight.my.service.RoundedCornerImageView
-           android:id="@+id/roundedCornerImageView"
-           android:layout_width="match_parent"
-           android:layout_height="75dp"
-           android:background="@color/color_white"
-           android:padding="20dp"
-           android:src="@mipmap/tid"
-           app:round_radius="35dp" />
-
-<!--
-    <ImageView
         android:id="@+id/roundedCornerImageView"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:src="@drawable/reports_setting" />-->
+        android:layout_width="@dimen/y150"
+        android:layout_height="@dimen/x85"
+        android:background="@color/color_white"
+        android:padding="@dimen/x20"
+        android:src="@mipmap/tid"
+        app:round_radius="@dimen/x45" />
+
+    <!--
+        <ImageView
+            android:id="@+id/roundedCornerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:src="@drawable/reports_setting" />-->
 
 
     <TextView
@@ -31,5 +31,5 @@
         android:layout_marginTop="5dp"
         android:text="订单管理"
         android:textColor="@color/black"
-        android:textSize="16sp" />
+        android:textSize="@dimen/sp16" />
 </LinearLayout>

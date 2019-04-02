@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.axecom.smartweight.ui.activity.HomeActivity;
-import com.shangtongyin.tools.serialport.IConstants_ST;
+import com.axecom.smartweight.my.activity.common.HomeActivity;
+import com.axecom.smartweight.my.config.IConstants;
 
 
-public class BootReceiver extends BroadcastReceiver implements IConstants_ST {
+public class BootReceiver extends BroadcastReceiver implements IConstants {
 
     private static final String ACTION_BOOT = "android.intent.action.BOOT_COMPLETED";
     private Intent intentService;

@@ -98,8 +98,6 @@ public class QRHelper {
      * @return
      */
     public static byte[] createPixelsQR(String contents1, int width, int height) {
-
-
         //判断URL合法性
         if (contents1 == null || "".equals(contents1) || contents1.length() < 1) {
             return null;
@@ -116,6 +114,7 @@ public class QRHelper {
             hints.put(EncodeHintType.CHARACTER_SET, "gbk");
             //图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(contents1, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
+
             int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
             //下面这里按照二维码的算法，逐个生成二维码的图片，两个for循环是图片横列扫描的结果
             int srcPos = 0;

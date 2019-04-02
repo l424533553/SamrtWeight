@@ -22,7 +22,7 @@ public class UserInfo {
      * mchid : null
      */
     //部门编号
-    @DatabaseField(generatedId = true)
+    @DatabaseField(defaultValue = "1", id = true)
     private int id;
     @DatabaseField
     private int marketid;
@@ -40,6 +40,11 @@ public class UserInfo {
     private String key;
     @DatabaseField
     private String mchid;
+    /**
+     * 支付类型，可能有不同的合作银行商
+     */
+    @DatabaseField
+    private String paytype;
 
     public UserInfo() {
     }
@@ -115,4 +120,15 @@ public class UserInfo {
     public String getMchid() {
         return mchid;
     }
+
+    public String getPaytype() {
+        return paytype;
+    }
+
+    public void setPaytype(String paytype) {
+        this.paytype = paytype;
+    }
+
 }
+
+

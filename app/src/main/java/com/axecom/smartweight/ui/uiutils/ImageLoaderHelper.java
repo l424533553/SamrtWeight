@@ -84,7 +84,7 @@ public class ImageLoaderHelper {
                 .build();
     }
 
-    public DisplayImageOptions getDisplayOptions(int round) {
+    public DisplayImageOptions getDisplayOptions(int round,Context context) {
         return new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
@@ -92,7 +92,7 @@ public class ImageLoaderHelper {
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .resetViewBeforeLoading(true)
-                .displayer(new RoundedBitmapDisplayer(UIUtils.dip2px(round)))
+                .displayer(new RoundedBitmapDisplayer(UIUtils.dip2px(round,context)))
                 .build();
     }
 

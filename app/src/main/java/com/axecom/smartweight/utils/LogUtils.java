@@ -3,8 +3,7 @@ package com.axecom.smartweight.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-
-import com.axecom.smartweight.conf.Constants;
+import com.luofx.utils.file.FileUtils;
 
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class LogUtils {
     /**
      * 是否允许输出log
      */
-    private static int mDebuggable = Constants.DEBUGLEVEL;
+    private static int mDebuggable = LEVEL_ALL;
 
     /**
      * 用于记时的变量

@@ -5,9 +5,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,14 +13,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <!-- <permission android:name="android.permission.WRITE_SETTINGS" /> -->
-
+    <permission android:name="android.permission.WRITE_SETTINGS" />
 
     <!-- 在sdcard中创建/删除文件的权限 -->
     <permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -33,197 +30,95 @@
 
     <!-- 允许系统 弹框 ，想要在Service 和 application中启动弹框，需要添加 改权限 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <!-- 息屏不被锁死 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
-    <!--
-        <uses-feature
-            android:name="android.hardware.usb.host"
-            android:required="false" />
-    -->
-    <!--
-    <uses-permission android:name="android.hardware.usb.host" />
-        <uses-permission android:name="android.hardware.usb.accessory" />
-        &lt;!&ndash; Required &ndash;&gt;
-        <permission
-            android:name="com.axecom.smartweight.permission.JPUSH_MESSAGE"
-            android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
 
-        &lt;!&ndash; Required  一些系统要求的权限，如访问网络等 &ndash;&gt;
-        <uses-permission android:name="com.axecom.iweight.permission.JPUSH_MESSAGE" />
-    -->
-    <!-- <uses-feature -->
-    <!-- android:name="android.hardware.bluetooth_le" -->
-    <!-- android:required="false" /> -->
+    <!-- allowBackup 是否允许备份 -->
     <application
         android:name=".base.SysApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/mybackupscheme"
         android:hardwareAccelerated="false"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="android:icon">
+        tools:replace="android:icon,android:theme">
 
         <!-- tools:replace="android:icon, android:theme,android:allowBackup,android:label" -->
+        <!-- android:name=".ui.activity.HomeActivity" -->
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <activity
-            android:name=".ui.activity.HomeActivity"
+            android:name=".my.activity.common.HomeActivity"
             android:screenOrientation="landscape"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <!-- <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" /> -->
             </intent-filter>
         </activity>
 
-        <!-- 记得在manifest中注册  -->
-        <!-- <receiver android:name=".my.helper.NetBroadcastReceiver"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-
-        <!--
-                    <receiver android:name="com.axecom.smartweight.net.UsbReceiver">
-                    <intent-filter>
-                        <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-                        <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
-                    </intent-filter>
-
-                    <meta-data
-                        android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                        android:resource="@xml/device_filter" />
-                </receiver>
-        -->
-
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".my.activity.common.MainActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
-
-            <!--
-  <intent-filter>
-
-  android:hardwareAccelerated="true"
-                <action android:name="android.intent.action.DEFAULT" />
-
-                <category android:name="com.jb.sdk.service.JbPrintService" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity
-            android:name=".ui.activity.UseBankCardActivity"
-            android:theme="@style/dialog" />
-        <activity
-            android:name=".ui.activity.UseCashActivity"
-            android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity
-            android:name=".ui.activity.SimpleModeActivity"
-            android:hardwareAccelerated="false" />
-        <activity android:name=".ui.activity.SettingsActivity" />
+        <!--        <activity
+                    android:name=".ui.activity.SimpleModeActivity"
+                    android:hardwareAccelerated="false" />-->
+        <activity android:name=".my.activity.common.SettingsActivity" />
         <activity android:name=".ui.activity.OrderInvalidActivity" />
-        <activity android:name=".ui.activity.AbnormalOrderActivity" />
+        <!-- <activity android:name=".ui.activity.AbnormalOrderActivity" />-->
         <activity
-            android:name=".ui.activity.ServerTestActivity"
+            android:name=".my.activity.ServerTestActivity"
             android:theme="@style/dialog" />
         <activity
             android:name=".ui.activity.CalibrationActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <activity
-            android:name=".ui.activity.WifiSettingsActivity"
+            android:name=".my.activity.WifiSettingsActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ui.activity.setting.GoodsSettingActivity" />
+        <!--<activity-->
+        <!--android:name=".ui.activity.ModityCommodityActivity"-->
+        <!--android:theme="@style/dialog"-->
+        <!--android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />-->
         <activity
-            android:name=".ui.activity.ModityCommodityActivity"
-            android:theme="@style/dialog"
-            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity
-            android:name=".ui.activity.SystemLoginActivity"
+            android:name=".my.activity.SystemLoginActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
         <!-- <activity android:name=".ui.activity.LocalSettingsActivity" /> -->
-        <activity android:name=".ui.activity.SystemSettingsActivity2" />
-
-        <service android:name="com.inuker.bluetooth.library.BluetoothService" />
-
-        <!--
-        <service
-            android:name=".my.service.CarouselService"
-            android:enabled="true"
-            android:exported="true"
-            >
-            &lt;!&ndash; android:process="@string/networkprocess"&ndash;&gt;
-
-            <intent-filter android:priority="1000">
-                &lt;!&ndash; 系统启动完成后会调用&ndash;&gt;
-                <action android:name="android.intent.action.BOOT_COMPLETED" />&lt;!&ndash; 用户开机广播 &ndash;&gt;
-                <action android:name="android.intent.action.DATE_CHANGED" />
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.USER_PRESENT" />&lt;!&ndash;  用户使用 唤醒&ndash;&gt;
-                <action android:name="android.intent.action.ACTION_TIME_TICK" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="android.intent.action.PACKAGE_RESTARTED" />&lt;!&ndash; 应用状态改变 &ndash;&gt;
-            </intent-filter>
-        </service>
-        -->
-
-
-        <!--
-            <service
-            android:name=".my.service.JobWakeUpService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        -->
-
         <activity
-            android:name="cn.jpush.android.ui.PopWinActivity"
-            android:exported="false"
-            android:theme="@style/MyDialogStyle" />
-        <!-- Required SDK核心功能 -->
-        <!-- <activity -->
-        <!-- android:name="cn.jpush.android.ui.PushActivity" -->
-        <!-- android:configChanges="orientation|keyboardHidden" -->
-        <!-- android:exported="false" -->
-        <!-- android:theme="@android:style/Theme.NoTitleBar"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="cn.jpush.android.ui.PushActivity" /> -->
+            android:name=".my.activity.common.SystemSettingsActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
 
-
-        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-        <!-- <category android:name="com.axecom.iweight" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-
-
-        <!-- Required SDK 核心功能 -->
-        <!-- 可配置android:process参数将PushService放在其他进程中 -->
-        <!-- <service -->
-        <!-- android:name="cn.jpush.android.service.PushService" -->
-        <!-- android:exported="false" -->
-        <!-- android:process=":mult"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="cn.jpush.android.intent.REGISTER" /> -->
-        <!-- <action android:name="cn.jpush.android.intent.REPORT" /> -->
-        <!-- <action android:name="cn.jpush.android.intent.PushService" /> -->
-        <!-- <action android:name="cn.jpush.android.intent.PUSH_TIME" /> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
-
+            />
         <service android:name=".my.helper.HeartBeatServcice" />
-        <!-- since 3.0.9 Required SDK 核心功能 -->
-        <provider
-            android:name="cn.jpush.android.service.DataProvider"
-            android:authorities="com.axecom.smartweight.DataProvider"
-            android:exported="false" />
 
-        <receiver android:name=".manager.BootReceiver">
+        <receiver
+            android:name=".manager.BootReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
 
                 <!-- 注册开机广播地址 -->
@@ -236,53 +131,63 @@
         <receiver android:name=".net.NetWorkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <!--
+                  为android.net.conn.CONNECTIVITY_CHANGE声明广播接收器对于目标为N和更高的应用程序是不赞成的。一般来说，应用程序不应该依赖这个广播，而应该使用JobScheduler或GCMNetworkManager。更少…（CTRL+F1）
+                  此问题标记的代码要么*对电池寿命产生负面影响，要么*使用最近改变行为的API，以防止后台任务过度消耗内存和电池。一般来说，应该使用JOB调度程序或GCMNETWORKMAMER。
+                -->
+
             </intent-filter>
         </receiver>
 
-        <!-- <service android:name=".manager.BannerService" /> -->
-
-
-        <!-- Required  . Enable it you can get statistics data with channel -->
-        <!-- <meta-data -->
-        <!-- android:name="JPUSH_CHANNEL" -->
-        <!-- android:value="developer-default" /> -->
-        <!-- <meta-data -->
-        <!-- android:name="JPUSH_APPKEY" -->
-        <!-- android:value="b032faec40fdd8fd898aaef0" /> &lt;!&ndash; </>值来自开发者平台取得的AppKey &ndash;&gt; -->
-        <!--  -->
-
         <activity android:name=".my.LogActivity" />
-        <activity android:name=".ui.activity.TestActivity" />
+        <activity android:name=".ui.TestActivity" />
         <activity android:name=".ui.activity.datasummary.SummaryActivity" />
-        <activity android:name=".ui.activity.LockActivity" />
-        <activity android:name=".ui.activity.setting.LocalSettingActivity" />
+        <activity android:name=".my.activity.common.LockActivity" />
+        <activity
+            android:name=".ui.activity.setting.LocalSettingActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity android:name=".ui.activity.setting.ErrorLogActivity" />
 
-        <service
-            android:name=".carouselservice1.service.CarouselService"
-            android:enabled="true"
-            android:exported="true">
+        <!--  <service
+              android:name=".carouselservice.service.CarouselService"
+              android:enabled="true"
+              android:exported="true"
+              android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 
-            <!-- android:process="@string/networkprocess" -->
+              &lt;!&ndash; android:process="@string/networkprocess" &ndash;&gt;
 
-            <intent-filter android:priority="1000">
+              <intent-filter android:priority="1000">
 
-                <!-- 系统启动完成后会调用 -->
-                <action android:name="android.intent.action.BOOT_COMPLETED" /> <!-- 用户开机广播 -->
-                <action android:name="android.intent.action.DATE_CHANGED" />
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.USER_PRESENT" /> <!-- 用户使用 唤醒 -->
-                <action android:name="android.intent.action.ACTION_TIME_TICK" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                <action android:name="android.intent.action.PACKAGE_RESTARTED" /> <!-- 应用状态改变 -->
-            </intent-filter>
-        </service>
-        <service
-            android:name=".carouselservice1.service.JobWakeUpService"
+                  &lt;!&ndash; 系统启动完成后会调用 &ndash;&gt;
+                  <action android:name="android.intent.action.BOOT_COMPLETED" /> &lt;!&ndash; 用户开机广播 &ndash;&gt;
+                  <action android:name="android.intent.action.DATE_CHANGED" />
+                  <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                  <action android:name="android.intent.action.USER_PRESENT" /> &lt;!&ndash; 用户使用 唤醒 &ndash;&gt;
+                  <action android:name="android.intent.action.ACTION_TIME_TICK" />
+                  <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                  <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                  <action android:name="android.intent.action.PACKAGE_RESTARTED" /> &lt;!&ndash; 应用状态改变 &ndash;&gt;
+              </intent-filter>
+          </service>-->
+
+        <!--
+            <service
+            android:name=".carouselservice.service.JobWakeUpService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        -->
 
-        <activity android:name=".ui.activity.setting.HelpActivity"></activity>
+        <activity android:name=".ui.activity.setting.HelpActivity" />
+        <activity android:name=".my.activity.common.ApiTestActivity" />
+
+        <activity android:name=".my.activity.MyBuglyActivity" />
+
+        <!--bugly的基础Activity-->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

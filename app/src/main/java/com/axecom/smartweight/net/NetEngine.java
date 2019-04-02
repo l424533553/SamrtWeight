@@ -42,7 +42,7 @@ public class NetEngine {
 //        call.enqueue(new Callback<PayResultBaen>() {
 //            @Override
 //            public void onResponse(Call<PayResultBaen> call, Response<PayResultBaen> response) {
-//                LogUtils.d(response.body().authCode + "--------------------");
+//                LogWriteUtils.d(response.body().authCode + "--------------------");
 //            }
 //
 //            @Override

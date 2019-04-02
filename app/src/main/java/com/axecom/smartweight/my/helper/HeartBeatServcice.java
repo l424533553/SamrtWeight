@@ -1,25 +1,24 @@
 package com.axecom.smartweight.my.helper;
 
-import android.app.Service;
+import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.support.annotation.Nullable;
 
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.my.activity.common.LockActivity;
+import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.AdResultBean;
+import com.axecom.smartweight.my.entity.BaseBusEvent;
 import com.axecom.smartweight.my.entity.ResultInfo;
-import com.axecom.smartweight.ui.activity.LockActivity;
+import com.axecom.smartweight.utils.AESHelper;
 import com.luofx.listener.VolleyListener;
 import com.luofx.utils.MyPreferenceUtils;
-import com.luofx.utils.log.MyLog;
-import com.shangtongyin.tools.serialport.IConstants_ST;
+import com.xuanyuan.library.MyLog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 /**
@@ -28,73 +27,121 @@ import org.json.JSONObject;
  * email:424533553@qq.com
  * describe:
  */
-public class HeartBeatServcice extends Service implements VolleyListener, IConstants_ST {
+public class HeartBeatServcice extends IntentService implements VolleyListener, IConstants {
     private boolean isLooper = true; //是否需要循环
     /**
      * 定义我们自己写的Binder对象
      */
-    private HttpHelper httpHelper;
-    private int marketid = -1;   // 市场编号
-    private int terid = -1;     // 秤/编号
-    private int NOTIFY = 555;
-    private int NOTIFY_MESSAGE = 666;
+//    private HttpHelper httpHelper;
 
-
-    public void setMarketid(int marketid) {
-        this.marketid = marketid;
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public HeartBeatServcice(String name) {
+        super(name);
+        MyLog.mylog("构造方法  HeartBeatServcice( name)");
     }
 
-    public void setTerid(int terid) {
-        this.terid = terid;
+    public HeartBeatServcice() {
+        super("HeartBeatServcice");
+        MyLog.mylog("构造方法  HeartBeatServcice()");
     }
 
-    @Nullable
+    private int marketid;// 市场id
+
     @Override
-    public IBinder onBind(Intent intent) {
-        return new MyBinder();
-    }
+    protected void onHandleIntent(Intent intent) {
+        marketid = intent.getIntExtra("marketid", -1);
+        int terid = intent.getIntExtra("terid", -1);
+        if (marketid <= 0 || terid <= 0) {
+            return;
+        }
 
-    private Handler handler;
-
-    private void initHandler() {
-        handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                if (msg.what == NOTIFY) {
-                    httpHelper.upState(marketid, terid, 0, 1);  // scalesId 秤的编号     1 正常    1 请求索引
-                } else if (msg.what == NOTIFY_MESSAGE) {
-                    httpHelper.upAdMessage(marketid, 2);  // scalesId 秤的编号
-                }
-                return false;
+        while (isLooper) {
+            try {
+//              MyLog.mylog(" 执行 心跳 命令");
+                HttpHelper.getmInstants(application).upStateEx(marketid, HeartBeatServcice.this, terid, 0, 1);  // scale
+                Thread.sleep(UPDATE_STATE_TIME);//2分钟
+                sendStatus2Fpms(0, HeartBeatServcice.this);
+//              sendCheck2Fpms(HeartBeatServcice.this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
+    /**
+     * 发送状态信息到计量院
+     *
+     * @param userStatus 0正常，1异常
+     */
+    private void sendStatus2Fpms(int userStatus, VolleyListener listener) {
+        String authenCode = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_AUTHENCODE, null);
+        String dataKey = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_DATAKEY, null);
+        if (authenCode == null || dataKey == null) {
+            return;
+        }
+        String cmdECB = AESHelper.encryptDESedeECB("updateStatus", dataKey);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("service=deviceService&cmd=" + cmdECB)
+                .append("&authenCode=" + authenCode)
+                .append("&appCode=FPMSWS")
+                .append("&deviceNo=123456789012")
+                .append("&deviceModel=xs-weight")
+                .append("&factoryName=xs-weight")
+                .append("&productionDate=2018-11-28")
+                .append("&macAddr=" + HttpHelper.getmInstants(application).getMac())
+                .append("&stallCode=")
+                .append("&businessEntity=")
+                .append("&creditCode=")
+                .append("&userStatus=" + userStatus);
+
+        String data = AESHelper.encryptDESedeECB(sb.toString(), MAIN_KEY);
+        HttpHelper.getmInstants(application).onFpmsLogin(listener, data, VOLLEY_FLAG_FPMS_STATE);
+    }
+
+    /**
+     * @param listener 上传标定数据
+     */
+    private void sendCheck2Fpms(VolleyListener listener) {
+        String authenCode = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_AUTHENCODE, null);
+        String dataKey = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_DATAKEY, null);
+        if (authenCode == null || dataKey == null) {
+            return;
+        }
+        String cmdECB = AESHelper.encryptDESedeECB("deviceCheck", dataKey);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("service=deviceService&cmd=" + cmdECB)
+                .append("&authenCode=" + authenCode)
+                .append("&appCode=FPMSWS")
+                .append("&deviceNo=123456789012")
+                .append("&macAddr=" + HttpHelper.getmInstants(application).getMac())
+
+                .append("&weight=" + 15)//校准点的重量（kg）,整数
+                .append("&initAd=" + 2341289)//校准后的原始零位值
+                .append("&initAd=" + 2641289);//校准点的AD值
+
+        String data = AESHelper.encryptDESedeECB(sb.toString(), MAIN_KEY);
+        HttpHelper.getmInstants(application).onFpmsLogin(listener, data, VOLLEY_FLAG_FPMS_CHECK);
+    }
+
+    private SysApplication application;
+    private Context context;
     @Override
     public void onCreate() {
         super.onCreate();
-        SysApplication application = (SysApplication) this.getApplication();
-        initHandler();
-        httpHelper = new HttpHelper(this, application);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isLooper) {
-                    try {
-                        handler.sendEmptyMessage(NOTIFY_MESSAGE);
-                        Thread.sleep(120000);//2分钟
-                        handler.sendEmptyMessage(NOTIFY);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+        context = this;
+        application = (SysApplication) this.getApplication();
+        MyLog.mylog("构造方法  onCreate() ");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        MyLog.mylog("构造方法  onStartCommand() ");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -102,6 +149,8 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
     public void onDestroy() {
         isLooper = false;
         super.onDestroy();
+        //注销注册
+
     }
 
     @Override
@@ -111,69 +160,71 @@ public class HeartBeatServcice extends Service implements VolleyListener, IConst
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        isLooper = false;
-        return super.onUnbind(intent);
-    }
-
-    @Override
     public void onResponse(VolleyError volleyError, int flag) {
         MyLog.myInfo("错误" + volleyError.getMessage());
     }
 
     private boolean isDisable;// 是否消失
 
-    @Override
-    public void onResponse(JSONObject jsonObject, int flag) {
-        switch (flag) {
-            case 1:
-                MyLog.myInfo("成功" + jsonObject.toString());
-                ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
-                if (resultInfo.getStatus() == 0) {
-                    if ("1".equals(resultInfo.getData())) {//禁用
-                        if (!isDisable) {
-                            Intent intent = new Intent(this, LockActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                        isDisable = true;
-                    } else {
-                        Intent intent = new Intent();
-                        intent.setAction(ACTION_UNLOCK_SOFT);
-                        sendBroadcast(intent);
-                        isDisable = false;
-                    }
-                }
-                break;
-            case 2:// 获得消息
-                AdResultBean adResultBean = JSON.parseObject(jsonObject.toString(), AdResultBean.class);
-                if (adResultBean != null && adResultBean.getStatus() == 0) {
-                    AdResultBean.DataBean dataBean = adResultBean.getData();
-                    if (dataBean != null) {
-                        int saveId = MyPreferenceUtils.getSp(this).getInt("AdId", -1);
-                        int id = dataBean.getId();
-                        if (saveId != id) {
-                            MyPreferenceUtils.getSp(this).edit().putInt("AdId", id).apply();
-                            Intent intent = new Intent();
-                            intent.setAction(NOTIFY_MESSAGE_CHANGE);
-                            intent.putExtra("data", dataBean);
-                            sendBroadcast(intent);
-                        }
-                    }
-                }
-                break;
-        }
-    }
-
     /**
-     * 自定义的内部类,继承Binder
-     * 在该内部类里,我们写对服务进行操作的方法
-     * 通过该对象实现对服务的操作,并从服务中获取数据
+     * @param jsonObject json对象
+     * @param flag       请求索引标识
      */
-    public class MyBinder extends Binder {
-        public HeartBeatServcice getService() {
-            return HeartBeatServcice.this;
-        }
-    }
+    @Override
+    public void onResponse(final JSONObject jsonObject, final int flag) {
 
+        application.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                switch (flag) {
+                    case 1:
+                        MyLog.myInfo("成功" + jsonObject.toString());
+                        ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
+                        if (resultInfo.getStatus() == 0) {
+                            if ("1".equals(resultInfo.getData())) {//禁用
+                                if (!isDisable) {
+                                    Intent intent = new Intent(context, LockActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                                isDisable = true;
+                            } else {
+                                // 用事件总线的方式取代BroadCast
+                                BaseBusEvent event = new BaseBusEvent();
+                                event.setEventType(BaseBusEvent.ACTION_UNLOCK_SOFT);
+                                EventBus.getDefault().post(event);
+                                isDisable = false;
+                            }
+                            //获取通告信息
+                            MyLog.mylog(" 执行 通告 命令");
+                            HttpHelper.getmInstants(application).upAdMessageEx(marketid, HeartBeatServcice.this, 2);  //通知 scalesId 秤的编号
+                        }
+                        break;
+                    case 2:// 获得消息
+                        AdResultBean adResultBean = JSON.parseObject(jsonObject.toString(), AdResultBean.class);
+                        if (adResultBean != null && adResultBean.getStatus() == 0) {
+                            AdResultBean.DataBean dataBean = adResultBean.getData();
+                            if (dataBean != null) {
+                                int saveId = MyPreferenceUtils.getSp(context).getInt("AdId", -1);
+                                int id = dataBean.getId();
+                                if (saveId != id) {// 遇上一条不一样，发终端通知
+                                    MyPreferenceUtils.getSp(context).edit().putInt("AdId", id).apply();
+//                                    Intent intent = new Intent();
+//                                    intent.setAction(NOTIFY_MESSAGE_CHANGE);
+//                                    intent.putExtra("data", dataBean);
+//                                    sendBroadcast(intent);
+
+                                    //取代 发广播的方式
+                                    BaseBusEvent event = new BaseBusEvent();
+                                    event.setEventType(BaseBusEvent.MARKET_NOTICE);
+                                    event.setOther(dataBean);
+                                    EventBus.getDefault().post(event);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+        });
+    }
 }

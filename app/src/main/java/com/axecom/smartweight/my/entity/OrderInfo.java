@@ -2,6 +2,7 @@ package com.axecom.smartweight.my.entity;
 
 import android.text.TextUtils;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -30,6 +31,7 @@ public class OrderInfo implements Cloneable {
      */
 
     //部门编号
+    @JSONField(serialize = false)
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
@@ -40,6 +42,7 @@ public class OrderInfo implements Cloneable {
     private String seller;
     @DatabaseField
     private int sellerid;
+    // 0 现金   1 微信   2 支付宝  3其他
     @DatabaseField
     private int settlemethod;
     @DatabaseField
@@ -47,24 +50,43 @@ public class OrderInfo implements Cloneable {
     @DatabaseField
     private int marketid;
     @DatabaseField
-    private String time;
+    private String time;//交易时间
+    @JSONField(serialize = false)
     @DatabaseField
     private int hour; //小時
+    @JSONField(serialize = false)
     @DatabaseField
     private int day; //小時
+    @JSONField(serialize = false)
     @DatabaseField
     private String totalamount;  // 总金额
+    @JSONField(serialize = false)
     @DatabaseField
     private String totalweight;  // 总重量
+    @JSONField(serialize = false)
     @DatabaseField
     private String stallNo;// 摊位号
+    @JSONField(serialize = false)
     @DatabaseField
     private Timestamp timestamp;  //时间戳
 
+    @JSONField(serialize = false)
     @DatabaseField
-    private int state;  // 0  已未上传  ，1上传
+    private int state;  // 0  已未上传  ， 1上传
+    @JSONField(serialize = false)
     @DatabaseField
     private String marketName;
+
+    @JSONField(serialize = false)
+    private long timingTime;//计时时间 ，超过三分钟不在访问是否成功
+
+    public long getTimingTime() {
+        return timingTime;
+    }
+
+    public void setTimingTime(long timingTime) {
+        this.timingTime = timingTime;
+    }
 
     /**
      * 这里需要注意的是：属性类型只能是ForeignCollection<T>或者Collection<T>

@@ -1,5 +1,9 @@
 package com.axecom.smartweight.my.entity;
 
+import android.text.TextUtils;
+import android.widget.TextView;
+
+import com.alibaba.fastjson.annotation.JSONField;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -10,11 +14,12 @@ import com.j256.ormlite.table.DatabaseTable;
  * describe:
  */
 @DatabaseTable(tableName = "orderbean")
-public class OrderBean {
+public class OrderBean implements Cloneable {
 
     //部门编号
+    @JSONField(serialize = false)
     @DatabaseField(generatedId = true)
-    private  int id;
+    private int id;
     @DatabaseField
     private String itemno;// 商品编号
     @DatabaseField
@@ -25,18 +30,22 @@ public class OrderBean {
     private String price;
     @DatabaseField
     private String weight;
+    @JSONField(serialize = false)
     @DatabaseField
     private String unit = "kg";
+
     @DatabaseField
-    private String x0;
+    private String x0 = "0";//置零值Ad
     @DatabaseField
-    private String x1;
+    private String x1 = "0";//标定0位ad
     @DatabaseField
-    private String x2;
+    private String x2 = "0";//皮重
     @DatabaseField
     private String k;
     @DatabaseField
-    private String xcur;
+    private String weight0;  //标定ad值
+    @DatabaseField
+    private String xcur;//当前商品的ad
     @DatabaseField
     private String traceno; // 批次號
 
@@ -48,8 +57,23 @@ public class OrderBean {
         this.traceno = traceno;
     }
 
+    private long time1;
+    private long time2;
+
+    @JSONField(serialize = false)
     @DatabaseField(canBeNull = false, foreign = true)
     private OrderInfo orderInfo;
+
+    @Override
+    public OrderBean clone() {
+        OrderBean stu = null;
+        try {
+            stu = (OrderBean) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return stu;
+    }
 
     public OrderBean(String name, String price, String weight, String subTotal) {
         this.name = name;
@@ -61,6 +85,29 @@ public class OrderBean {
     public OrderBean() {
     }
 
+    public String getWeight0() {
+        return weight0;
+    }
+
+    public void setWeight0(String weight0) {
+        this.weight0 = weight0;
+    }
+
+    public long getTime1() {
+        return time1;
+    }
+
+    public void setTime1(long time1) {
+        this.time1 = time1;
+    }
+
+    public long getTime2() {
+        return time2;
+    }
+
+    public void setTime2(long time2) {
+        this.time2 = time2;
+    }
 
     public int getId() {
         return id;
@@ -144,6 +191,9 @@ public class OrderBean {
 
 
     public String getMoney() {
+        if (TextUtils.isEmpty(money)) {
+            return "0.00";
+        }
         return money;
     }
 
@@ -160,10 +210,22 @@ public class OrderBean {
     }
 
     public String getWeight() {
+        if (TextUtils.isEmpty(weight)) {
+            return "0";
+        }
         return weight;
     }
 
     public void setWeight(String weight) {
         this.weight = weight;
     }
+
+    private String setWeight() {
+        if (weight == null) {
+            return weight;
+        } else {
+            return "";
+        }
+    }
+
 }

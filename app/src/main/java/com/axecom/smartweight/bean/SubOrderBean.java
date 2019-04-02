@@ -6,20 +6,8 @@ public class SubOrderBean {
     private String print_code_img;
     private String code_img_url;
 
-    public String getCode_img_url() {
-        return code_img_url;
-    }
-
-    public void setCode_img_url(String code_img_url) {
-        this.code_img_url = code_img_url;
-    }
-
-    public String getPrint_code_img() {
-        return print_code_img;
-    }
-
-    public void setPrint_code_img(String print_code_img) {
-        this.print_code_img = print_code_img;
+    public void setOrder_no(String order_no) {
+        this.order_no = order_no;
     }
 
     public String getPrint_code() {
@@ -30,11 +18,28 @@ public class SubOrderBean {
         this.print_code = print_code;
     }
 
+    public void setPrint_code_img(String print_code_img) {
+        this.print_code_img = print_code_img;
+    }
+
+    public void setCode_img_url(String code_img_url) {
+        this.code_img_url = code_img_url;
+    }
+
+    public String getCode_img_url() {
+        return code_img_url;
+    }
+
+
+    public String getPrint_code_img() {
+        return print_code_img;
+    }
+
+
+
+
     public String getOrder_no() {
         return order_no;
     }
 
-    public void setOrder_no(String order_no) {
-        this.order_no = order_no;
-    }
 }

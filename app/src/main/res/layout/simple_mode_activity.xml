@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/green_3CB371"
     android:orientation="horizontal"
-    tools:context="com.axecom.smartweight.ui.activity.MainActivity">
+    tools:context="com.axecom.smartweight.my.activity.common.MainActivity">
 
     <LinearLayout
         style="@style/layout_style"

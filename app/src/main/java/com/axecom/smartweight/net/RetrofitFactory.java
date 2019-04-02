@@ -1,21 +1,6 @@
 package com.axecom.smartweight.net;
 
 
-import android.text.TextUtils;
-
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.conf.Constants;
-import com.axecom.smartweight.utils.SPUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-
-
 /**
  * Created by Administrator on 2017-11-29.
  */

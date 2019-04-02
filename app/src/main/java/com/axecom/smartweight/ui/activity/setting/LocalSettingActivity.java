@@ -1,34 +1,46 @@
 package com.axecom.smartweight.ui.activity.setting;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.adapter.BackgroundAdapter;
-import com.luofx.view.CircleProgressBar;
+import com.axecom.smartweight.my.config.IConstants;
+import com.axecom.smartweight.my.entity.BaseBusEvent;
+import com.luofx.aar.help.CashierInputFilter;
+import com.luofx.utils.MyPreferenceUtils;
 
-public class LocalSettingActivity extends AppCompatActivity implements View.OnClickListener {
+import org.greenrobot.eventbus.EventBus;
 
-    CircleProgressBar color_progress_view;
+public class LocalSettingActivity extends Activity implements View.OnClickListener, IConstants {
+//    CircleProgressBar color_progress_view;
 
-    private boolean isLoop = true;
-    private SharedPreferences sharedPreferences;
+    private Context context;
+    private float priceLarge;
+    private float priceMiddle;
+    private float priceSmall;
+
+    private void initData() {
+        priceLarge = MyPreferenceUtils.getSp(context).getFloat(PRICE_LARGE, 0.3f);
+        priceMiddle = MyPreferenceUtils.getSp(context).getFloat(PRICE_MIDDLE, 0.2f);
+        priceSmall = MyPreferenceUtils.getSp(context).getFloat(PRICE_SMALL, 0.1f);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_setting);
-        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        context = this;
+        initData();
         initView();
-        initHandler();
+
+//        initHandler();
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -44,32 +56,50 @@ public class LocalSettingActivity extends AppCompatActivity implements View.OnCl
 //                }
 //            }
 //        }).start();
+
+
     }
 
 
-    private Handler handler;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isLoop = false;
+    public  void doBack(View view){
+        onBackPressed();
     }
 
-    private void initHandler() {
-        handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                color_progress_view.update(stepCount, 1000);
-                return false;
-            }
-        });
-    }
+
+//    private Handler handler;
+//
+//    private void initHandler() {
+//        handler = new Handler(new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(Message msg) {
+//                color_progress_view.update(stepCount, 1000);
+//                return false;
+//            }
+//        });
+//    }
 
     private int stepCount = 100;
 
     private void initView() {
         Spinner spinnerButton = findViewById(R.id.ivSelect);
-        int index = sharedPreferences.getInt("BACKGROUND_INDEX", 0);
+//        InputFilter[] filters = {new CashierInputFilter()};
+        InputFilter[] filters = {new CashierInputFilter(99)};
+
+        EditText etLarge = findViewById(R.id.etLarge);
+        EditText etMiddle = findViewById(R.id.etMiddle);
+        EditText etSmall = findViewById(R.id.etSmall);
+
+        etLarge.setFilters(filters); //设置
+        etMiddle.setFilters(filters); //设置
+        etSmall.setFilters(filters); //设置
+//        etMiddle.setFilters(filters); //设置
+//        etSmall.setFilters(filters); //设置
+
+        etLarge.setText(String.valueOf(priceLarge));
+        etMiddle.setText(String.valueOf(priceMiddle));
+        etSmall.setText(String.valueOf(priceSmall));
+        findViewById(R.id.btnSubmitShoppingBag).setOnClickListener(this);
+        int index = MyPreferenceUtils.getSp(context).getInt("BACKGROUND_INDEX", 0);
 
         /* 静态的显示下来出来的菜单选项，显示的数组元素提前已经设置好了
          * 第二个参数：已经编写好的数组
@@ -82,10 +112,14 @@ public class LocalSettingActivity extends AppCompatActivity implements View.OnCl
         spinnerButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sharedPreferences.edit().putInt("BACKGROUND_INDEX", position).apply();
+                MyPreferenceUtils.getSp(context).edit().putInt("BACKGROUND_INDEX", position).apply();
 //                Intent intent = new Intent();
 //                intent.setAction("com.axecom.smartweight.ui.activity.setting.background.change");
 //                sendBroadcast(intent);
+
+                BaseBusEvent event = new BaseBusEvent();
+                event.setEventType(BaseBusEvent.BACKGROUND_CHANGE);
+                EventBus.getDefault().post(event);//解除事件总线问题
             }
 
             @Override
@@ -100,11 +134,17 @@ public class LocalSettingActivity extends AppCompatActivity implements View.OnCl
 //        color_progress_view.update(stepCount, 1000);
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivSelect:
                 //弹出背景选择框
+                break;
+            case R.id.btnSubmitShoppingBag:
+
+                //TODO  确定购物袋价格
+
                 break;
             default:
                 break;

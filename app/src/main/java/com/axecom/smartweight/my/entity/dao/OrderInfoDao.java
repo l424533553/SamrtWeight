@@ -79,6 +79,17 @@ public class OrderInfoDao {
         }
     }
 
+    // 删除数据
+    public int deleteAll() {
+        try {
+            return dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+
     // 修改数据
     public int update(OrderInfo data) {
         int rows = -1;

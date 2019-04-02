@@ -27,17 +27,19 @@ import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.BusEvent;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.impl.ItemDragHelperCallback;
-import com.axecom.smartweight.my.adapter.GoodsAdapter;
 import com.axecom.smartweight.my.adapter.GoodsTypeAdapter;
+import com.axecom.smartweight.my.adapter.HotGoodsAdapter;
+import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.AllGoods;
+import com.axecom.smartweight.my.entity.BaseBusEvent;
 import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
 import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
-import com.axecom.smartweight.my.entity.dao.GoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
+import com.axecom.smartweight.my.entity.dao.HotGoodsDao;
 import com.luofx.listener.MyOnItemClickListener2;
-import com.luofx.utils.common.MyToast;
-import com.shangtongyin.tools.serialport.IConstants_ST;
+import com.luofx.newclass.ActivityController;
+import com.xuanyuan.xinyu.MyToast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,29 +53,37 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class GoodsSettingActivity extends Activity implements View.OnClickListener, MyOnItemClickListener2, IConstants_ST {
+import static com.axecom.smartweight.my.entity.BaseBusEvent.NOTIFY_HOT_GOOD_CHANGE;
 
-    private RecyclerView rvGoods;
+/**
+ * 商品 设置  ： 提供功能，添加删除菜品菜单
+ */
+public class GoodsSettingActivity extends Activity implements View.OnClickListener, MyOnItemClickListener2, IConstants {
 
 
-    private GoodsAdapter goodsAdapter;
-    //    private GoodsSelectAdapter goodsSelectAdapter;
+    // 热键商品适配器
+    private HotGoodsAdapter hotGoodsAdapter;
     private GoodsTypeAdapter goodsTypeAdapter;
-
-
-    private boolean isShowDelTv = false;
     protected SysApplication sysApplication;
 
-    private GoodsDao goodsDao;
+    private HotGoodsDao hotGoodsDao;
+    // 所有商品
     private AllGoodsDao allGoodsDao;
+    // 货物类型 Dao
     private GoodsTypeDao goodsTypeDao;
     private Context context;
+    //热键 商品 列表
+    private RecyclerView rvHotGoods;
+
+    //商品类型列表
+    private RecyclerView rvGoodsType;
+    // 产品选择列表
+    private GridView rvGoodsSelect;
 
     /**
      * 销售商品列表
      */
     private List<Goods> hotGoodsList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +93,15 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.activity_goods_setting);
         sysApplication = (SysApplication) getApplication();
         context = this;
+        ActivityController.addActivity(this);
 
-        setInitView();
-//        ActivityController.addActivity(this);
-
+        initView();
         initHander();
-        goodsDao = new GoodsDao(context);
+        hotGoodsDao = new HotGoodsDao(context);
         allGoodsDao = new AllGoodsDao(context);
+        goodsTypeDao = new GoodsTypeDao(context);
         initRecycle();
         getGoods();
-
     }
 
     private Handler handler;
@@ -103,9 +112,9 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             public boolean handleMessage(Message msg) {
                 switch (msg.what) {
                     case NOTIFY_INITDAT:
-//                        classAdapter.notifyDataSetChanged();
-//                        goodsTypeAdapter.notifyDataSetChanged();
-//                        goodsAdapter.notifyDataSetChanged();
+                        classAdapter.notifyDataSetChanged();
+                        goodsTypeAdapter.notifyDataSetChanged();
+                        hotGoodsAdapter.notifyDataSetChanged();
                         break;
                 }
                 return false;
@@ -115,12 +124,16 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     private ClassAdapter classAdapter;
 
+
+    private int addCount;//添加的数量
+
     private void initRecycle() {
 
         /*  初始化商品热键表   ***********************************************/
-        rvGoods = findViewById(R.id.rvGoods);
+
         GridLayoutManager manager = new GridLayoutManager(this, 3);
-        rvGoods.setLayoutManager(manager);
+        rvHotGoods.setLayoutManager(manager);
+        // 回拽 分割线
         ItemDragHelperCallback callback = new ItemDragHelperCallback() {
             @Override
             public boolean isLongPressDragEnabled() {
@@ -156,8 +169,8 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                         int toId = to1.getId();
                         from1.setId(toId);
                         to1.setId(fromId);
-                        goodsDao.update(from1);
-                        goodsDao.update(to1);
+                        hotGoodsDao.update(from1);
+                        hotGoodsDao.update(to1);
 
                     }
                 } else {
@@ -171,8 +184,8 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                         int toId = to1.getId();
                         from1.setId(toId);
                         to1.setId(fromId);
-                        goodsDao.update(from1);
-                        goodsDao.update(to1);
+                        hotGoodsDao.update(from1);
+                        hotGoodsDao.update(to1);
                     }
                 }
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
@@ -185,16 +198,13 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
             }
         });
-        helper.attachToRecyclerView(rvGoods);
-        goodsAdapter = new GoodsAdapter(context);
-        goodsAdapter.setMyOnItemClickListener(this);
-        rvGoods.setAdapter(goodsAdapter);
-
-
-
+        helper.attachToRecyclerView(rvHotGoods);
+        hotGoodsAdapter = new HotGoodsAdapter(context);
+        hotGoodsAdapter.setMyOnItemClickListener(this);
+        rvHotGoods.setAdapter(hotGoodsAdapter);
 
         /*  初始化  类别表  ************************************/
-        RecyclerView rvGoodsType = findViewById(R.id.rvGoodsType);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvGoodsType.setLayoutManager(linearLayoutManager);
@@ -206,7 +216,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         rvGoodsType.setAdapter(goodsTypeAdapter);
 
         /*  商品选择栏 **********************/
-        GridView rvGoodsSelect = findViewById(R.id.rvGoodsSelect);
+
         classAdapter = new ClassAdapter(context);
         rvGoodsSelect.setAdapter(classAdapter);
 
@@ -224,7 +234,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                 goods.setTypeid(allGoods.getTypeid());
                 if (!hotGoodsList.contains(goods)) {
                     hotGoodsList.add(goods);
-                    goodsAdapter.notifyItemChanged(hotGoodsList.size() - 1);
+                    hotGoodsAdapter.notifyItemChanged(hotGoodsList.size() - 1);
                     int typeid = allGoods.getTypeid();
 
                     GoodsType goodsType = goodsTypeDao.queryById(typeid);
@@ -232,13 +242,24 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                         goods.setBatchCode(goodsType.getTraceno());
                     }
 
-                    int count = goodsDao.insert(goods);
+                    int count = hotGoodsDao.insert(goods);
                     if (count > 0) {
+                        addCount++;
                         MyToast.toastShort(context, "添加成功");
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (addCount > 0) {
+            BaseBusEvent event = new BaseBusEvent();
+            event.setEventType(NOTIFY_HOT_GOOD_CHANGE);
+            EventBus.getDefault().post(event);
+        }
     }
 
     /**
@@ -251,13 +272,13 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             case 1:
                 try {
                     // 进行 删除操作
-                    Goods goods = goodsAdapter.getItem(position);
-                    goodsAdapter.removeList(position);
+                    Goods goods = hotGoodsAdapter.getItem(position);
+                    hotGoodsAdapter.removeList(position);
                     if (goods != null) {
-                        goodsDao.delete(goods);
+                        addCount++;
+                        hotGoodsDao.delete(goods);
                     }
                 } catch (Exception e) {
-                    //TODO
                     e.printStackTrace();
                 }
                 break;
@@ -275,11 +296,6 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     }
 
     private void getGoods() {
-        hotGoodsList = goodsDao.queryAll();
-
-        if (goodsTypeDao == null) {
-            goodsTypeDao = new GoodsTypeDao(context);
-        }
 
         final List<GoodsType> goodsTypes = goodsTypeDao.queryAll();
         if (goodsTypes != null) {
@@ -288,27 +304,31 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             goodsType.setName("全部商品");
             goodsTypes.add(0, goodsType);
 
-            new Thread(new Runnable() {
+            sysApplication.getThreadPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    goodsAdapter.setDatas(hotGoodsList);
+                    hotGoodsList = hotGoodsDao.queryAll();//获取热键商品
+                    hotGoodsAdapter.setDatas(hotGoodsList);
                     goodsTypeAdapter.setDatas(goodsTypes);
                     List<AllGoods> goodsList = allGoodsDao.queryByTypeId(-1);
 //                goodsSelectAdapter.setDatas(goodsList);
                     classAdapter.setDatas(goodsList);
                     handler.sendEmptyMessage(NOTIFY_INITDAT);
                 }
-            }).start();
+            });
         }
-
     }
 
+    //编辑框
     private EditText etGoodName;
 
-    public void setInitView() {
+    public void initView() {
         etGoodName = findViewById(R.id.etGoodName);
         findViewById(R.id.btnSearch).setOnClickListener(this);
         findViewById(R.id.btnSave).setOnClickListener(this);
+        rvHotGoods = findViewById(R.id.rvHotGoods);
+        rvGoodsType = findViewById(R.id.rvGoodsType);
+        rvGoodsSelect = findViewById(R.id.rvGoodsSelect);
 
     }
 
@@ -333,6 +353,9 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         }
     }
 
+    /**
+     * 隐藏键盘
+     */
     public void hintKeyBoard() {
         //拿到InputMethodManager
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -364,8 +387,8 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         EventBus.getDefault().post(new BusEvent(BusEvent.SAVE_COMMODITY_SUCCESS, true));
         Toast.makeText(GoodsSettingActivity.this, message, Toast.LENGTH_SHORT).show();
 
-        goodsAdapter.showDeleteTv(false);
-        rvGoods.setAdapter(goodsAdapter);
+        hotGoodsAdapter.showDeleteTv(false);
+        rvHotGoods.setAdapter(hotGoodsAdapter);
     }
 
     private SweetAlertDialog mSweetAlertDialog;
@@ -435,6 +458,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             holder.nameBtn.setText(item.getName());
             return convertView;
         }
+
         private class ViewHolder {
             private TextView nameBtn;
         }

@@ -10,23 +10,19 @@ import android.widget.TextView;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.entity.AdResultBean;
 
+/**
+ * 自定义的消息通知 弹出框
+ * 弹出市场的广告通知
+ */
 public class CustomAlertDialog extends Dialog implements View.OnClickListener {
 
-//    public interface OnDialogButtonClickListener {
-//        /**
-//         * 点击按钮的回调方法
-//         *
-//         * @param requestCode
-//         * @param isPositive
-//         */
-//        void onDialogButtonClick(int requestCode, boolean isPositive);
-//    }
 
-    private Context context;
-    private String title;
-    private String message;
-    private String strPositive;
-    private String strNegative;
+//    private Context context;
+//    private String title;
+//    private String message;
+//    private String strPositive;
+//    private String strNegative;
+
     //    private int requestCode;
     //    private OnDialogButtonClickListener listener;
 
@@ -34,13 +30,9 @@ public class CustomAlertDialog extends Dialog implements View.OnClickListener {
 
     public CustomAlertDialog(Context context, AdResultBean.DataBean dataBean) {
 //                             OnDialogButtonClickListener listener) {
-        super(context, R.style.Dialog123);
-        this.context = context;
+        super(context, R.style.dialog);
+//        this.context = context;
         this.dataBean = dataBean;
-
-//        this.message = message;
-//        this.requestCode = requestCode;
-//        this.listener = listener;
     }
 
 //    private TextView tvTitle;

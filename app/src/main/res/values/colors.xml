@@ -8,6 +8,7 @@
     <color name="btn_clicked">#03B48A</color>
     <color name="green_3CB371">#03B48A</color>
     <color name="green_008B00">#008B00</color>
+    <color name="light_green">#A4D2B7</color>
     <color name="white">#ffffff</color>
     <color name="black">#000</color>
 
@@ -15,6 +16,14 @@
     <color name="gray_ccc">#CCCCCC</color>
     <color name="gray_bbb">#BBBBBB</color>
     <color name="gray_aaa">#AAAAAA</color>
+    
+    <color name="color_background1">#C9C9BC</color>
+    <color name="color_background2">#B8D598</color>
+    <color name="color_background3">#77B56C</color>
+    <color name="color_background4">#6CD2A8</color>
+    <color name="color_background5">#B0F6D9</color>
+    <color name="color_background6">#79BCBB</color>
+    <color name="color_background7">#DCCFE3</color>
 
     <color name="gray_888">#888888</color>
     <color name="gray_555">#555555</color>
@@ -27,12 +36,19 @@
 
     <color name="color_black_text">#000223</color>
     <color name="color_black">#000000</color>
+    <color name="color_black2">#222222</color>
     <color name="color_red">#E72816</color>
+
+
     <color name="color_gray">#BCBCBC</color>
+
     <color name="color_gray2_text">#999999</color>
     <color name="color_white">#ffffff</color>
     <color name="color_huyan">#CBEBCA</color>
+
     <color name="color_middle_title">#7B7DD0</color>
+
+
     <color name="color_right_title">#5294D0</color>
     <color name="color_carsh_pay">#FAB033</color>
     <color name="color_add2">#5492E5</color>
@@ -58,6 +74,11 @@
     <color name="color_settings13">#F31440</color>
     <color name="color_settings14">#DBDE74</color>
     <color name="color_settings17">#99F4E9</color>
+    <color name="color_settings18">#D65679</color>
+    <color name="jglsjglg">#C0D5F4</color>
+    <color name="color_zero_pressed">#9B4FDB</color>
+    <color name="color_carsh_pressed">#019865</color>
+
 </resources>
 
 

@@ -20,41 +20,23 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.bean.SubOrderBean;
-import com.axecom.smartweight.bean.SubOrderReqBean;
-import com.axecom.smartweight.manager.AccountManager;
-import com.axecom.smartweight.manager.ActivityController;
-import com.axecom.smartweight.net.RetrofitFactory;
 import com.axecom.smartweight.ui.uiutils.UIUtils;
 import com.axecom.smartweight.ui.uiutils.ViewUtils;
-import com.axecom.smartweight.utils.LogUtils;
-import com.axecom.smartweight.utils.SPUtils;
-import com.bigkoo.convenientbanner.holder.Holder;
-import com.bumptech.glide.Glide;
+import com.luofx.newclass.ActivityController;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Longer on 2016/10/26.
@@ -71,6 +53,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     protected SysApplication sysApplication;
+    private Context context;
 
     // 测试功能
     @SuppressLint("InlinedApi")
@@ -79,7 +62,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(FLAG_HOMEKEY_DISPATCHED, FLAG_HOMEKEY_DISPATCHED);//关键代码
-        sysApplication= (SysApplication) getApplication();
+        sysApplication = (SysApplication) getApplication();
+        context = this;
 
         EventBus.getDefault().register(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -102,64 +86,14 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 //        SysApplication.mWidthPixels = dm.widthPixels;
 //        SysApplication.mHeightPixels = dm.heightPixels;
         ActivityController.addActivity(this);
-        initView();
-    }
-
-    /**
-     * 判断 是否在线
-     */
-    public void isOnline() {
-        RetrofitFactory.getInstance().API()
-                .isOnline(AccountManager.getInstance().getToken(), AccountManager.getInstance().getScalesId())
-                .compose(this.<BaseEntity>setThread())
-                .subscribe(new Observer<BaseEntity>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(BaseEntity baseEntity) {
-                        if (baseEntity.isSuccess()) {
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
-
-    /**
-     * 网络  图片  holderView
-     */
-    public class NetworkImageHolderView implements Holder<String> {
-        private ImageView imageView;
-
-        @Override
-        public View createView(Context context) {
-            imageView = new ImageView(context);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            return imageView;
-        }
-
-        @Override
-        public void UpdateUI(Context context, int position, String data) {
-            imageView.setImageResource(R.drawable.logo);
-//            ImageLoader imageLoader = ImageLoader.getInstance();
-//            imageLoader.displayImage(data, imageView);
-            Glide.with(context).load(data).into(imageView);
-        }
-    }
-
-    public void initView() {
 
     }
+
+   public  abstract void initView();
+
+
+
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -180,30 +114,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
 
-    /**
-     * 返回当前activity(需要注意的是这里要是要返回子类的实例)
-     **/
-    public BaseActivity myActivity() {
-        return this;
-    }
-
-
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     /**
@@ -284,7 +199,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void showLoading(String titleText, int type) {
-        if(mSweetAlertDialog!=null){
+        if (mSweetAlertDialog != null) {
             mSweetAlertDialog.dismiss();
         }
         mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
@@ -295,7 +210,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void showLoading() {
-        if(mSweetAlertDialog!=null){
+        if (mSweetAlertDialog != null) {
             mSweetAlertDialog.dismiss();
         }
         mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
@@ -304,8 +219,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSweetAlertDialog.show();
     }
 
-    public void showLoading(String titleText,String confirmText) {
-        if(mSweetAlertDialog!=null){
+    public void showLoading(String titleText, String confirmText) {
+        if (mSweetAlertDialog != null) {
             mSweetAlertDialog.dismiss();
         }
         mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
@@ -317,9 +232,10 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSweetAlertDialog.show();
     }
 
-    public void showLoading(String titleText,String confirmText,long times) {
 
-        showLoading(titleText,confirmText);
+    public void showLoading(String titleText, String confirmText, long times) {
+
+        showLoading(titleText, confirmText);
         UIUtils.getMainThreadHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -328,7 +244,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }, times);
     }
 
-        public void showLoading(String titleText) {
+    public void showLoading(String titleText) {
         SweetAlertDialog mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
         mSweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         mSweetAlertDialog.setTitleText(titleText);
@@ -344,11 +260,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
     }
 
-    public void setIsShowContentView(boolean isShow) {
-        mIsShowContenttext = isShow;
-    }
 
-    private boolean mIsShowContenttext = false;
 
     public void disableShowInput(final EditText editText) {
         if (android.os.Build.VERSION.SDK_INT <= 10) {
@@ -406,56 +318,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
     }
 
-    public String getCurrentTime() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// HH:mm:ss
-        Date date = new Date(System.currentTimeMillis());
-        return simpleDateFormat.format(date);
-    }
-
-    public String getCurrentTime(String format) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);// HH:mm:ss
-        Date date = new Date(System.currentTimeMillis());
-        return simpleDateFormat.format(date);
-    }
-
-    public String getCurrentTime(String format, int type) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);// HH:mm:ss
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        if (type == 1)
-            c.add(Calendar.MONTH, -1);
-        if (type == 2)
-            c.add(Calendar.MONTH, +1);
-        if (type == 3)
-            c.add(Calendar.DAY_OF_MONTH, -1);
-        if (type == 4)
-            c.add(Calendar.DAY_OF_MONTH, +1);
-        Date m = c.getTime();
-        return simpleDateFormat.format(m);
-    }
-
-    public String getCurrentTime(String specifiedDay, String format, int type) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);// HH:mm:ss
-        Calendar c = Calendar.getInstance();
-        Date date = null;
-        try {
-            date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        c.setTime(date);
-        if (type == 1)
-            c.add(Calendar.MONTH, -1);
-        if (type == 2)
-            c.add(Calendar.MONTH, +1);
-        if (type == 3)
-            c.add(Calendar.DAY_OF_MONTH, -1);
-        if (type == 4)
-            c.add(Calendar.DAY_OF_MONTH, +1);
-        Date m = c.getTime();
-        return simpleDateFormat.format(m);
-    }
 
     public String getMonthTime(String specifiedDay, String format, int type) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);// HH:mm:ss
@@ -489,128 +351,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         });
     }
 
-    @Subscribe
-    public void onEventMainThread(BusEvent event) {
-        LogUtils.d("main", this.getClass().getSimpleName());
-       /* if (event.getType() == BusEvent.GO_HOME_CODE || event.getType() == BusEvent.LOGIN_SUCCESS) {
-            if (!(this instanceof MainActivity)) {
-                finish();
-            }
-        }*/
-//        if (event.getType() == BusEvent.GO_HOME_PAGE) {
-//            if (!(this instanceof HomeActivity)) {
-//                finish();
-//            }
-//        }
 
 
-        if (event.getType() == BusEvent.NET_WORK_AVAILABLE) {
-            if (event.getBooleanParam()) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<SubOrderReqBean> orders = (List<SubOrderReqBean>) SPUtils.readObject(BaseActivity.this, "local_order");
-                        submitOrders(orders);
-//                        for (int i = 0; i < orders.size(); i++) {
-//                            submitOrder(orders.get(i));
-//                        }
-                    }
-                }).start();
-            }
-        }
-        if (event.getType() == BusEvent.REPORT_DEVICE_IS_ONLINE) {
-            isOnline();
-        }
-    }
 
-    /**
-     * 
-     * @param list
-     */
-    public void submitOrders(List<SubOrderReqBean> list) {
-        RetrofitFactory.getInstance().API()
-                .submitOrders(list)
-                .compose(this.<BaseEntity>setThread())
-                .subscribe(new Observer<BaseEntity>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(BaseEntity baseEntity) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
-    public void submitOrder(SubOrderReqBean subOrderReqBean) {
-        RetrofitFactory.getInstance().API()
-                .submitOrder(subOrderReqBean)
-                .compose(this.<BaseEntity<SubOrderBean>>setThread())
-                .subscribe(new Observer<BaseEntity<SubOrderBean>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(final BaseEntity<SubOrderBean> subOrderBeanBaseEntity) {
-                        if (subOrderBeanBaseEntity.isSuccess()) {
-                            LogUtils.d("提交成功");
-                        } else {
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-                });
-    }
-
-    public void toActivity(Class target) {
-        this.startActivity(new Intent(this, target));
-    }
-
-    public void toActivityByBoolean(Class target, String key, boolean value) {
-        Intent intent = new Intent(this, target);
-        intent.putExtra(key, value);
-        this.startActivity(intent);
-    }
-
-
-    /**
-     * 跳转Activity的方法,传入我们需要的参数即可
-     */
-    public <T> void startDDMActivity(Class<T> activity, boolean isAinmain) {
-        Intent intent = new Intent(myActivity(), activity);
-        startActivity(intent);
-        //是否需要开启动画(目前只有这种x轴平移动画,后续可以添加):
-        if (isAinmain) {
-            this.overridePendingTransition(R.anim.activity_translate_x_in, R.anim.activity_translate_x_out);
-        }
-    }
-
-    public <T> ObservableTransformer<T, T> setThread() {
-        return new ObservableTransformer<T, T>() {
-            @Override
-            public ObservableSource<T> apply(Observable<T> upstream) {
-                return upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-            }
-        };
-    }
 
 
 

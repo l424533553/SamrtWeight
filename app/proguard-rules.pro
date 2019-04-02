@@ -24,3 +24,11 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+#不要混淆Bugly 中的代码
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+-keep class android.support.**{*;}
+
+# tinker混淆规则
+-dontwarn com.tencent.tinker.**
+-keep class com.tencent.tinker.** { *; }

@@ -73,18 +73,16 @@ public class MyApkUtils {
     /**
      * 得到安装的intent
      *
-     * @param apkFile
-     * @return
+     * @param apkFile apk文件安装
+     * @return 返回安装意图
      */
     public static Intent getInstallIntent(Context context, File apkFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-
         Uri uri;
         // 判断版本大于等于7.0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             // "net.csdn.blog.ruancoder.fileprovider"即是在清单文件中配置的authorities
-
 //            File file=new File(apkFile.getAbsolutePath());
 //            if(file.exists()){
 //                MyLog.logTest("存在");
@@ -93,10 +91,9 @@ public class MyApkUtils {
 //                MyLog.logTest("不存在");
 //            }
 
-            uri = FileProvider.getUriForFile(context, "com.dtncpzs.traceback.fileprovider", apkFile);
+            uri = FileProvider.getUriForFile(context, context.getPackageName()+".fileprovider", apkFile);
             // 给目标应用一个临时授权
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
         } else {
             uri = Uri.fromFile(new File(apkFile.getAbsolutePath()));
         }
@@ -106,25 +103,21 @@ public class MyApkUtils {
         return intent;
     }
 
-
-    public void readyInstall(){
-
-    }
-
     /**
      * 安装 程序
+     *
      * @param context
      * @param filePath
      */
-    public static void installUseAS(Context context,String filePath) {
+    public static void installUseAS(Context context, String filePath) {
         File apkFile = new File(filePath);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         //判断是否是AndroidN以及更高的版本
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(context, "com.dtncpzs.traceback.fileprovider" , apkFile);
+            Uri contentUri = FileProvider.getUriForFile(context, context.getPackageName()+".fileprovider", apkFile);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
-        }else{
+        } else {
             Uri uri = Uri.fromFile(apkFile);
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

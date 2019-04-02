@@ -2,7 +2,6 @@ package com.axecom.smartweight.ui.uiutils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;

@@ -1,56 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="400dp"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/y900"
+    android:layout_height="@dimen/x520"
+    android:layout_gravity="center"
+    android:background="@drawable/shape_ad_dialog"
     android:gravity="center_horizontal"
-    android:maxHeight="500dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvAdTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_middle_title"
         android:gravity="center"
-        android:text="test"
+        android:padding="@dimen/x10"
+        android:text="最新通知"
         android:textColor="@color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_marginEnd="@dimen/x50"
+        android:layout_marginStart="@dimen/x50"
+        android:layout_marginBottom="15dp"
+        android:layout_height="1dp" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/x50"
+        android:layout_marginEnd="@dimen/x50"
         android:layout_weight="1"
-        >
+        android:background="#99283760"
+        android:padding="@dimen/x10">
+
         <TextView
             android:id="@+id/tvAdContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:paddingStart="18dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="18dp"
-            android:paddingBottom="8dp"
+            android:minHeight="80dp"
             android:text=""
-            android:textColor="@color/black"
-            android:textSize="25sp" />
+
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp25" />
     </ScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_middle_title"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="20dp"
+        android:paddingTop="@dimen/x10"
         android:paddingEnd="20dp">
 
         <TextView
             android:id="@+id/tvAdMarketName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:background="@null"
-            android:text=""
+            android:text="黄田市场"
             android:textColor="@color/white"
             android:textSize="25sp" />
 
@@ -58,24 +69,28 @@
             android:id="@+id/tvAdDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/x40"
+            android:layout_toEndOf="@+id/tvAdMarketName"
             android:background="@null"
-            android:text=""
+            android:text="2018-12-20"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textSize="25sp"
+            tools:ignore="RelativeOverlap" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/btnAdSubmit"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/x200"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="10dp"
-        android:background="#E54716"
-        android:text="我已知道"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_ad_button"
+        android:text="关  闭"
         android:textColor="@color/white"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>
+

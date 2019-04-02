@@ -25,6 +25,9 @@ public class BusEvent {
     public static final int notifiySellerInfo = 16;
 
 
+    public BusEvent() {
+    }
+
     //图片下载完成
     //使用mTpye来区分来自不同接受者和发送者
     private int mType = 0;

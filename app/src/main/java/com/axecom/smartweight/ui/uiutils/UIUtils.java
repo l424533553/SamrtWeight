@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.utils.LogUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,57 +33,11 @@ import java.util.Properties;
  * Created by Longer on 2016/10/26.
  */
 public class UIUtils {
-
-    /**
-     * 得到上下文
-     */
-    public static Context getContext() {
-        return SysApplication.getContext();
-    }
-
     /**
      * 得到Resource对象
      */
-    public static Resources getResources() {
-        Context context = getContext();
-        Resources resources = context.getResources();
-        LogUtils.e("aaa");
-        return getContext().getResources();
-    }
-
-    /**
-     * 得到String.xml中定义的字符信息
-     */
-    public static String getString(int resId) {
-        return getResources().getString(resId);
-    }
-
-    /**
-     * 得到String.xml中定义的字符信息,带占位符
-     */
-    public static String getString(int resId, Object... formatArgs) {
-        return getResources().getString(resId, formatArgs);
-    }
-
-    /**
-     * 得到String.xml中定义的字符数组信息
-     */
-    public static String[] getStrings(int resId) {
-        return getResources().getStringArray(resId);
-    }
-
-    /**
-     * 得到color.xml中定义的颜色信息
-     */
-    public static int getColor(int resId) {
-        return getResources().getColor(resId);
-    }
-
-    /**
-     * 得到主线程的线程id
-     */
-    public static long getMainThreadId() {
-        return SysApplication.getMainThreadId();
+    public static Resources getResources(Context context) {
+        return context.getResources();
     }
 
     /**
@@ -94,57 +47,27 @@ public class UIUtils {
         return SysApplication.getHandler();
     }
 
-    /**
-     * 安全的执行一个任务
-     */
-    public static void postTaskSafely(Runnable task) {
-        // 得到当前的线程
-        long curThreadId = android.os.Process.myTid();
-        // 得到主线程的线程id
-        long mainThreadId = getMainThreadId();
-        if (curThreadId == mainThreadId) {
-            // 如果当前是在主线程-->直接执行
-            task.run();
-        } else {
-            // 如果当前是在子线程-->通过消息机制,把任务发送到主线程执行
-            getMainThreadHandler().post(task);
-        }
-    }
-
-    public static void postTaskSafelyDelayed(Runnable task, long delayMillis) {
-        // 得到当前的线程
-        long curThreadId = android.os.Process.myTid();
-        // 得到主线程的线程id
-        long mainThreadId = getMainThreadId();
-        if (curThreadId == mainThreadId) {
-            // 如果当前是在主线程-->直接执行
-            task.run();
-        } else {
-            // 如果当前是在子线程-->通过消息机制,把任务发送到主线程执行
-            getMainThreadHandler().postDelayed(task, delayMillis);
-        }
-    }
 
     /**
      * 得到应用程序的包名
      */
-    public static String getPackageName() {
-        return getContext().getPackageName();
+    public static String getPackageName(Context context) {
+        return context.getPackageName();
     }
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    public static int dip2px(float dpValue) {
-        final float scale = SysApplication.getContext().getResources().getDisplayMetrics().density;
+    public static int dip2px(float dpValue, Context context) {
+        final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
     /**
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
-    public static int px2dip(float pxValue) {
-        final float scale = SysApplication.getContext().getResources().getDisplayMetrics().density;
+    public static int px2dip(float pxValue, Context context) {
+        final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -210,8 +133,6 @@ public class UIUtils {
     }
 
 
-
-
     public static float formatNumber(String currencyCode, float num) {
         BigDecimal bd = new BigDecimal(num);
         if (currencyCode.contains("KRW")) {
@@ -225,8 +146,6 @@ public class UIUtils {
         }
         return bd.floatValue();
     }
-
-
 
 
     private static String getNumberFormat(float price, NumberFormat nf, boolean rounding) {
@@ -265,7 +184,7 @@ public class UIUtils {
 
     private static Properties pro;
 
-    public static void fixScrollEditText(ScrollView scrollView){
+    public static void fixScrollEditText(ScrollView scrollView) {
         scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         scrollView.setFocusable(true);
         scrollView.setFocusableInTouchMode(true);

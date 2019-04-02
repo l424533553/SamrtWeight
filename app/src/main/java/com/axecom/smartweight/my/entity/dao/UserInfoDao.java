@@ -27,7 +27,6 @@ public class UserInfoDao {
         }
     }
 
-
     private static UserInfoDao baseDao;
 
     public static UserInfoDao getInstance(Context context) {
@@ -55,6 +54,16 @@ public class UserInfoDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // 删除数据
+    public int deleteAll() {
+        try {
+            return dao.deleteBuilder().delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     // 修改数据
@@ -103,7 +112,7 @@ public class UserInfoDao {
     public UserInfo queryById(int id) {
         UserInfo article = null;
         try {
-            article =  dao.queryForId(id);
+            article = dao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -111,9 +120,9 @@ public class UserInfoDao {
     }
 
     // 通过条件查询文章集合（通过用户ID查找）
-    public List<UserInfo> queryByUserName(String COLUMNNAME_NAME, String userName) {
+    public List<UserInfo> queryByColumnName(String columnName, Object value) {
         try {
-            return dao.queryBuilder().where().eq(COLUMNNAME_NAME, userName).query();
+            return dao.queryBuilder().where().eq(columnName, value).query();
         } catch (SQLException e) {
             e.printStackTrace();
         }

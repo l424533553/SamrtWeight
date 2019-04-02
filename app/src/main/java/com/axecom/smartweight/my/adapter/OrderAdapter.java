@@ -84,13 +84,16 @@ public class OrderAdapter extends BaseAdapter {
         holder.nameTv.setText(orderBean.getName());
         holder.tvIndex.setText(String.valueOf(position + 1));
 
-        if ((orderBean.getWeight()).indexOf('.') == -1 || orderBean.getWeight().length() - (orderBean.getWeight().indexOf(".") + 1) <= 1) {
-            holder.weightTv.setText(Float.parseFloat(orderBean.getWeight()) / 1000 + "");
-//                holder.weightTv.setText(context.getResources().getString(R.string.string_weight_unit_kg, Float.parseFloat(orderBean.weight) / 1000 + ""));
-        } else {
-            holder.weightTv.setText(orderBean.getWeight());
-//                holder.weightTv.setText(context.getResources().getString(R.string.string_weight_unit_kg, orderBean.weight));
-        }
+//        if ((orderBean.getWeight()).indexOf('.') == -1 || orderBean.getWeight().length() - (orderBean.getWeight().indexOf(".") + 1) <= 1) {
+//            holder.weightTv.setText(Float.parseFloat(orderBean.getWeight()) / 1000 + "");
+////                holder.weightTv.setText(context.getResources().getString(R.string.string_weight_unit_kg, Float.parseFloat(orderBean.weight) / 1000 + ""));
+//        } else {
+//            holder.weightTv.setText(orderBean.getWeight());
+////                holder.weightTv.setText(context.getResources().getString(R.string.string_weight_unit_kg, orderBean.weight));
+//        }
+
+        holder.weightTv.setText(orderBean.getWeight());
+
 
         holder.priceTv.setText(orderBean.getPrice());
         holder.subtotalTv.setText(orderBean.getMoney());

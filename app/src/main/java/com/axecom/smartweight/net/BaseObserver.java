@@ -3,7 +3,6 @@ package com.axecom.smartweight.net;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 
-
 import com.axecom.smartweight.base.BaseEntity;
 
 import java.net.ConnectException;
