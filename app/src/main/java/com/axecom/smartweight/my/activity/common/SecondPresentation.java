@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.activity.common;
 
+import android.annotation.SuppressLint;
 import android.app.Presentation;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,8 +18,8 @@ import com.axecom.smartweight.my.adapter.OrderAdapter;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.luofx.help.QRHelper;
-import com.xuanyuan.xinyu.MyToast;
 import com.luofx.utils.text.StringUtils;
+import com.xuanyuan.library.MyToast;
 
 import java.util.List;
 
@@ -26,14 +27,17 @@ import java.util.List;
  * Created by Administrator on 2018/7/20.
  */
 public class SecondPresentation extends Presentation {
-    private Context context;
-    public TextView tvPayWay, tvPayMoney;
-    public ImageView ivQR;
+    private final Context context;
+    /**
+     * 交易笔数
+     */
+    private TextView tvPayWay, tvPayMoney, tvOrderCount;
+    private ImageView ivQR;
     public OrderAdapter adapter;
     public List<String> list;
     private OrderInfo data;
     private final int SHOW_TIME = 20000;
-    private SysApplication sysApplication;
+    private final SysApplication sysApplication;
 
     SecondPresentation(Context outerContext, Display display) {
         super(outerContext, display);
@@ -49,6 +53,7 @@ public class SecondPresentation extends Presentation {
         tt1(data);
     }
 
+    @SuppressLint("SetTextI18n")
     private void tt1(OrderInfo orderInfoFirst) {
         indexCount++;
         show();
@@ -56,12 +61,14 @@ public class SecondPresentation extends Presentation {
         adapter.setDatas(orderInfoFirst.getOrderItem());
         tvPayMoney.setText(orderInfoFirst.getTotalamount());
         if (orderInfoFirst.getSettlemethod() == 1) {
-            tvPayWay.setText("微信支付");
+            tvPayWay.setText("扫码支付");
         } else if (orderInfoFirst.getSettlemethod() == 2) {
-            tvPayWay.setText("支付宝支付");
+            tvPayWay.setText("扫码支付");
         } else if (orderInfoFirst.getSettlemethod() == 0) {
             tvPayWay.setText("现金支付");
         }
+
+        tvOrderCount.setText(adapter.getCount() + "笔");
 
         if (orderInfoFirst.getSettlemethod() > 0) {
             //售卖人
@@ -80,7 +87,7 @@ public class SecondPresentation extends Presentation {
                 MyToast.showError(context, "支付参数未配置！");
             }
         } else {
-            ivQR.setImageResource(R.drawable.logo);
+            ivQR.setImageResource(R.mipmap.logo);
         }
 
         handler.sendEmptyMessageDelayed(1001, SHOW_TIME);
@@ -89,10 +96,11 @@ public class SecondPresentation extends Presentation {
     private void clearnFirst() {
         tvPayMoney.setText(R.string.default_price);
         tvPayWay.setText("");
-        ivQR.setImageResource(R.drawable.logo);
+        ivQR.setImageResource(R.mipmap.logo);
         adapter.setDatas(null);
         notifyData(data);
     }
+
 
     private ListView lvOne;
 
@@ -105,6 +113,10 @@ public class SecondPresentation extends Presentation {
         }
         if (tvPayWay == null) {
             tvPayWay = findViewById(R.id.tvPayWay);
+        }
+
+        if (tvOrderCount == null) {
+            tvOrderCount = findViewById(R.id.tvOrderCount);
         }
         if (adapter == null) {
             adapter = new OrderAdapter(context, true);
@@ -121,13 +133,12 @@ public class SecondPresentation extends Presentation {
         initView();
     }
 
-    @Override
-    public void show() {
-        super.show();
-    }
 
     @Override
     public void hide() {
+        tvOrderCount.setText("");
+        tvPayMoney.setText("");
+        tvPayWay.setText("");
         super.hide();
     }
 
@@ -157,10 +168,12 @@ public class SecondPresentation extends Presentation {
     /**
      * 设置订单类
      */
+    @SuppressLint("SetTextI18n")
     void setOrderBean(List<OrderBean> data, String money) {
         indexCount++;
         show();
         adapter.setDatas(data);
+        tvOrderCount.setText(adapter.getCount() + "笔");
         tvPayMoney.setText(money);
         handler.sendEmptyMessageDelayed(1001, SHOW_TIME);
     }
@@ -169,6 +182,8 @@ public class SecondPresentation extends Presentation {
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        if (isShowing()) {
+            super.dismiss();
+        }
     }
 }

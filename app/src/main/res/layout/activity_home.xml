@@ -1,304 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
     android:gravity="center">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
-        android:src="@drawable/login_bg"/>
+        android:scaleType="fitXY"
+        android:src="@mipmap/login_bg" />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#70FFFFFF"/>
+        android:background="#10FFFFFF"
+        android:visibility="visible"
+        />
 
     <LinearLayout
         android:layout_width="850dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/home_login_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:text="@string/string_login_txt"
             android:textColor="@color/green_3CB371"
-            android:textSize="40sp" />
+            android:textSize="40sp"
+           />
 
-        <ImageView
+        <View
             android:layout_width="430dp"
             android:layout_height="1dp"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginTop="5dp"
             android:background="@color/green_3CB371" />
 
+
         <LinearLayout
-
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@drawable/shape_bg"
-            android:outlineProvider="background"
-            android:elevation="5dp"
-            android:orientation="horizontal"
-            android:translationZ="1dp">
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                android:src="@mipmap/logo" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
-                <ImageView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
-                    android:src="@drawable/logo" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/string_home_txt1"
-                        android:textColor="@color/green_3CB371"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/string_home_txt2"
-                        android:textColor="@color/green_3CB371"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/string_home_txt3"
-                        android:textColor="@color/green_3CB371"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="@string/string_home_txt4"
-                        android:textColor="@color/green_3CB371"
-                        android:textSize="25sp" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="150dp"
-                    android:layout_marginTop="20dp"
                     android:layout_weight="1"
-                    android:src="@drawable/banner_bg" />
+                    android:gravity="center"
+                    android:text="@string/string_home_txt1"
+                    android:textColor="@color/green_3CB371"
+                    android:textSize="25sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/string_home_txt2"
+                    android:textColor="@color/green_3CB371"
+                    android:textSize="25sp" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/string_home_txt3"
+                    android:textColor="@color/green_3CB371"
+                    android:textSize="25sp" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/cloud" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/green_3CB371"
-                        android:textSize="25sp" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/string_home_txt4"
+                    android:textColor="@color/green_3CB371"
+                    android:textSize="25sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:background="@drawable/shape_btn_bg"
-                android:orientation="vertical">
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="@dimen/x240"
+                android:layout_marginRight="20dp"
+                android:paddingStart="@dimen/x50"
+                android:paddingEnd="@dimen/x50"
+                android:text="@string/stringLauch"
+                android:background="@drawable/selector_btn_epay"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="25sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="40dp"
-                    android:background="@drawable/shape_bg"
-                    android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/x50"
+                android:src="@mipmap/cloud" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="3dp"
-                        android:background="@color/gray_555" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/weight" />
-
-                        <TextView
-                            android:gravity="center_vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@color/green_3CB371"
-                            android:textSize="25sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/user" />
-
-                        <TextView
-                            android:id="@+id/home_card_number_tv"
-                            android:gravity="center_vertical"
-                            android:textSize="25sp"
-                            android:textColor="@color/black"
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/shape_edittext_bg"
-                            android:hint="@string/string_home_user_hint_txt"
-                            android:paddingLeft="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/lock" />
-
-                        <TextView
-                            android:id="@+id/home_pwd_tv"
-                            android:gravity="center_vertical"
-                            android:textSize="25sp"
-                            android:textColor="@color/black"
-                            android:layout_width="match_parent"
-                            android:inputType="numberPassword"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="10dp"
-                            android:background="@drawable/shape_edittext_bg"
-                            android:hint="@string/string_home_pwd_hint_txt"
-                            android:paddingLeft="5dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <CheckedTextView
-                            android:id="@+id/home_save_pwd_ctv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="50dp"
-                            android:layout_marginTop="20dp"
-                            android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-                            android:gravity="center"
-                            android:text="@string/string_home_remember_pwd_txt"
-                            android:textSize="20sp" />
-
-                    <CheckedTextView
-                        android:id="@+id/home_login_auto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="50dp"
-                        android:layout_marginTop="20dp"
-                        android:textSize="20sp"
-                        android:drawableLeft="?android:attr/listChoiceIndicatorMultiple"
-                        android:gravity="center"
-                        android:text="@string/string_login_auto_txt" />
-                    </LinearLayout>
-                    <Button
-                        android:id="@+id/home_confirm_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@drawable/shape_btn_bg"
-                        android:text="@string/string_confirm"
-                        android:textColor="@color/white"
-                        android:textSize="25sp" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivLog"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
-        android:src="@mipmap/log"
-        android:layout_gravity="bottom|right"
-        />
+        android:src="@mipmap/log" />
 
-</FrameLayout>
+</merge>

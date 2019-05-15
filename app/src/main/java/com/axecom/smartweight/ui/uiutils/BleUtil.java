@@ -2,9 +2,9 @@ package com.axecom.smartweight.ui.uiutils;
 
 import com.axecom.smartweight.bean.BleAdvertisedData;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,10 +13,10 @@ public class BleUtil {
     private final static String TAG = BleUtil.class.getSimpleName();
 
     public static BleAdvertisedData parseAdertisedData(byte[] advertisedData) {
-        List<UUID> uuids = new ArrayList<UUID>();
+        List<UUID> uuids = new ArrayList<>();
         String name = null;
         if (advertisedData == null) {
-            return new BleAdvertisedData(uuids, name);
+            return new BleAdvertisedData(uuids, null);
         }
 
         ByteBuffer buffer = ByteBuffer.wrap(advertisedData).order(ByteOrder.LITTLE_ENDIAN);
@@ -46,11 +46,7 @@ public class BleUtil {
                 case 0x09:
                     byte[] nameBytes = new byte[length - 1];
                     buffer.get(nameBytes);
-                    try {
-                        name = new String(nameBytes, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+                    name = new String(nameBytes, StandardCharsets.UTF_8);
                     break;
                 default:
                     buffer.position(buffer.position() + length - 1);
@@ -60,7 +56,7 @@ public class BleUtil {
         return new BleAdvertisedData(uuids, name);
     }
 
-    static final char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {

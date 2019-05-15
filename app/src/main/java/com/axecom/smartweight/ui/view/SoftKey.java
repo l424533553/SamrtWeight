@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,8 +14,7 @@ import com.axecom.smartweight.R;
 
 public class SoftKey extends GridView {
     private static final String[] DATA_DIGITAL = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "删除", "0", "."};
-    private MyAdapter mAdapter;
-    private Context context;
+    private final Context context;
 
     public SoftKey(Context context) {
         super(context);
@@ -35,13 +35,13 @@ public class SoftKey extends GridView {
     }
 
     public void initView() {
-        mAdapter = new MyAdapter(context, DATA_DIGITAL);
+        MyAdapter mAdapter = new MyAdapter(context, DATA_DIGITAL);
         setAdapter(mAdapter);
     }
 
     class MyAdapter extends BaseAdapter {
-        private Context context;
-        private String[] digitals;
+        private final Context context;
+        private final String[] digitals;
 
         public MyAdapter(Context context, String[] digitals) {
             this.context = context;
@@ -63,9 +63,10 @@ public class SoftKey extends GridView {
             return position;
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
+            ViewHolder holder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.soft_keyborad_item, null);
                 holder = new ViewHolder();

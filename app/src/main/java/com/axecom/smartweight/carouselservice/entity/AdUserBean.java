@@ -1,7 +1,11 @@
 package com.axecom.smartweight.carouselservice.entity;
 
+import android.support.annotation.NonNull;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+
 
 /**
  * author: luofaxin
@@ -41,14 +45,15 @@ public class AdUserBean {
     @DatabaseField
     private String adcontent;
     private String baseurl;
-    private String status;
+    public String status;
+
+
 
     public AdUserBean() {
     }
 
 
-    public String getStatus() {
-        return status;
+    public void getStatus() {
     }
 
     public void setStatus(String status) {
@@ -143,6 +148,9 @@ public class AdUserBean {
         this.baseurl = baseurl;
     }
 
+
+
+    @NonNull
     @Override
     public String toString() {
         return "AdUserBean{" +
@@ -162,3 +170,20 @@ public class AdUserBean {
     }
 
 }
+
+//		"licence": "ups\/uploads\/file\/20190118\/tim.jpg;ups\/uploads\/file\/20190118\/tim.jpg;ups\/uploads\/file\/20190118\/tim.jpg",
+//                "ad": "ups\/uploads\/file\/20190118\/u=257373811,4016047896&fm=26&gp=0.jpg",
+//                "photo": "assets\/files\/20190118115808442.jpg",
+//                "companyno": "",
+//                "introduce": "\u5e72\u8d27\u6863",
+//                "adcontent": "",
+//                "companyname": "\u5185\u6d4b01",
+//                "linkphone": "",
+//                "companyid": "1150",
+//                "status": "",
+//                "baseurl": "https:\/\/data.axebao.com\/smartsz\/"
+
+//https:\/\/data.axebao.com\/smartsz\/ups\/uploads\/file\/20190118\/u=257373811,4016047896&fm=26&gp=0.jpg
+//https:\/\/data.axebao.com\/smartsz\/assets\/files\/20190118115808442.jpg
+//
+//https:\/\/data.axebao.com\/smartsz\/ups\/uploads\/file\/20190118\/tim.jpg;ups\/uploads\/file\/20190118\/tim.jpg;ups\/uploads\/file\/20190118\/tim.jpg

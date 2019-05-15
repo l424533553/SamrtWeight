@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="65dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="5dp"
     android:layout_marginEnd="5dp"
+    tools:ignore="HardcodedText,ContentDescription"
     android:background="@drawable/selector_btn_click"
     android:orientation="horizontal">
 
@@ -11,8 +13,9 @@
         android:id="@+id/commodity_item_2_selected_iv"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/u137"
-        android:visibility="gone" />
+        android:src="@mipmap/u137"
+        android:visibility="gone"
+         />
 
     <TextView
         android:id="@+id/commodity_item_2_name_tv"
@@ -31,7 +34,7 @@
         android:layout_alignParentEnd="true"
         android:gravity="center"
         android:scaleType="fitCenter"
-        android:src="@drawable/delete"
+        android:src="@mipmap/delete"
         android:visibility="visible" />
 
 </RelativeLayout>

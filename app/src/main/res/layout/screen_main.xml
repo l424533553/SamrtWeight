@@ -4,9 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/gray_eee"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/MyAppTheme"
+    tools:ignore="HardcodedText,ContentDescription"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,8 +35,9 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="3dp"
-                android:src="@drawable/head"
-                android:scaleType="centerCrop" />
+                android:contentDescription="@string/headimg"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/head" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -146,7 +150,18 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
 
-                    android:src="@drawable/love"
+                    android:src="@mipmap/love"
+                    android:textColor="@color/color_black"
+                    android:textSize="20sp"
+                    />
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="2dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:src="@mipmap/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
 
@@ -156,7 +171,7 @@
                     android:layout_marginTop="2dp"
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
-                    android:src="@drawable/love"
+                    android:src="@mipmap/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
 
@@ -166,7 +181,7 @@
                     android:layout_marginTop="2dp"
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
-                    android:src="@drawable/love"
+                    android:src="@mipmap/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
 
@@ -176,17 +191,7 @@
                     android:layout_marginTop="2dp"
                     android:paddingStart="2dp"
                     android:paddingEnd="2dp"
-                    android:src="@drawable/love"
-                    android:textColor="@color/color_black"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginTop="2dp"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="2dp"
-                    android:src="@drawable/love"
+                    android:src="@mipmap/love"
                     android:textColor="@color/color_black"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -215,19 +220,19 @@
 
     </LinearLayout>
 
-<!--    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:textSize="@dimen/sp18"
-        android:textColor="@color/color_black"
-        android:layout_height="wrap_content" />
+    <!--    <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/sp18"
+            android:textColor="@color/color_black"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="match_parent"
-        android:textColor="@color/color_black"
-        android:textSize="@dimen/sp18"
-        android:layout_height="wrap_content" />-->
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp18"
+            android:layout_height="wrap_content" />-->
 
     <com.sunfusheng.marqueeview.MarqueeView
         android:id="@+id/marqueeView"

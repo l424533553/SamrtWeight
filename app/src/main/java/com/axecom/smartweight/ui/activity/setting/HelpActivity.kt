@@ -8,8 +8,8 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import com.axecom.smartweight.R
 import com.axecom.smartweight.base.SysApplication
-import com.luofx.utils.MyPreferenceUtils
 import com.luofx.utils.file.FileUtils
+import com.xuanyuan.library.MyPreferenceUtils
 import org.apache.poi.hwpf.HWPFDocument
 import org.apache.poi.hwpf.converter.PicturesManager
 import org.apache.poi.hwpf.converter.WordToHtmlConverter

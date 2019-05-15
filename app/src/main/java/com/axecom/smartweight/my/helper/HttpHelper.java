@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.axecom.smartweight.base.SysApplication;
@@ -12,11 +13,13 @@ import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.ResultInfo;
+import com.axecom.smartweight.my.entity.UserInfo;
 import com.axecom.smartweight.my.entity.dao.OrderInfoDao;
 import com.luofx.listener.OkHttpListener;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
 import com.luofx.utils.net.NetWorkJudge;
+import com.xuanyuan.library.MyToast;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -69,15 +72,24 @@ public class HttpHelper implements IConstants {
         application.volleyGet(url, listener, requestIndex);
     }
 
+
+    /**
+     * 秤的标定,数据传给 安鑫宝
+     */
+    public void upTicBD(Map<String, String> map, VolleyStringListener listener, int requestIndex) {
+        String url = BASE_IP_ST + "/api/smartsz/addbd";
+        application.volleyPostString(url, map, listener, requestIndex);
+    }
+
     /**
      * 加密3Dex
      */
-    //通过
-    public void upStateEx(int marketid, VolleyListener listener, int terid, int flag, int requestIndex) {
+    public void upStateEx(int marketid, VolleyListener listener, int terid, String note, int flag, int requestIndex) {
         if (marketid < 0 || terid < 0) {
             return;
         }
-        String data = "{\"marketid\":\"" + marketid + "\",\"terid\":\"" + terid + "\",\"flag\":\"" + flag + "\"}";
+
+        String data = "{\"marketid\":\"" + marketid + "\",\"terid\":\"" + terid + "\",\"flag\":\"" + flag + "\",\"note\":\"" + note + "\"}";
         String desdata = application.getDesBCBHelper().encode(data);
         if (desdata == null) {
             return;
@@ -86,16 +98,18 @@ public class HttpHelper implements IConstants {
         application.volleyGet(url, listener, requestIndex);
     }
 
+//
 //    {"marketid":"11","terid":"103","flag":"0"}
 
 //    void upAdMessage(int marketid, VolleyListener listener, int requestIndex) {
 //        if (marketid < 0) {
 //            return;
 //        }
-////        String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
+////       String url = BASE_IP_ST + "/api/smartsz/addatatus?marketid=" + marketid + "&terid=" + terid + "&flag=" + flag;
 //        String url = BASE_IP_ST + "/api/smartsz/getvbroadcasbymarketid?marketid=" + marketid;
 //        application.volleyGet(url, listener, requestIndex);
 //    }
+
 
     //通过
     void upAdMessageEx(int marketid, VolleyListener listener, int requestIndex) {
@@ -108,16 +122,6 @@ public class HttpHelper implements IConstants {
         String url = BASE_IP_ST + "/api/smartsz/getvbroadcasbymarketid?desdata=" + desdata;
         application.volleyGet(url, listener, requestIndex);
     }
-
-    /**
-     * 上傳交易单条信息
-     */
-//    public void commitDD(OrderInfo orderInfo, OkHttpListener okHttpListener) {
-//        String StringOld = JSON.toJSONString(orderInfo);
-//        String stringNew = StringOld.replace("orderItem", "items");
-//        String url = BASE_IP_ST + "/api/smart/commitszex?";
-//        application.okHttpPost(url, stringNew, okHttpListener);
-//    }
 
     /**
      * 上傳交易单条信息
@@ -195,15 +199,6 @@ public class HttpHelper implements IConstants {
         application.volleyPostString(url, map, volleyStringListener, flag);
     }
 
-
-    /**
-     * 订单支付成功询问
-     */
-//    public void askOrder(String mchid, String orderno, VolleyListener volleyListener, int flag) {
-//        String url = BASE_IP_ST + "/api/pay/check?mchid=" + mchid + "&orderno=" + orderno;
-//        application.volleyGet(url, volleyListener, flag);
-//    }
-
     /**
      * 订单支付成功询问
      */
@@ -219,16 +214,11 @@ public class HttpHelper implements IConstants {
 //    http://119.23.43.64/api/pay/check?desdata=a11659433bd66e26ea0bf474929ff23529009bf63ac8acea509e722da4713835fe4a9cd4d1a9a955e8c85a8a8feb9248abfa30c03fcad59a64f7a4077520993a
 //    http://119.23.43.64/api/pay/check?desdata=a11659433bd66e26ea0bf474929ff23529009bf63ac8acea509e722da4713835fe4a9cd4d1a9a955e8c85a8a8feb9248743d6c8bbdb3cdda7bc0012ea368b701
 
+
     /**
-     * 通过mac 获得用户信息
-     *
-     * @param flag 请求浮标
+     * @param volleyListener volley监听
+     * @param flag           vtype  0：8寸
      */
-//    public void getUserInfo(VolleyListener volleyListener, int flag) {
-//        String url = BASE_IP_ST + "/api/smart/getinfobymac?mac=" + getMac();
-//        application.volleyGet(url, volleyListener, flag);
-//    }
-    //通过
     public void getUserInfoEx(VolleyListener volleyListener, int flag) {
         String data = "{\"mac\":\"" + getMac() + "\"}";
 //        JSON.toJSONString()
@@ -237,6 +227,9 @@ public class HttpHelper implements IConstants {
         String url = BASE_IP_ST + "/api/smart/getinfobymac?desdata=" + desdata;
         application.volleyGet(url, volleyListener, flag);
     }
+
+//    http://119.23.43.64/api/smart/getinfobymac?desdata=95036e23953a518755f2f49870622d39881ef75a96d65040c4c87a80887e5413
+
 
 //    {"mac":"10:d0:7a:6e:f6:c3"}
 //    95036e23953a5187e1ae2f29819781c11a54dd33ec40217a97d94f486831945d
@@ -271,7 +264,7 @@ public class HttpHelper implements IConstants {
 
                         // response  返回结果
                         @Override
-                        public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                        public void onStringResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
                             // 注：该回调是子线程，非主线程
 //                                Log.i("wxy", "callback thread id is " + Thread.currentThread().getId());
                             ResultInfo resultInfo = com.alibaba.fastjson.JSON.parseObject(response.body().string(), ResultInfo.class);
@@ -294,10 +287,6 @@ public class HttpHelper implements IConstants {
             }
         });
     }*/
-//    {"desdata":"ce231b70b673cf9123e8b142bf7d3ee643d62fab4df43fa3deec1556ad20f1cd1b8b3e3e404f4b4ce46436f49beeccaf5071e35639885f561778009d3d446e166d997df7c52c3839fbe468c721569ddfebdb50a47e5de385ae9fff50e450c35f4afb4915cab93570239d3b89ed7fbebc2af77f8cab06a155d8e265c6cba3d9b5ee5c12116e90eb2f966a5dfb1e45ba2fce3c4f5cf223e245614dda852ac1988185406327743055c2c0b83b3928d8bd4e4d1f4a64b5cca56f734f7b99a0689fc98abac31b4ae2eea0f12ec78a635b9cee6cb1c16884e2ab8da3f6d8f34c2d59e8b814e4952a42a4bcc48f769c3c9e0bfe54136f88e26fbd5bd49749bf7ae4c5cb72c6ec5669cf382c03a196a7c40e2268428695bc0faf45b76157ee85f3fa5bf7a2f39080e040d6d0628a71845caf94bec6b182972c744ebc1e09fb5e60271166c0ea12c97a4ce80713da3b25c6d940c7e3ff8e93ab17863732e12623ed8f2a0a7536967c9e830c34cad839e7fea44b16f7a45e2699ecf2b7f2e4f670b1ef11bf154b9040370a338da4e5b7a21a9e0b87a58a71cbd52e306bf998bc2806ca427232984b3b84c2a3e383b26e95a937e1214a09bf484dc18164c9a819ef5fd4e0a940e69e5f17e02f29e2fd360901300f84b75dc39856709f174316af3bc3362de5d143b2a2fc956b18ad50f1dfb61cc8178f8e6d9bf51c9503c0bfd856640415662f294ae600d79a688a2dced06b4585e6b2bdadd1e281ddf7e7cadacfdaa6e96a71b466dfca07d2792d8bc1674ade37679dd6cd9cbc97914dbad1221afa3a4fae2b618519b11ff48d9fe4162decfd86c30a34508406ad780777c1f015a127b99f27613cedc2b20c13c12e848935de51924b4e580e6253e9eee040f944d7ee225fa36a789cbf3c46db54d29b759a3af238213e2d2adbbb3cc1"}
-//   [{"billcode":"AX10301162019113644","billstatus":"0","marketid":11,"items":[{"itemno":"2173","money":"6.98","name":"鸭肠","price":"45","weight":"0.155"}],"seller":"胡启城","sellerid":1126,"settlemethod":0,"terid":103,"time":"2019-01-16 11:36:44"},{"billcode":"AX10301162019113656","billstatus":"0","marketid":11,"items":[{"itemno":"2397","money":"69.45","name":"鸡胗","price":"448","weight":"0.155"},{"itemno":"2398","money":"8.99","name":"水鸭","price":"58","weight":"0.155"},{"itemno":"2400","money":"86.49","name":"鸡肾","price":"558","weight":"0.155"}],"seller":"胡启城","sellerid":1126,"settlemethod":0,"terid":103,"time":"2019-01-16 11:36:56"}]
-//    ce231b70b673cf9123e8b142bf7d3ee643d62fab4df43fa3deec1556ad20f1cd1b8b3e3e404f4b4ce46436f49beeccaf5071e35639885f561778009d3d446e166d997df7c52c3839fbe468c721569ddfebdb50a47e5de385ae9fff50e450c35f4afb4915cab93570239d3b89ed7fbebc2af77f8cab06a155d8e265c6cba3d9b5ee5c12116e90eb2f966a5dfb1e45ba2fce3c4f5cf223e245614dda852ac1988185406327743055c2c0b83b3928d8bd4e4d1f4a64b5cca56f734f7b99a0689fc98abac31b4ae2eea0f12ec78a635b9cee6cb1c16884e2ab8da3f6d8f34c2d59e8b814e4952a42a4bcc48f769c3c9e0bfe54136f88e26fbd5bd49749bf7ae4c5cb72c6ec5669cf382c03a196a7c40e2268428695bc0faf45b76157ee85f3fa5bf7a2f39080e040d6d0628a71845caf94bec6b182972c744ebc1e09fb5e60271166c0ea12c97a4ce80713da3b25c6d940c7e3ff8e93ab17863732e12623ed8f2a0a7536967c9e830c34cad839e7fea44b16f7a45e2699ecf2b7f2e4f670b1ef11bf154b9040370a338da4e5b7a21a9e0b87a58a71cbd52e306bf998bc2806ca427232984b3b84c2a3e383b26e95a937e1214a09bf484dc18164c9a819ef5fd4e0a940e69e5f17e02f29e2fd360901300f84b75dc39856709f174316af3bc3362de5d143b2a2fc956b18ad50f1dfb61cc8178f8e6d9bf51c9503c0bfd856640415662f294ae600d79a688a2dced06b4585e6b2bdadd1e281ddf7e7cadacfdaa6e96a71b466dfca07d2792d8bc1674ade37679dd6cd9cbc97914dbad1221afa3a4fae2b618519b11ff48d9fe4162decfd86c30a34508406ad780777c1f015a127b99f27613cedc2b20c13c12e848935de51924b4e580e6253e9eee040f944d7ee225fa36a789cbf3c46db54d29b759a3af238213e2d2adbbb3cc1
-    //TODO  接口待检测
     public void updateDataEx(final OrderInfoDao orderInfoDao) {
         application.getThreadPool().execute(new Runnable() {
             @Override
@@ -326,14 +315,14 @@ public class HttpHelper implements IConstants {
 
                         // 返回结果
                         @Override
-                        public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response)   {
+                        public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) {
                             // 注：该回调是子线程，非主线程
 //                                Log.i("wxy", "callback thread id is " + Thread.currentThread().getId());
                             try {
                                 ResultInfo resultInfo;
                                 if (response.body() != null) {
                                     resultInfo = JSON.parseObject(response.body().string(), ResultInfo.class);
-                                }else {
+                                } else {
                                     return;
                                 }
                                 if (resultInfo.getStatus() == 0) {
@@ -352,23 +341,14 @@ public class HttpHelper implements IConstants {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         }
                     });
                 }
+
+
             }
         });
     }
-
-    /**
-     * 請求广告证照图片
-     */
-//    public void httpQuestImage(VolleyStringListener listener, int shellerid, int flag) {
-//        String url = BASE_IP_ST + "/api/smartsz/getadinfo?companyid=";
-//        String path = url + shellerid;
-//        application.volleyStringGet(path, listener, flag);
-//    }
 
     /**
      * 請求广告证照图片
@@ -382,10 +362,21 @@ public class HttpHelper implements IConstants {
         String url = BASE_IP_ST + "/api/smartsz/getadinfo?desdata=" + desdata;
         application.volleyStringGet(url, listener, flag);
     }
-//    {"companyid":"1135"}
-//5186f38001c5e0a01837a08ddd9a74d2b77680a7fafed075
-//    http://119.23.43.64/api/smartsz/getadinfo?desdata=5186f38001c5e0a01837a08ddd9a74d2b77680a7fafed075
 
+    /**
+     * 复制上面的  方法  ，监听接口不一样  而已
+     *
+     * @param listener  监听
+     * @param shellerid 商户id
+     * @param flag      请求旗标
+     */
+    public void httpQuestImageEx22(VolleyListener listener, int shellerid, int flag) {
+        String data = "{\"companyid\":\"" + shellerid + "\"}";
+        String desdata = application.getDesBCBHelper().encode(data);
+        String url = BASE_IP_ST + "/api/smartsz/getadinfo?desdata=" + desdata;
+        application.volleyGet(url, listener, flag);
+    }
+    
     @SuppressLint("HardwareIds")
     public String getMac() {
         WifiManager wm = (WifiManager) application.getSystemService(Context.WIFI_SERVICE);
@@ -396,13 +387,7 @@ public class HttpHelper implements IConstants {
                 mac = wifiInfo.getMacAddress();
             }
         }
-        if (application.getTestMode() > 0) {
-            return mac;
-        } else {
-            return "10:d0:7a:6e:f6:c3";
-//        return "10:d0:7a:6e:9c:e7";
-        }
-
+        return mac;
     }
 
     /**
@@ -418,8 +403,10 @@ public class HttpHelper implements IConstants {
 //        application.volleyGet(url, listener, flag);
 //    }
 
-    //通过
-    public void initGoodsEx(VolleyListener listener, int tid, int flag) {
+    /**
+     * 获取
+     */
+    public void initHotGoodEx(VolleyListener listener, int tid, int flag) {
         String data = "{\"terid\":\"" + tid + "\"}";
         String desdata = application.getDesBCBHelper().encode(data);
         String url = BASE_IP_ST + "/api/smartsz/getquick?desdata=" + desdata;
@@ -462,12 +449,102 @@ public class HttpHelper implements IConstants {
     }
 
     /**
+     * 获取小程序图片信息
+     */
+    public void getSmallRoutine(VolleyListener listener, int sellerId, int flag) {
+        String url = BASE_IP_WEB + "/getimgcode.php?id=" + sellerId;
+        application.volleyGet(url, listener, flag);
+    }
+
+//    https://data.axebao.com/smartsz/getimgcode.php?id=1152
+
+    /**
      * 计量院 接口接入  登陆
      */
     public void onFpmsLogin(VolleyListener listener, String data, int flag) {
-        String url = "http://fpms.chinaap.com/admin/trade?executor=http&appCode=FPMSWS&data=" + data;
+        String url = "https://fpms.chinaap.com/admin/trade?executor=http&appCode=FPMSWS&data=" + data;
         application.volleyGet(url, listener, flag);
+    }
+
+    /**
+     * 计量院 接口接入  登陆
+     * vtype  0：8寸     1: 15寸      2: 21寸
+     */
+    public void onCheckVersion(VolleyListener listener, int marketId, int flag) {
+        String url = "https://data.axebao.com/api/smartsz/getvbymarketid?marketid=" + marketId;
+        application.volleyGet(url, listener, flag);
+    }
+
+
+    /**
+     * @param userInfo 用户信息
+     * @param tidType  秤类型  0:商通   1: 15.6寸秤   2 ：8寸秤
+     * @return 验证用户信息的有效性   是否有效可行
+     */
+    public boolean validateUserInfo(UserInfo userInfo, int tidType) {
+        if (userInfo == null) {
+            MyToast.showError(application, "未获取到用户配置信息");
+            return false;
+        }
+        if (TextUtils.isEmpty(userInfo.getSeller())) {
+            MyToast.showError(application, "用户信息未设置用户名");
+            return false;
+        }
+        if (tidType != 0 && tidType != 3) {
+            if (userInfo.getSno() == null) {
+                MyToast.showError(application, "请配置序列号");
+                return false;
+            } else {
+                if (userInfo.getSno().length() != 12) {
+                    MyToast.showError(application, "序列号长度为12");
+                    return false;
+                }
+            }
+
+            if (userInfo.getModel() == null) {
+                MyToast.showError(application, "请配置规格型号");
+                return false;
+            }
+
+            if (TextUtils.isEmpty(userInfo.getProducer())) {
+                MyToast.showError(application, "请配置出厂厂家");
+                return false;
+            }
+
+            if (userInfo.getOuttime() == null) {
+                MyToast.showError(application, "请配置出厂时间");
+                return false;
+            }
+        }
+        return true;
     }
 }
 
-//http://119.23.43.64/api/pay/check?mchid=169540002436&orderno=AX10312242018152227
+////http://119.23.43.64/api/pay/check?mchid=169540002436&orderno=AX10312242018152227
+//
+//https://fpms.chinaap.com/admin/trade?executor=http&appCode=FPMSWS&
+//// data=1338EC0CF5D288B7F5694100704A1978E7E2506C8D7EE17E94FD4BFA7C6AD12EC00EA1F620E91FBD40A3ACB407A2E0D048E0A976CEC4AB9A5656A17BB56A2755007BC3F4E143AD90A4DF50EAFDBF1A13
+
+//http://119.23.43.64/api/smartsz/addbd
+
+//
+//        "bdman" -> "内测03"
+//        "terid" -> "145"
+//        "fkd" -> "0.005"
+//        "bdvalue" -> "10kg"
+//        "ad0" -> "2106838"
+//
+//        "bdtime" -> "2019-04-08 17:10:46"
+//        "ad1" -> "2367868"
+//        "k" -> "0.0383105"
+//
+//        "note" -> "-"
+//        "bd" -> "10kg"
+//        "maxlv" -> "30kg"
+
+
+//https://fpms.chinaap.com/admin/trade?executor=http&appCode=FPMSWS&data=1338EC0CF5D288B78F824E1CC26BEA0E18983A581F949C23384EFC00846574E2CADD9DCCA82EFD08E0F2896E4BEA14AB4CF71DA2C28C80679FEDFDB79B3A946DC48BAED9E751D2BF6CFD66B8207B1CA05FE5509DF4635FBA78DBF596648E79F3A23DCF2C6CB7F1810C590C4C251B01CCB60FCE8785055F06F5E893126F41EB31FF7AC23D4171496A51523E96431D2D731DF95F10BA420A559276BD16EEF99C7F1D91D3302530143F893B8036ECA0317A5733B73F7986F978646281C32417E0FE
+
+//{"result":{"message":"操作成功","success":true}}
+
+//{"result":{"message":"Input length must be multiple of 8 when decrypting with padded cipher","code":"E000","type":3,"success":false}}

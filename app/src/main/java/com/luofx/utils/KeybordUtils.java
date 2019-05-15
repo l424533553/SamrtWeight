@@ -2,12 +2,16 @@ package com.luofx.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import java.lang.reflect.Method;
+
 /**
- * 说明：
+ * 说明：软键盘的关闭打开
  * 作者：User_luo on 2018/7/9 17:02
  * 邮箱：424533553@qq.com
  */
@@ -43,24 +47,6 @@ public class KeybordUtils {
         }
     }
 
-
-    /**
-     * 隐藏键盘
-     */
-//    public void hintKeyBoard(Context context, View view) {
-//        //拿到InputMethodManager
-//        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        //如果window上view获取焦点 && view不为空
-//        if (imm.isActive() &&   getCurrentFocus() != null) {
-//            //拿到view的token 不为空
-//            if (getCurrentFocus().getWindowToken() != null) {
-//                //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
-//                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-//            }
-//        }
-//    }
-
-
     /**
      * 判断当前软键盘是否打开
      *
@@ -84,5 +70,37 @@ public class KeybordUtils {
         return false;
     }
 
+
+    /**
+     * 设置后，点击 EditText 将不会再弹出软件盘
+     * @param editText  控件
+     */
+    public void disableShowInput(final EditText editText) {
+        Class<EditText> cls = EditText.class;
+        Method method;
+        try {
+            method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
+            method.setAccessible(true);
+            method.invoke(editText, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                editText.setSelection(editText.length());
+            }
+        });
+    }
 
 }

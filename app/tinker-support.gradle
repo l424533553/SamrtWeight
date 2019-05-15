@@ -38,7 +38,7 @@ tinkerSupport {
 
     // 构建基准包和补丁包都要指定不同的tinkerId，并且必须保证唯一性
     // 打补丁包时 记得放开，随意定一个唯一的id名
-    tinkerId = "base-20190328.3.970.1"
+    tinkerId = "base-20190510.3.975.6"
 //    tinkerId = "patch-3.65"
 
     // 构建多渠道补丁时使用

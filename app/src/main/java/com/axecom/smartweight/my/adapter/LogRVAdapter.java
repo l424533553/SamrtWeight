@@ -53,7 +53,10 @@ public class LogRVAdapter extends RecyclerView.Adapter<LogRVAdapter.ViewHolder> 
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvType, tvMessage, tvTime, tvLocation;
+        private final TextView tvType;
+        private final TextView tvMessage;
+        private final TextView tvTime;
+        private final TextView tvLocation;
         public ViewHolder(View itemView) {
             super(itemView);
             tvType = itemView.findViewById(R.id.tvType);

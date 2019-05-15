@@ -17,7 +17,7 @@ package com.luofx.utils.apk;//package com.luofx.utils.apk;//package com.coolshow
 //import com.lidroid.xutils.http.HttpHandler;
 //import com.lidroid.xutils.http.ResponseInfo;
 //import com.lidroid.xutils.http.callback.RequestCallBack;
-//import com.luofx.utils.MyPreferenceUtils;
+//import com.xuanyuan.library.MyPreferenceUtils;
 //import com.luofx.utils.UpdateVersionUtil;
 //import com.xuanyuan.library.MyLog;
 //import com.shangtongyin.serialport.R;

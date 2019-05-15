@@ -8,12 +8,11 @@ import android.view.View;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.my.entity.Goods;
+import com.axecom.smartweight.my.entity.HotGood;
 import com.axecom.smartweight.my.entity.ResultInfo;
 import com.axecom.smartweight.my.entity.dao.HotGoodsDao;
 import com.luofx.listener.VolleyListener;
-import com.xuanyuan.xinyu.MyToast;
+import com.xuanyuan.library.MyToast;
 
 import org.json.JSONObject;
 
@@ -21,25 +20,19 @@ import java.util.List;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener, VolleyListener {
 
-    private SysApplication sysApplication;
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        sysApplication = (SysApplication) getApplication();
         context = this;
         findViewById(R.id.btnTest).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnTest:
-//                initGoods(sysApplication.getTid());
-                break;
-        }
+
     }
 
 //    private void initGoods(int tid) {
@@ -64,16 +57,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResponse(JSONObject jsonObject, int flag) {
         ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
-        switch (flag) {
-            case 2:
-                if (resultInfo != null) {
-                    List<Goods> goodsList = JSON.parseArray(resultInfo.getData(), Goods.class);
-                    if (goodsList != null && goodsList.size() > 0) {
-                        HotGoodsDao hotGoodsDao = new HotGoodsDao(context);
-                        hotGoodsDao.insert(goodsList);
-                    }
+        if (flag == 2) {
+            if (resultInfo != null) {
+                List<HotGood> hotGoodList = JSON.parseArray(resultInfo.getData(), HotGood.class);
+                if (hotGoodList != null && hotGoodList.size() > 0) {
+                    HotGoodsDao hotGoodsDao = new HotGoodsDao(context);
+                    hotGoodsDao.insert(hotGoodList);
                 }
-                break;
+            }
         }
     }
 

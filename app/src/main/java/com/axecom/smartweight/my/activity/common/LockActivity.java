@@ -2,7 +2,6 @@ package com.axecom.smartweight.my.activity.common;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,7 +11,7 @@ import android.view.WindowManager;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
-import com.luofx.utils.MyPreferenceUtils;
+import com.xuanyuan.library.MyPreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,13 +39,10 @@ public class LockActivity extends AppCompatActivity implements IConstants {
     //定义处理接收的方法
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventBus(BaseBusEvent event) {
-        switch (event.getEventType()) {
-            case BaseBusEvent.ACTION_UNLOCK_SOFT:// 解锁软件
-                MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, false).apply();
-                LockActivity.this.finish();
-                break;
-            default:
-                break;
+        // 解锁软件
+        if (ACTION_UNLOCK_SOFT.equals(event.getEventType())) {
+            MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, false).apply();
+            LockActivity.this.finish();
         }
     }
 
@@ -81,15 +77,6 @@ public class LockActivity extends AppCompatActivity implements IConstants {
 //        intentFilter.addAction(ACTION_UNLOCK_SOFT);
 //    }
 
-    /**
-     * 数据 功能 开始
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //当网络发生变化的时候，系统广播会发出值为android.net.conn.CONNECTIVITY_CHANGE这样的一条广播
-//        registerReceiver(recevier, intentFilter);
-    }
 
     @Override
     protected void onPause() {

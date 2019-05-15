@@ -1,7 +1,6 @@
 package com.axecom.smartweight.my.entity;
 
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.j256.ormlite.field.DatabaseField;
@@ -41,7 +40,7 @@ public class OrderBean implements Cloneable {
     @DatabaseField
     private String x2 = "0";//皮重
     @DatabaseField
-    private String k;
+    private String k="0.0";
     @DatabaseField
     private String weight0;  //标定ad值
     @DatabaseField
@@ -218,14 +217,6 @@ public class OrderBean implements Cloneable {
 
     public void setWeight(String weight) {
         this.weight = weight;
-    }
-
-    private String setWeight() {
-        if (weight == null) {
-            return weight;
-        } else {
-            return "";
-        }
     }
 
 }

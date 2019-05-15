@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -29,12 +30,14 @@ public class WifiPwdDialog extends Dialog {
         private static final String[] DATA_DIGITAL = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "删除", "0", "."};
 
         private View contentView;
-        private WifiPwdDialog wifiPwdDialog;
-        private View view;
-        private EditText inputEv;
-        private Button confirmBtn, cancelBtn;
+        private final WifiPwdDialog wifiPwdDialog;
+        private final View view;
+        private final EditText inputEv;
+        private final Button confirmBtn;
+        private final Button cancelBtn;
         private OnConfirmedListener onConfrimedListener;
 
+        @SuppressLint("InflateParams")
         public Builder(Context context) {
             wifiPwdDialog = new WifiPwdDialog(context, R.style.dialog);
             view = LayoutInflater.from(context).inflate(R.layout.wifi_pwd_layout, null);

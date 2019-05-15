@@ -9,8 +9,8 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 /**
@@ -23,8 +23,7 @@ import java.util.Hashtable;
  */
 public class QRHelper {
 
-
-    /**
+    /* *
      * @param contents1 二维码内容，可以是url网址，可以是普通字符串
      *                  width 最大为 48 ,高应该和宽 保持一致
      */
@@ -92,26 +91,29 @@ public class QRHelper {
     /**
      * 商通打印机  二维码 生成打印指令
      *
-     * @param contents1
-     * @param width
-     * @param height
-     * @return
+     * @param contents1 内容
+     * @param width     宽度
+     * @param height    高度
+     * @return 返回字节数据
      */
     public static byte[] createPixelsQR(String contents1, int width, int height) {
         //判断URL合法性
         if (contents1 == null || "".equals(contents1) || contents1.length() < 1) {
             return null;
         }
-        String contents = null;
+
 //        List<byte[]> list = new ArrayList<>();
 //        Bitmap bitmap = null;
         int QR_WIDTH = width * 8;  //  二维码宽
         int QR_HEIGHT = height * 8; //  二维码高
         byte[] bytes = new byte[(32 * 8 + 5) * height];
         try {
-            contents = new String(contents1.getBytes(), "gbk");
-            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
+
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "gbk");
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            hints.put(EncodeHintType.MARGIN, 0);  //设置白边
+
             //图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(contents1, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
 
@@ -138,7 +140,6 @@ public class QRHelper {
                     rowByte[j] = dealArray(dest);
                 }
 //                rowByte[width * 8 + 5] = 10;
-
                 System.arraycopy(rowByte, 0, bytes, srcPos, width * 8 + 5);
                 srcPos += width * 8 + 5;
 
@@ -153,8 +154,6 @@ public class QRHelper {
             //显示到一个ImageView上面
         } catch (WriterException e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         }
 //        return list;
         return bytes;
@@ -162,11 +161,6 @@ public class QRHelper {
 
     /**
      * 商通打印机  二维码 生成打印指令
-     *
-     * @param contents1
-     * @param width
-     * @param height
-     * @return
      */
     public static byte[] createPixelsQR3(String contents1, int width, int height) {
         //判断URL合法性
@@ -187,7 +181,6 @@ public class QRHelper {
         bytes[4] = 0;
 
         try {
-            contents = new String(contents1.getBytes(), "gbk");
             Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "gbk");
             //图像数据转换，使用了矩阵转换
@@ -222,21 +215,14 @@ public class QRHelper {
             //显示到一个ImageView上面
         } catch (WriterException e) {
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         }
 //        return list;
         return bytes;
     }
 
-
     /**
      * 商通打印机  二维码 生成打印指令
      *
-     * @param contents1
-     * @param width
-     * @param height
-     * @return
      */
     public static byte[] createPixelsQR2(String contents1, int width, int height) {
         //判断URL合法性
@@ -249,7 +235,6 @@ public class QRHelper {
         byte[] bytes = new byte[(32 * 8) * height];
         try {
 
-            contents = new String(contents1.getBytes(), "gbk");
             Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "gbk");
             //图像数据转换，使用了矩阵转换
@@ -285,12 +270,10 @@ public class QRHelper {
         } catch (WriterException e) {
             e.printStackTrace();
             e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
         }
 
         return bytes;
     }
-
 
     public static Bitmap createQR(String contents1, int width, int height) {
         //判断URL合法性
@@ -340,7 +323,7 @@ public class QRHelper {
                 return;
             }
 
-            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
+            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
             //图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(contents, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
@@ -368,9 +351,8 @@ public class QRHelper {
         }
     }
 
-
     /**
-     * @param contents  二维码内容，可以是url网址，可以是普通字符串
+     * @param contents 二维码内容，可以是url网址，可以是普通字符串
      */
     public static Bitmap createQRImage(String contents) {
         int QR_WIDTH = 300;  //二维码宽
@@ -381,8 +363,10 @@ public class QRHelper {
                 return null;
             }
 
-            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
+            hints.put(EncodeHintType.MARGIN, 0);  //设置白边
+
             //图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(contents, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
             int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
@@ -403,11 +387,10 @@ public class QRHelper {
             Bitmap bitmap = Bitmap.createBitmap(QR_WIDTH, QR_HEIGHT, Bitmap.Config.ARGB_8888);
             bitmap.setPixels(pixels, 0, QR_WIDTH, 0, 0, QR_WIDTH, QR_HEIGHT);
             //显示到一个ImageView上面
-            return  bitmap;
+            return bitmap;
         } catch (WriterException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -438,9 +421,6 @@ public class QRHelper {
         }
         return (byte) be;
     }
-
 }
 
-
-//     -16777216
 

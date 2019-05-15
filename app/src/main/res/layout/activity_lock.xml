@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/lockbg"
+    android:background="@mipmap/lockbg"
     android:alpha="1"
     tools:context=".my.activity.common.LockActivity">
 
@@ -16,6 +16,7 @@
         android:text="软件锁定中，请联系管理员解锁"
         android:textColor="@color/color_red"
         android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

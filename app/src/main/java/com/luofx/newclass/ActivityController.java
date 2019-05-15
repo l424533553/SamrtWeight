@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class ActivityController {
 
-    public static List<Activity> activities = new ArrayList<Activity>();
-    static boolean mIsFinishAll = false;
+    private static final List<Activity> activities = new ArrayList<>();
+    private static boolean mIsFinishAll = false;
 
     public static void addActivity(Activity activity) {
         activities.add(activity);
@@ -29,14 +29,17 @@ public class ActivityController {
     public static void finishAll() {
         LogUtils.d("finishAll");
         for (Activity activity : activities) {
-            if (!activity.isFinishing()) {
-                activity.finish();
+            if (activity != null) {
+                if (!activity.isFinishing()) {
+                    activity.finish();
+                }
             }
         }
     }
 
     /**
      * 安全结束Activity的方法
+     *
      * @param whenTheArrayListFinish 借口回调,防止未完成遍历的情况就删除或者增加集合操作
      */
     public static void finishAllSafe(WhenTheArrayListFinish whenTheArrayListFinish) {
@@ -58,7 +61,7 @@ public class ActivityController {
         void readComplete();
     }
 
-    public static void finishActivityOutOfMainActivity(){
+    public static void finishActivityOutOfMainActivity() {
         for (Activity activity : activities) {
             String c = activity.getComponentName().getClassName();
             if (!activity.isFinishing() && !activity.getComponentName().getClassName().equals("com.fuexpress.kr.MyBuglyActivity")) {
@@ -67,13 +70,13 @@ public class ActivityController {
         }
     }
 
-    public static List<Activity> cardActiviies = new ArrayList<Activity>();
+    private static final List<Activity> cardActiviies = new ArrayList<>();
 
-    public static void cardAddActivity(Activity activity){
+    public static void cardAddActivity(Activity activity) {
         cardActiviies.add(activity);
     }
 
-    public static void cardFinish(){
+    public static void cardFinish() {
         for (Activity activity : cardActiviies) {
             if (!activity.isFinishing()) {
                 activity.finish();

@@ -1,7 +1,5 @@
 package com.luofx.newclass.weighter;
 
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 
 import com.axecom.smartweight.my.config.IConstants;
@@ -10,6 +8,8 @@ import com.axecom.smartweight.my.entity.BaseBusEvent;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+
+import static com.axecom.smartweight.my.config.IEventBus.WEIGHT_ST;
 
 /**
  * luofaxin 20180829 修改
@@ -20,7 +20,7 @@ public class STWeighter extends MyBaseWeighter implements IConstants {
     /**
      * 读取重量的命令
      */
-    private byte[] readWeightOrder = new byte[]{0x55, (byte) 0xAA};
+    private final byte[] readWeightOrder = new byte[]{0x55, (byte) 0xAA};
 
 
 //    private byte[] readWeightAD = new byte[]{0x55, (byte) 0xAE};
@@ -63,7 +63,6 @@ public class STWeighter extends MyBaseWeighter implements IConstants {
 //        }
 //        return serialPort;
 //    }
-
 
 
     //关闭
@@ -112,7 +111,7 @@ public class STWeighter extends MyBaseWeighter implements IConstants {
      */
     private class ReadThread extends Thread {
         private boolean isRun;
-        byte[] buffer = new byte[64];
+        final byte[] buffer = new byte[64];
         private int size;
 
         private ReadThread() {
@@ -143,9 +142,8 @@ public class STWeighter extends MyBaseWeighter implements IConstants {
                                     str = str.substring(0, index).trim().replace(" ", "");
                                     if (!TextUtils.isEmpty(str)) {
 //                                        MyLog.myInfo("收到的数据" + str);
-                                        BaseBusEvent event=new BaseBusEvent();
-                                        int WEIGHT_NOTIFY_ST = 2013;//商通的称重通知
-                                        event.setEventType(BaseBusEvent.NOTIFY_WEIGHT_ST);
+                                        BaseBusEvent event = new BaseBusEvent();
+                                        event.setEventType(WEIGHT_ST);
                                         event.setOther(str);
                                         EventBus.getDefault().post(event);
                                     }
@@ -166,12 +164,30 @@ public class STWeighter extends MyBaseWeighter implements IConstants {
      * 称重模块置零 命令
      */
     public void resetBalance() {
+        sendZer();
+    }
+
+    @Override
+    public void getKValue() {
+
+    }
+
+    /**
+     * 置零命令
+     */
+    @Override
+    public void sendZer() {
         byte[] order = new byte[]{0x55, 0x00};
         write(order);
     }
 
     @Override
-    public void getKValue() {
+    public void sendRemoveSign() {
+
+    }
+
+    @Override
+    public void sendCalibrationData(boolean isCalibration10kg) {
 
     }
 

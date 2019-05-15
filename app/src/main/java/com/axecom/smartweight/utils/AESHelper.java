@@ -1,26 +1,35 @@
 package com.axecom.smartweight.utils;
 
-import java.io.UnsupportedEncodingException;
+import android.annotation.SuppressLint;
 
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 ///** AES对称加密解密类 **/
+
+/**
+ * DESede/ECB/PKCS5Padding  加密方式不是语义上安全的  ，
+ * 推荐使用 DESede/CBC/PKCS5Padding
+ */
 public class AESHelper {
-
-    // /** 算法/模式/填充 **/
-    private static final String CipherMode = "AES/ECB/PKCS5Padding";
-
     ///** 创建密钥 **/
     private static SecretKeySpec createKey(String password) {
-        byte[] data = null;
+        byte[] data;
         if (password == null) {
             password = "";
         }
-        StringBuffer sb = new StringBuffer(32);
+        StringBuilder sb = new StringBuilder(32);
         sb.append(password);
         while (sb.length() < 32) {
             sb.append("0");
@@ -29,23 +38,21 @@ public class AESHelper {
             sb.setLength(32);
         }
 
-        try {
-            data = sb.toString().getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        data = sb.toString().getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(data, "AES");
     }
 
     // /** 加密字节数据 **/
+    @SuppressLint("GetInstance")
     public static byte[] encrypt(byte[] content, String password) {
         try {
+            // /** 算法/模式/填充 **/
+            String CipherMode = "AES/ECB/PKCS5Padding";
             SecretKeySpec key = createKey(password);
             System.out.println(key);
             Cipher cipher = Cipher.getInstance(CipherMode);
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] result = cipher.doFinal(content);
-            return result;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,23 +63,28 @@ public class AESHelper {
     public static String encrypt(String content, String password) {
         byte[] data = null;
         try {
-            data = content.getBytes("UTF-8");
+            data = content.getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
             e.printStackTrace();
         }
         data = encrypt(data, password);
-        String result = byte2hex(data);
-        return result;
+        if (data != null) {
+            return byte2hex(data);
+        }
+        return null;
+
     }
 
     // /** 解密字节数组 **/
+    @SuppressLint("GetInstance")
     public static byte[] decrypt(byte[] content, String password) {
         try {
+            // /** 算法/模式/填充 **/
+            String CipherMode = "AES/ECB/PKCS5Padding";
             SecretKeySpec key = createKey(password);
             Cipher cipher = Cipher.getInstance(CipherMode);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] result = cipher.doFinal(content);
-            return result;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,22 +102,18 @@ public class AESHelper {
         data = decrypt(data, password);
         if (data == null)
             return null;
-        String result = null;
-        try {
-            result = new String(data, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String result;
+        result = new String(data, StandardCharsets.UTF_8);
         return result;
     }
 
     // /** 字节数组转成16进制字符串 **/
-    public static String byte2hex(byte[] b) { // 一个字节的数，
-        StringBuffer sb = new StringBuffer(b.length * 2);
-        String tmp = "";
-        for (int n = 0; n < b.length; n++) {
+    private static String byte2hex(byte[] b) { // 一个字节的数，
+        StringBuilder sb = new StringBuilder(b.length * 2);
+        String tmp;
+        for (byte b1 : b) {
             // 整数转成十六进制表示
-            tmp = (Integer.toHexString(b[n] & 0XFF));
+            tmp = (Integer.toHexString(b1 & 0XFF));
             if (tmp.length() == 1) {
                 sb.append("0");
             }
@@ -136,19 +144,31 @@ public class AESHelper {
      * @param src 加密数据源
      * @param key 加密秘钥
      * @return 返回16进制的加密数据
-     * @throws Exception 数据格式异常 和 转换异常
+     * 数据格式异常 和 转换异常
      */
+    @SuppressLint("GetInstance")
     public static String encryptDESedeECB(final String src, final String key) {
         try {
-            final DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));
+            final DESedeKeySpec dks = new DESedeKeySpec(key.getBytes(StandardCharsets.UTF_8));
             final SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");
             final SecretKey securekey = keyFactory.generateSecret(dks);
 
-            final Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+            String transformation = "DESede/ECB/PKCS5Padding";
+            final Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.ENCRYPT_MODE, securekey);
             byte[] b = cipher.doFinal(src.getBytes());
             return byte2hex(b);
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         }
         return null;

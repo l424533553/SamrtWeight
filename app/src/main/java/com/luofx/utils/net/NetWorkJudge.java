@@ -13,8 +13,6 @@ public class NetWorkJudge {
 
     /**
      * 判断 网络是否 可用
-     * @param context
-     * @return
      */
     public static boolean isNetworkAvailable(Context context) {
         // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
@@ -24,12 +22,10 @@ public class NetWorkJudge {
         } else {
             // 获取NetworkInfo对象
             NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
-
             if (networkInfo != null && networkInfo.length > 0) {
-                for (int i = 0; i < networkInfo.length; i++) {
-//
+                for (NetworkInfo networkInfo1 : networkInfo) {
                     // 判断当前网络状态是否为连接状态
-                    if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
+                    if (networkInfo1.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
                 }
@@ -53,12 +49,11 @@ public class NetWorkJudge {
             //步骤3：根据需要取出网络连接信息
             //获取WIFI连接的信息
             NetworkInfo networkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            Boolean isWifiConn = networkInfo.isConnected();
             //获取移动数据连接的信息
 //            NetworkInfo  networkInfo2 = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 //            Boolean isMobileConn = networkInfo2.isConnected();
 
-            return  isWifiConn;
+            return networkInfo.isConnected();
 //            MyLog.myInfo("网络改变了:" + isWifiConn);
 //            MyToast.toastShort(context.getApplicationContext(), "网络改变了:" + isWifiConn);
 
@@ -72,10 +67,10 @@ public class NetWorkJudge {
             //用于存放网络连接信息
             StringBuilder sb = new StringBuilder();
             //通过循环将网络信息逐个取出来
-            for (int i = 0; i < networks.length; i++) {
+            for (Network network : networks) {
                 //获取ConnectivityManager对象对应的NetworkInfo对象
-                NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
-                sb.append(networkInfo.getTypeName() + " connect is " + networkInfo.isConnected());
+                NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
+                sb.append(networkInfo.getTypeName()).append(" connect is ").append(networkInfo.isConnected());
             }
         }
         return false;
@@ -98,11 +93,9 @@ public class NetWorkJudge {
 
     /**
      * 检测当前网络的类型 是否是wifi
-     * @param context
-     * @return
      */
     public static int checkedNetWorkType(Context context){
-        if(!checkedNetWork(context)){
+        if(isNetWorkError(context)){
             return NONETWORK;
         }
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -116,22 +109,17 @@ public class NetWorkJudge {
 
     /**
      * 检查是否连接网络
-     * @param context
-     * @return
+
      */
-    public static boolean  checkedNetWork(Context context){
+    public static boolean isNetWorkError(Context context){
         // 1.获得连接设备管理器
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(cm == null) return false;
-        /**
-         * 获取网络连接对象
-         */
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-        if(networkInfo == null || !networkInfo.isAvailable()){
-            return false;
+        if(cm!=null){
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            return networkInfo == null || !networkInfo.isAvailable();
+        }else {
+            return true;
         }
-        return true;
     }
 
 }

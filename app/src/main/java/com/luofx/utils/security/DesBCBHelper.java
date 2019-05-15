@@ -1,18 +1,11 @@
 package com.luofx.utils.security;
 
-/**
- * 作者：罗发新
- * 时间：2019/1/15 0015    9:40
- * 邮件：424533553@qq.com
- * 说明：
- */
 
 import android.annotation.SuppressLint;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.InvalidKeySpecException;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -24,9 +17,11 @@ import javax.crypto.spec.SecretKeySpec;
 /***
  * DES ECB PKCS5Padding 对称加密 解密
  *
- *
+ * 作者：罗发新
+ * 时间：2019/1/15 0015    9:40
+ * 邮件：424533553@qq.com
+ * 说明：
  */
-
 public class DesBCBHelper {
 
     private static DesBCBHelper mInstants;
@@ -41,7 +36,7 @@ public class DesBCBHelper {
     private DesBCBHelper() {
         try {
             init();
-        } catch (InvalidKeyException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (InvalidKeyException  e) {
             e.printStackTrace();
         }
     }
@@ -49,7 +44,7 @@ public class DesBCBHelper {
     private AlgorithmParameterSpec iv = null;// 加密算法的参数接口，IvParameterSpec是它的一个实现
     private SecretKey key = null;
 
-    private void init() throws InvalidKeyException, NoSuchAlgorithmException, InvalidKeySpecException {
+    private void init() throws InvalidKeyException {
         String desKey = "data.axebao.com@axecom.s";
         String desIv = "@smh2019";
         byte[] DESkey = desKey.getBytes();
@@ -72,7 +67,7 @@ public class DesBCBHelper {
         try {
             Cipher enCipher = Cipher.getInstance("DESede/CBC/PKCS5Padding");// 得到加密对象Cipher
             enCipher.init(Cipher.ENCRYPT_MODE, key, iv);// 设置工作模式为加密模式，给出密钥和向量
-            byte[] pasByte = enCipher.doFinal(data.getBytes("utf-8"));
+            byte[] pasByte = enCipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             encodeString = bytesToHexString(pasByte);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,12 +77,9 @@ public class DesBCBHelper {
 
     /**
      * 計量院的加密設計
-     *
-     * @param data 需要加密的内容
-     * @return
      */
-    public String encodeECB(String data) {
-        data="service=sign&cmd=login&authenCode=fpms_vender_axb&password=h79OpV3MtCfiZHcu";
+    public String encodeECB() {
+        String data = "service=sign&cmd=login&authenCode=fpms_vender_axb&password=h79OpV3MtCfiZHcu";
         String encodeString = null;
         try {
             String desKey = "F7AD4703F4520AFDB0216339";
@@ -96,7 +88,7 @@ public class DesBCBHelper {
             @SuppressLint("GetInstance")
             Cipher enCipher = Cipher.getInstance("DESede/ECB/PKCS7Padding");// 得到加密对象Cipher
             enCipher.init(Cipher.ENCRYPT_MODE, mainkey);// 设置工作模式为加密模式，给出密钥和向量
-            byte[] pasByte = enCipher.doFinal(data.getBytes("utf-8"));
+            byte[] pasByte = enCipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             encodeString = bytesToHexString(pasByte);
         } catch (Exception e) {
             e.printStackTrace();

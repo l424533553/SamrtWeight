@@ -1,5 +1,6 @@
 package com.luofx.help;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -61,6 +62,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
     /**
      * CrashHandler实例
      */
+    @SuppressLint("StaticFieldLeak")
     private static CrashHandler INSTANCE;
     /**
      * 程序的Context对象
@@ -69,7 +71,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
     /**
      * 使用Properties来保存设备的信息和错误堆栈信息
      */
-    private Properties mDeviceCrashInfo = new Properties();
+    private final Properties mDeviceCrashInfo = new Properties();
     private static final String VERSION_NAME = "versionName";
     private static final String VERSION_CODE = "versionCode";
     private static final String STACK_TRACE = "STACK_TRACE";
@@ -114,7 +116,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
      * 获取系统默认的UncaughtException处理器,
      * 设置该CrashHandler为程序的默认处理器
      */
-    public void init(Context ctx ) {
+    public void init(Context ctx) {
         mContext = ctx;
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
@@ -126,8 +128,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-
-
         if (!handleException(ex) && mDefaultHandler != null) {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
@@ -176,7 +176,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
 
         String url = BASE_IP_ST + "/api/smartsz/addapplog";
         String stringBody = JSON.toJSONString(exceptionInfo);
-        myBaseApplication.okHttpPost(url, stringBody, myBaseApplication);
+        //todo 取消了错误日志收集
+//        myBaseApplication.okHttpPost(url, stringBody, myBaseApplication);
 
         //收集设备信息
         collectCrashDeviceInfo(mContext);
@@ -197,31 +198,23 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
 
     /**
      * 把错误报告发送给服务器,包含新产生的和以前没发送的.
-     *
-     * @param ctx
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void sendCrashReportsToServer(Context ctx) {
         String[] crFiles = getCrashReportFiles(ctx);
         if (crFiles != null && crFiles.length > 0) {
-            TreeSet<String> sortedFiles = new TreeSet<String>();
-            sortedFiles.addAll(Arrays.asList(crFiles));
+            TreeSet<String> sortedFiles = new TreeSet<>(Arrays.asList(crFiles));
             for (String fileName : sortedFiles) {
                 File cr = new File(ctx.getFilesDir(), fileName);
-                postReport(cr);
+                // 发送信息到服务器
                 cr.delete();// 删除已发送的报告
             }
         }
     }
 
-    private void postReport(File file) {
-        // TODO 发送错误报告到服务器
-    }
 
     /**
      * 获取错误报告文件名
-     *
-     * @param ctx
-     * @return
      */
     private String[] getCrashReportFiles(Context ctx) {
         File filesDir = ctx.getFilesDir();
@@ -303,6 +296,4 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler, IConstants
             }
         }
     }
-
-
 }

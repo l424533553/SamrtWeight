@@ -59,7 +59,6 @@ public class BaseModel {
      * @param tag        请求标记
      * @param observable 被观察者
      * @param observer   观察者
-     * @param <T>
      */
     protected <T> void sendRequest(@NonNull Object tag, @NonNull Observable<T> observable, @NonNull Observer<T> observer) {
 //       ......

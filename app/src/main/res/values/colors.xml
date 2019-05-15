@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#218868</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#009966</color>
@@ -28,20 +28,14 @@
     <color name="gray_888">#888888</color>
     <color name="gray_555">#555555</color>
     <color name="gray_e3">#E3E3E3</color>
-
-
     <color name="transparent">#01000000</color>
     <color name="red_000">#FF0000</color>
     <color name="red_text">#EE4011</color>
-
     <color name="color_black_text">#000223</color>
     <color name="color_black">#000000</color>
     <color name="color_black2">#222222</color>
     <color name="color_red">#E72816</color>
-
-
     <color name="color_gray">#BCBCBC</color>
-
     <color name="color_gray2_text">#999999</color>
     <color name="color_white">#ffffff</color>
     <color name="color_huyan">#CBEBCA</color>
@@ -70,9 +64,9 @@
     <color name="color_settings10">#018BD6</color>
     <color name="color_settings9">#D69E6D</color>
     <color name="color_settings11">#E7670E</color>
-    <color name="color_settings12">#0EE7D0</color>
-    <color name="color_settings13">#F31440</color>
-    <color name="color_settings14">#DBDE74</color>
+    <color name="color_settings12" tools:keep="@color/color_settings12">#0EE7D0</color>
+    <color name="color_settings13" tools:keep="@color/color_settings13">#F31440</color>
+    <color name="color_settings14" tools:keep="@color/color_settings14">#DBDE74</color>
     <color name="color_settings17">#99F4E9</color>
     <color name="color_settings18">#D65679</color>
     <color name="jglsjglg">#C0D5F4</color>

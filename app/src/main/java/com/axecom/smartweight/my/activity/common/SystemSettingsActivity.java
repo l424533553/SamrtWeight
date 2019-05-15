@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.activity.common;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,48 +9,54 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
-import com.axecom.smartweight.my.helper.HttpHelper;
 import com.axecom.smartweight.ui.activity.setting.ErrorLogActivity;
-import com.axecom.smartweight.utils.AESHelper;
-import com.luofx.listener.VolleyListener;
 import com.luofx.newclass.ActivityController;
-import com.luofx.newclass.weighter.XSWeighter15;
-import com.luofx.utils.MyPreferenceUtils;
-import com.xuanyuan.library.MyLog;
-import com.xuanyuan.xinyu.MyToast;
 import com.luofx.utils.file.FileUtils;
 import com.luofx.utils.text.MyTextUtils;
+import com.xuanyuan.library.MyLog;
+import com.xuanyuan.library.MyPreferenceUtils;
+import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.PowerConsumptionRankingsBatteryView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
-public class SystemSettingsActivity extends Activity implements IConstants, View.OnClickListener, VolleyListener {
-    private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv;
-    private CheckedTextView icCardSettlementCtv, stopPrintCtv, noPatchSettlementCtv;
-    private CheckedTextView autoPrevCtv, stopCashCtv, stopAlipayCtv, stopweichatpayCtv;
+import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.axecom.smartweight.my.config.IEventBus.WEIGHT_ELECTRIC;
+
+
+public class SystemSettingsActivity extends Activity implements IConstants, View.OnClickListener {
+    //    private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv;
+//    private CheckedTextView icCardSettlementCtv, stopPrintCtv, noPatchSettlementCtv;
+//    private CheckedTextView autoPrevCtv, stopCashCtv, stopAlipayCtv, stopweichatpayCtv;
     private EditText tvWebIP;
     private Context context;
     private SysApplication sysApplication;
-    private Button btnCalibration;//标定按钮
-    private Button btnZeroSetting;//置零按钮
 
     private TextView tvHardwareInfo;
+
+
+    /**
+     * 电池控件
+     */
+    private PowerConsumptionRankingsBatteryView pcrBattery;
+    /**
+     * 电池状态 ，电池数据，电池占比
+     */
+    private TextView pcrBtState, pcrBtData, pcrBtPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,7 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         sysApplication = (SysApplication) getApplication();
         context = this;
         initView();
+        initBattery();
         EventBus.getDefault().register(this);//解除事件总线问题
         ActivityController.addActivity(this);
     }
@@ -69,7 +77,34 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         EventBus.getDefault().unregister(this);//解除事件总线问题
     }
 
-    private boolean isCalibration10kg;//是不是10kg的砝码标定
+    /**
+     * 是否打开充电标志
+     */
+    private boolean isOpen;
+
+    private void initBattery() {
+        pcrBattery = findViewById(R.id.pcrBattery);
+
+        pcrBtState = findViewById(R.id.pcrBtState);
+        pcrBtData = findViewById(R.id.pcrBtData);
+        pcrBtPercent = findViewById(R.id.pcrBtPercent);
+
+        if (sysApplication.getTidType() <= 0) {
+            pcrBattery.setVisibility(View.GONE);
+        } else {
+            pcrBattery.setVisibility(View.VISIBLE);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+//                mHandler.sendEmptyMessage(0);
+                    if (isOpen) {
+                        pcrBattery.chargeElectric(8);
+                    }
+
+                }
+            }, 0, 200);
+        }
+    }
 
     public void initView() {
         String baseWebIP = MyPreferenceUtils.getSp(context).getString(BASE_WEB_IP, BASE_IP_ST);
@@ -78,70 +113,40 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         tvWebIP.setText(baseWebIP);
         tvHardwareInfo = findViewById(R.id.tvHardwareInfo);
 
+
         findViewById(R.id.btnSaveIP).setOnClickListener(this);
         findViewById(R.id.btnCleanLog).setOnClickListener(this);
         findViewById(R.id.btnHardwareInfo).setOnClickListener(this);
+        findViewById(R.id.btnStartBD).setOnClickListener(this);
 
-        //标定数据
-        RadioGroup rgWeight = findViewById(R.id.rgWeight);
-        RadioButton rbWeight20 = findViewById(R.id.rbWeight20);
-        rbWeight20.setChecked(true);
-        rgWeight.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (group.getCheckedRadioButtonId()) {
-                    case R.id.rbWeight10:
-                        isCalibration10kg = true;
-                        break;
-                    case R.id.rbWeight20:
-                        isCalibration10kg = false;
-                        break;
-                    default:
-                        isCalibration10kg = false;
-                        break;
-                }
-            }
-        });
-
-        btnZeroSetting = findViewById(R.id.btnZeroSetting);
-        btnZeroSetting.setOnClickListener(this);
-        btnCalibration = findViewById(R.id.btnCalibration);
-        btnCalibration.setOnClickListener(this);
-        btnCalibration.setClickable(false);
-        btnCalibration.setEnabled(false);
 
         findViewById(R.id.btnDeleteAdImage).setOnClickListener(this);
         findViewById(R.id.btnApiTest).setOnClickListener(this);
         findViewById(R.id.btnRemoveSign).setOnClickListener(this);
 
-        notClearPriceCtv = findViewById(R.id.system_settings_not_clear_price_ctv);
-        saveWeightCtv = findViewById(R.id.system_settings_save_weight_ctv);
-        autoObtainCtv = findViewById(R.id.system_settings_auto_obtain_ctv);
-        cashEttlementCtv = findViewById(R.id.system_settings_cash_ettlement_ctv);
 
-        icCardSettlementCtv = findViewById(R.id.system_settings_ic_card_settlement_ctv);
-        stopPrintCtv = findViewById(R.id.system_settings_stop_print_ctv);
-        noPatchSettlementCtv = findViewById(R.id.system_settings_no_patch_settlement_ctv);
-        autoPrevCtv = findViewById(R.id.system_settings_auto_prev_ctv);
-        Button cashRoundingCtv = findViewById(R.id.btnLookLog);
-        stopCashCtv = findViewById(R.id.system_settings_stop_cash_ctv);
-        stopAlipayCtv = findViewById(R.id.system_settings_stop_alipay_ctv);
-        stopweichatpayCtv = findViewById(R.id.system_settings_stop_weichatpay_ctv);
+//        Button cashRoundingCtv = findViewById(R.id.btnLookLog);
+//        stopCashCtv = findViewById(R.id.system_settings_stop_cash_ctv);
+//        stopAlipayCtv = findViewById(R.id.system_settings_stop_alipay_ctv);
+//        stopweichatpayCtv = findViewById(R.id.system_settings_stop_weichatpay_ctv);
+//
+//        notClearPriceCtv.setOnClickListener(this);
+//        saveWeightCtv.setOnClickListener(this);
+//        autoObtainCtv.setOnClickListener(this);
+//        cashEttlementCtv.setOnClickListener(this);
+//        stopPrintCtv.setOnClickListener(this);
+//        noPatchSettlementCtv.setOnClickListener(this);
+//        autoPrevCtv.setOnClickListener(this);
+//        cashRoundingCtv.setOnClickListener(this);
+//        stopCashCtv.setOnClickListener(this);
+//        stopAlipayCtv.setOnClickListener(this);
+//        stopweichatpayCtv.setOnClickListener(this);
+//        icCardSettlementCtv.setOnClickListener(this);
 
-        notClearPriceCtv.setOnClickListener(this);
-        saveWeightCtv.setOnClickListener(this);
-        autoObtainCtv.setOnClickListener(this);
-        cashEttlementCtv.setOnClickListener(this);
-        stopPrintCtv.setOnClickListener(this);
-        noPatchSettlementCtv.setOnClickListener(this);
-        autoPrevCtv.setOnClickListener(this);
-        cashRoundingCtv.setOnClickListener(this);
-        stopCashCtv.setOnClickListener(this);
-        stopAlipayCtv.setOnClickListener(this);
-        stopweichatpayCtv.setOnClickListener(this);
-        icCardSettlementCtv.setOnClickListener(this);
+
         initSwitch();
     }
+
 
     /**
      * 初始化开关设置
@@ -164,36 +169,55 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         onBackPressed();
     }
 
+    private String kValue;
+
     //定义处理接收的方法
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventBus(BaseBusEvent event) {
-        switch (event.getEventType()) {
-            case BaseBusEvent.TYPE_GET_K_VALUE:
-                try {
-                    String data = (String) event.getOther();
-                    String array[] = data.split(" ");
-                    if (array.length >= 3) {
-                        if (array[0].length() == 7 && array[1].length() == 7 && array[2].length() == 9) {
-//                            String kValue = array[2];
-                            String initAd = array[0];
-                            String initAd0 = array[1];
-                            if (!isBDFinish) {
-                                isBDFinish = true;//标定完成
-                                sendCalibrationInfo(isCalibration10kg, initAd0, initAd);
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (WEIGHT_ELECTRIC.equals(event.getEventType())) {
+            String[] array = event.getOther().toString().split(" ");
+            if (array.length >= 3 && array[1].length() == 4 && array[2].length() == 2) {
+                String electricData = array[1];
+
+                int electric = (int) (((Float.valueOf(electricData) / 100) - PowerConsumptionRankingsBatteryView.MinEleve) * PowerConsumptionRankingsBatteryView.ConstantEleve);
+                if (electric < 0) {
+                    electric = 0;
+                } else if (electric > 100) {
+                    electric = 100;
                 }
-                break;
-            default:
-                break;
+
+                int electricState = array[2].charAt(0) - 48;
+                if (electricState == 0) {//无充电
+                    isOpen = false;
+                    pcrBattery.setLevelHeight(electric);
+                    pcrBtState.setText("未充电");
+                    if (electric <= 20) {
+                        MyToast.showError(context, "电量不足,请及时接通电源！");
+                    }
+                } else if (electricState == 1) {
+                    isOpen = true;
+                    pcrBtState.setText("充电中");
+                }
+                pcrBtData.setText(electricData);
+                pcrBtPercent.setText(electric + "");
+            }
         }
     }
 
-    //是否标定完成
-    private boolean isBDFinish;
+
+    /**
+     * 是否得到了Ad值
+     */
+    private boolean isGetAd;
+
+    private boolean isSendDataFpsm;
+
+    /**
+     * 上下文。使用上下文
+     */
+    DecimalFormat decimalFormat = new DecimalFormat("0.000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+
 
     @Override
     public void onClick(View v) {
@@ -208,35 +232,35 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
                     MyToast.toastShort(SystemSettingsActivity.this, "IP保存失败");
                 }
                 break;
-            case R.id.system_settings_not_clear_price_ctv:
-                notClearPriceCtv.setChecked(!notClearPriceCtv.isChecked());
-                break;
+//            case R.id.system_settings_not_clear_price_ctv:
+//                notClearPriceCtv.setChecked(!notClearPriceCtv.isChecked());
+//                break;
             case R.id.btnApiTest://API调试测试
                 Intent intent2 = new Intent(SystemSettingsActivity.this, ApiTestActivity.class);
                 startActivity(intent2);
 
                 break;
-            case R.id.system_settings_save_weight_ctv:
-                saveWeightCtv.setChecked(!saveWeightCtv.isChecked());
-                break;
-            case R.id.system_settings_auto_obtain_ctv:
-                autoObtainCtv.setChecked(!autoObtainCtv.isChecked());
-                break;
-            case R.id.system_settings_cash_ettlement_ctv:
-                cashEttlementCtv.setChecked(!cashEttlementCtv.isChecked());
-                break;
-            case R.id.system_settings_ic_card_settlement_ctv:
-                icCardSettlementCtv.setChecked(!icCardSettlementCtv.isChecked());
-                break;
-            case R.id.system_settings_stop_print_ctv:
-                stopPrintCtv.setChecked(!stopPrintCtv.isChecked());
-                break;
-            case R.id.system_settings_no_patch_settlement_ctv:
-                noPatchSettlementCtv.setChecked(!noPatchSettlementCtv.isChecked());
-                break;
-            case R.id.system_settings_auto_prev_ctv:
-                autoPrevCtv.setChecked(!autoPrevCtv.isChecked());
-                break;
+//            case R.id.system_settings_save_weight_ctv:
+//                saveWeightCtv.setChecked(!saveWeightCtv.isChecked());
+//                break;
+//            case R.id.system_settings_auto_obtain_ctv:
+//                autoObtainCtv.setChecked(!autoObtainCtv.isChecked());
+//                break;
+//            case R.id.system_settings_cash_ettlement_ctv:
+//                cashEttlementCtv.setChecked(!cashEttlementCtv.isChecked());
+//                break;
+//            case R.id.system_settings_ic_card_settlement_ctv:
+//                icCardSettlementCtv.setChecked(!icCardSettlementCtv.isChecked());
+//                break;
+//            case R.id.system_settings_stop_print_ctv:
+//                stopPrintCtv.setChecked(!stopPrintCtv.isChecked());
+//                break;
+//            case R.id.system_settings_no_patch_settlement_ctv:
+//                noPatchSettlementCtv.setChecked(!noPatchSettlementCtv.isChecked());
+//                break;
+//            case R.id.system_settings_auto_prev_ctv:
+//                autoPrevCtv.setChecked(!autoPrevCtv.isChecked());
+//                break;
             case R.id.btnLookLog:// 查看错误日志信息
                 Intent intent = new Intent(SystemSettingsActivity.this, ErrorLogActivity.class);
                 startActivity(intent);
@@ -246,68 +270,41 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
                 String fileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/log/error" + ".txt";
                 MyTextUtils.clearInfoForFile(fileName);
                 break;
-            case R.id.system_settings_stop_cash_ctv:
-                stopCashCtv.setChecked(!stopCashCtv.isChecked());
-                break;
-            case R.id.system_settings_stop_alipay_ctv:
-                stopAlipayCtv.setChecked(!stopAlipayCtv.isChecked());
-                break;
-            case R.id.system_settings_stop_weichatpay_ctv:
-                stopweichatpayCtv.setChecked(!stopweichatpayCtv.isChecked());
-                break;
-            case R.id.btnZeroSetting://置零准备
-                XSWeighter15 xsWeighter15 = XSWeighter15.getXSWeighter();
-                xsWeighter15.sendZer();
-                btnZeroSetting.setBackgroundResource(R.color.light_green);
-                btnCalibration.setBackgroundResource(R.drawable.selector_btn_epay);
-                btnCalibration.setClickable(true);
-                btnCalibration.setEnabled(true);
-                break;
+//            case R.id.system_settings_stop_cash_ctv:
+//                stopCashCtv.setChecked(!stopCashCtv.isChecked());
+//                break;
+//            case R.id.system_settings_stop_alipay_ctv:
+//                stopAlipayCtv.setChecked(!stopAlipayCtv.isChecked());
+//                break;
+//            case R.id.system_settings_stop_weichatpay_ctv:
+//                stopweichatpayCtv.setChecked(!stopweichatpayCtv.isChecked());
+//                break;
+
+
+//            case R.id.btnZeroSetting://置零准备
+//                sysApplication.getMyBaseWeighter().sendZer();
+//                btnCalibration.setBackgroundResource(R.drawable.selector_btn_epay);
+//                btnCalibration.setClickable(true);
+//                btnCalibration.setEnabled(true);
+//
+//                break;
             case R.id.btnRemoveSign://移除拆机标识
-                xsWeighter15 = XSWeighter15.getXSWeighter();
-                xsWeighter15.sendRemoveSign();
+                sysApplication.getMyBaseWeighter().sendRemoveSign();
                 MyToast.toastShort(context, "设定成功");
                 break;
-            case R.id.btnCalibration://10kg标定
-                isBDFinish = false;
-                xsWeighter15 = XSWeighter15.getXSWeighter();
-                xsWeighter15.sendCalibrationData(isCalibration10kg);
-                MyToast.toastShort(context, "标定成功");
-                btnCalibration.setBackgroundResource(R.color.light_green);
 
-                //发送获取K值  的命令
-//                xsWeighter15.getKValue();
-
-
-//                if (sysApplication.getTidType() == 1) {//XS
-////                    final SerialPort serialPort = .getSerialPort();
-//                    xsWeighter15 = XSWeighter15.getXSWeighter();
-//                    if (xsWeighter15 != null) {
-//                        AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-//                        builder1.setTitle("标定密码");
-//                        final EditText et = new EditText(this);
-//                        et.setHint("请输入密码");
-//                        et.setInputType(InputType.TYPE_CLASS_PHONE);
-//                        et.setSingleLine(true);
-//                        builder1.setView(et);
-//                        builder1.setNegativeButton("取消", null);
-//                        builder1.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                String password = et.getText().toString();
-//                                if (password.equals("93716")) {
-//                                    xsWeighter15.sendCalibrationData();  //发送标定命令10kg
-//                                    MyToast.toastShort(context, "标定成功");
-//                                } else {
-//                                    MyToast.toastShort(context, "密码错误");
-//                                }
-//                            }
-//                        });
-//                        AlertDialog alertDialog = builder1.create();
-//                        alertDialog.show();
-//                    }
-//                }
+            case R.id.btnStartBD:// 准备标定秤
+                Intent intent1 = new Intent(context, ScaleBDACActivity.class);
+                startActivity(intent1);
                 break;
+//            case R.id.btnCalibration://10kg标定
+//                isSendDataFpsm = false;
+//                sysApplication.getMyBaseWeighter().sendCalibrationData(isCalibration10kg);
+//                btnCalibration.setBackgroundResource(R.color.light_green);
+//                btnCalibration.setClickable(false);
+//                btnCalibration.setEnabled(false);
+//                kValue = null;
+//                break;
             case R.id.btnDeleteAdImage:// 删除广告图片
                 String dir = FileUtils.getDownloadDir(this, FileUtils.DOWNLOAD_DIR);
                 boolean isDeleteSuccess = FileUtils.deleteDir(dir);
@@ -320,8 +317,24 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
             case R.id.btnHardwareInfo:// 显示硬件信息
                 checkPhoneType();
                 break;
+            case R.id.btnGetK://  获取K值信息
+                sysApplication.getMyBaseWeighter().getKValue();
+                break;
+            case R.id.btnsbSend://  获取K值信息
+                sysApplication.getMyBaseWeighter().getKValue();
+                String sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+                String sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+                String kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
+//                if (sbAd != null && sbZeroAd != null) {
+//                    MyLog.blue("传输的 标定Ad= " + sbAd + "   传输的标定0位Ad=" + sbZeroAd);
+//                    sendCalibrationInfo(isCalibration10kg, sbZeroAd, sbAd, kValue);
+//                }
+                break;
+            default:
+                break;
         }
     }
+
 
     /**
      * 检查手机类型
@@ -340,7 +353,7 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         phoneInfo += ", VERSION_CODES.BASE: "
                 + android.os.Build.VERSION_CODES.BASE;
         phoneInfo += ", MODEL: " + android.os.Build.MODEL;
-        phoneInfo += ", SDK: " + android.os.Build.VERSION.SDK;
+        phoneInfo += ", SDK: " + Build.VERSION.SDK_INT;
         phoneInfo += ", VERSION.RELEASE: " + android.os.Build.VERSION.RELEASE;
         phoneInfo += ", DEVICE: " + android.os.Build.DEVICE;
         phoneInfo += ", DISPLAY: " + android.os.Build.DISPLAY;
@@ -353,109 +366,9 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
 
         MyLog.bluelog("硬件信息" + phoneInfo);
         tvHardwareInfo.setText(phoneInfo);
-
-//        String device = Build.DEVICE;
-//
-//        if (model.startsWith("Lenovo")) {
-//            setLenovoLenovo(true);
-//        }
-//
-//        if ("Meizu".equals(brand)) {
-//            setMZ(true);
-//        }
-//
-//        if ((manufacturer != null && manufacturer.trim().contains("samsung") && sdkVersion >= 9)
-//                && (model == null || (!model.trim().toLowerCase()
-//                .contains("google") && !model.trim().toLowerCase()
-//                .contains("nexus")))) {
-//            setSamsung(true);
-//        }
-//
-//        // 安卓4.0以上rom
-//        if (sdkVersion >= 14) {
-//            setSdkGreaterThanApi14(true);
-//        }
-//        if (displayStr != null && displayStr.toLowerCase().contains("miui")) {
-//            setMIUI(true);
-//        }
-//        if (brand.equals("Xiaomi") && model.trim().contains("MI 2")) {
-//            setIsXiaomi2S(true);
-//        }
-//        if (brand.equals("Xiaomi") && model.trim().contains("1S")) {
-//            setIsXiaomi2S(true);
-//        }
-//        if (brand.equals("Xiaomi") && model.trim().contains("MI-")) {
-//            setMIUI(true);
-//        }
-
     }
 
     // TODO 硬件信息
 
 
-    /**
-     * 发送订单信息到计量院后台,获取到 标定后的数据传输给计量院
-     */
-    private void sendCalibrationInfo(boolean isCalibration10kg, String initAd0, String initAd) {
-        if (sysApplication.getTidType() < 1) {//非香山秤
-            return;
-        }
-        int CalibrationWeight;
-        if (isCalibration10kg) {
-            CalibrationWeight = 10;
-        } else {
-            CalibrationWeight = 20;
-        }
-        String authenCode = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_AUTHENCODE, null);
-        String dataKey = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_DATAKEY, null);
-        if (authenCode == null || dataKey == null) {
-            return;
-        }
-
-        String cmdECB = AESHelper.encryptDESedeECB("deviceCheck", dataKey);//标定
-        String sb = "service=deviceService&cmd=" + cmdECB + "&authenCode=" + authenCode +
-                "&appCode=FPMSWS" +
-                "&deviceNo=123456789012" +
-                "&macAddr=" +
-                HttpHelper.getmInstants(sysApplication).getMac() +
-                "&weight=" + CalibrationWeight +  //重量
-                "&initAd=" + initAd0 +   //标准点0位Ad
-                "&initAd=" + initAd;//标准点Ad
-
-        String data = AESHelper.encryptDESedeECB(sb, MAIN_KEY);
-        HttpHelper.getmInstants(sysApplication).onFpmsLogin(SystemSettingsActivity.this, data, VOLLEY_FLAG_FPMS_SUBMIT);
-
-    }
-
-
-    @Override
-    public void onResponse(VolleyError volleyError, int flag) {
-
-    }
-
-    @Override
-    public void onResponse(JSONObject jsonObject, int flag) {
-
-    }
 }
-
-
-////硬件信息Product: rk3288, CPU_ABI: armeabi-v7a, TAGS: test-keys, VERSION_CODES.BASE: 1, MODEL: rk3288, SDK: 22,
-////        VERSION.RELEASE: 5.1.1, DEVICE: rk3288,
-////
-//           DISPLAY: rk3288-userdebug 5.1.1 LMY49F eng.android-build.20180629.135349 test-keys,
-////        BRAND: Android, BOARD: rk30sdk,
-//            FINGERPRINT: Android/rk3288/rk3288:5.1.1/LMY49F/android-build06291356:userdebug/test-keys,
-////        ID: LMY49F, MANUFACTURER: rockchip,
-//// USER: android-build
-//                   liaokai
-//
-////香山
-////硬件信息Product: rk3288, CPU_ABI: armeabi-v7a, TAGS: test-keys, VERSION_CODES.BASE: 1, MODEL: rk3288, SDK: 22,
-////        VERSION.RELEASE: 5.1.1, DEVICE: rk3288,
-//
-//        DISPLAY: 4.0.0-180716-OEM,
-//                   BRAND: Android, BOARD: rk30sdk,
-//                   FINGERPRINT: Android/rk3288/rk3288:5.1.1/LMY49F/liaokai12061456:userdebug/test-keys,
-//        ID: LMY49F, MANUFACTURER: rockchip,
-//                   USER:

@@ -1,5 +1,6 @@
 package com.luofx.newclass;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -22,10 +23,11 @@ import java.util.Iterator;
  * Created by zf on 2017/5/31.
  */
 
+@SuppressLint("Registered")
 public class USBService extends Service {
-    private MyBinder mBinder = new MyBinder();
+    private final MyBinder mBinder = new MyBinder();
     private UsbManager manager ;
-    private UsbInterface Interface1,Interface2;
+    private UsbInterface Interface1;
     /**
      * 块输出端点
      */
@@ -59,9 +61,9 @@ public class USBService extends Service {
         boolean rel = false;
         if ((vid == 34918 && pid == 256) || (vid == 1137 && pid == 85)
                 || (vid == 6790 && pid == 30084)
-                || (vid == 26728 && pid == 256) || (vid == 26728 && pid == 512)
+                || (vid == 26728 && pid == 512)
                 || (vid == 26728 && pid == 256) || (vid == 26728 && pid == 768)
-                || (vid == 26728 && pid == 1024)|| (vid == 26728 && pid == 1280)
+                || (vid == 26728 && pid == 1024) || (vid == 26728 && pid == 1280)
                 || (vid == 26728 && pid == 1536)) {
             return true;
         }
@@ -99,8 +101,7 @@ public class USBService extends Service {
                     Log.e("成功获得设备接口:","" + Interface1.getId());
                 }
                 if (i == 1) {
-                    Interface2 = intf;
-                    Log.e("成功获得设备接口:","" + Interface2.getId());
+                    Log.e("成功获得设备接口:","" + intf.getId());
                 }
             }
             return true;
@@ -117,7 +118,7 @@ public class USBService extends Service {
      */
     private UsbEndpoint epIntEndpointOut;
     private UsbEndpoint epIntEndpointIn;
-    private UsbEndpoint assignEndpoint(UsbInterface mInterface) {
+    private void assignEndpoint(UsbInterface mInterface) {
 
         for (int i = 0; i < mInterface.getEndpointCount(); i++) {
             UsbEndpoint ep = mInterface.getEndpoint(i);
@@ -147,7 +148,6 @@ public class USBService extends Service {
                 && epIntEndpointOut == null && epIntEndpointIn == null) {
             throw new IllegalArgumentException("not endpoint is founded!");
         }
-        return epIntEndpointIn;
     }
     // 打开设备
     public void openDevice(UsbInterface mInterface) {
@@ -172,9 +172,8 @@ public class USBService extends Service {
             }
             if (conn.claimInterface(mInterface, true)) {
                 myDeviceConnection = conn;
-                if (myDeviceConnection != null)//
-                    Log.e("open","设备成功！");
-                final String mySerial = myDeviceConnection.getSerial();
+                Log.e("open","设备成功！");
+               myDeviceConnection.getSerial();
             } else {
                 conn.close();
             }

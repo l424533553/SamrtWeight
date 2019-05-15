@@ -17,8 +17,7 @@ import java.io.OutputStreamWriter;
 public class LogWriteUtils {
 
     public final static boolean CHEAK = false;                    //开发阶段设置为true
-    private static String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath(); // 缓存根路径
-    private static String TAG = "LogUtil";
+    private static final String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath(); // 缓存根路径
     private static String logPath = null;                   //log日志存放路径
     private static final char VERBOSE = 'v';
     private static final char INFO = 'i';
@@ -26,13 +25,13 @@ public class LogWriteUtils {
     private static final char WARN = 'w';
     private static final char ERROR = 'e';
 
-    public static String log = SDCARD + "log" + "/";
+    public static final String log = SDCARD + "log" + "/";
 
     /**
      * 初始化，须在使用之前设置，最好在Application创建时调用
      * 获得文件储存路径,在后面加"/Logs"建立子文件夹
-     *
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void init() {
         logPath = getFilePath();
         File fileLog = new File(log);
@@ -102,19 +101,16 @@ public class LogWriteUtils {
 
     /**
      * 将log信息写入文件中
-     *
-     * @param type
-     * @param tag
-     * @param msg
      */
     private static void writeToFile(char type, String tag, String msg) {
         if (null == logPath) {
+            String TAG = "LogUtil";
             Log.e(TAG, "logPath == null ，未初始化LogToFile");
             return;
         }
         String fileName = logPath + "/log/error" + ".txt";
         String log = DateUtil.getDate() + "------" + type + " " + tag + " " + msg + "\n";
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         BufferedWriter bw = null;
         try {
             fos = new FileOutputStream(fileName, true);//这里的第二个参数代表追加还是覆盖，true为追加，flase为覆盖
@@ -136,12 +132,14 @@ public class LogWriteUtils {
     /**
      * 清空缓存目录
      */
-    public static void clearCaches(String Path) {
+    public static boolean clearCaches(String Path) {
+        boolean result = true;
         File dir = new File(Path);
         File[] allfiles = dir.listFiles();
         for (File file : allfiles) {
-            file.delete();
+            result = result && file.delete();
         }
+        return result;
     }
 
 }

@@ -9,7 +9,7 @@ import android.widget.EditText;
  */
 
 public class MoneyTextWatcher implements TextWatcher {
-    private EditText editText;
+    private final EditText editText;
     private int digits = 1;
 
     public   MoneyTextWatcher(EditText et) {
@@ -44,7 +44,7 @@ public class MoneyTextWatcher implements TextWatcher {
                 editText.setSelection(s.length()); //光标移到最后
             }
         }
-        if (s.toString().trim().substring(0).equals(".")) {
+        if (s.toString().trim().equals(".")) {
             s = "0" + s;
             editText.setText(s);
             editText.setSelection(2);
@@ -58,7 +58,7 @@ public class MoneyTextWatcher implements TextWatcher {
                 return;
             }
         }
-        if (s.toString().indexOf(".") >= 0) {
+        if (s.toString().contains(".")) {
             if (editText.getText().toString().indexOf(".", editText.getText().toString().indexOf(".") + 1) > 0) {
                 editText.setText(editText.getText().toString().substring(0, editText.getText().toString().length() - 1));
                 editText.setSelection(editText.getText().toString().length());

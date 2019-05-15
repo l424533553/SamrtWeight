@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
+    tools:ignore="HardcodedText"
     android:layout_height="match_parent">
 
     <TextView
@@ -27,7 +29,8 @@
         android:src="@mipmap/back96"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="@+id/textView2"
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -53,7 +56,8 @@
                 android:gravity="center"
                 android:text="服务器IP："
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />
 
             <EditText
                 android:id="@+id/tvWebIP"
@@ -63,10 +67,13 @@
                 android:background="@drawable/shape_white_btn_bg"
                 android:gravity="center_vertical"
                 android:hint="@string/baseUrl"
+                android:inputType="text"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:autofillHints=""
+                tools:ignore="UnusedAttribute" />
 
             <Button
                 android:id="@+id/btnSaveIP"
@@ -83,9 +90,56 @@
         <TextView
             android:id="@+id/tvHardwareInfo"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="硬件信息" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="硬件信息"
-            />
+            android:background="@drawable/shape_light_green_bg"
+            android:orientation="horizontal">
+
+            <com.xuanyuan.library.PowerConsumptionRankingsBatteryView
+                android:id="@+id/pcrBattery"
+                android:layout_width="@dimen/y25"
+                android:layout_height="@dimen/y45"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/x10"
+                android:visibility="visible"
+                app:batteryShellHeadHeight="@dimen/x5"
+                app:batteryShellHeadWidth="@dimen/x14"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/pcrBtState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/pcrBattery"
+                android:text="未充电"
+                android:textColor="@color/color_white" />
+
+            <TextView
+                android:id="@+id/pcrBtData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pcrBtState"
+                android:layout_alignStart="@+id/pcrBtState"
+                android:text="8.00"
+                android:textColor="@color/color_white" />
+
+            <TextView
+                android:id="@+id/pcrBtPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/pcrBtData"
+                android:layout_alignStart="@+id/pcrBtData"
+                android:text="70"
+                android:textColor="@color/color_white" />
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -115,7 +169,8 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="API调试测试"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/btnDeleteAdImage"
@@ -127,7 +182,8 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="删除轮播图片"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/btnLookLog"
@@ -139,7 +195,8 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="查看log"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/btnCleanLog"
@@ -151,47 +208,11 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="删除log"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/rgWeight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/shape_light_green_bg"
-            android:orientation="horizontal"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="标定重量:"
-                android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
-
-            <RadioButton
-                android:id="@+id/rbWeight10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="10kg砝码"
-                android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
-
-            <RadioButton
-                android:id="@+id/rbWeight20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="20kg砝码"
-                android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
-        </RadioGroup>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -199,67 +220,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="10dp"
-
-            >
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_light_green_bg"
-                android:clickable="false"
-                android:enabled="false"
-                android:text="标定流程："
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btnZeroSetting"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_btn_epay"
-                android:text="第一步\n清空置零"
-                android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_light_green_bg"
-                android:enabled="false"
-                android:text="第二步\n放置砝码"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/btnCalibration"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_light_green_bg"
-                android:text="第三步\n标定"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:visibility="visible">
 
             <!-- <Button
                  android:id="@+id/btnApiTest"
@@ -307,7 +268,8 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="去除拆机标识"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/btnHardwareInfo"
@@ -318,52 +280,61 @@
                 android:background="@drawable/selector_btn_epay"
                 android:text="测试硬件信息"
                 android:textColor="@color/selector_btn_text"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
+            <Button
+                android:id="@+id/btnStartBD"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:text="标定秤"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
-            android:padding="10dp"
             android:background="@drawable/shape_light_green_bg"
-            >
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <TextView
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:text="打印二维码"
-                android:textSize="@dimen/sp18"
                 android:textColor="@color/color_white"
-
-                />
+                android:textSize="@dimen/sp18" />
 
             <Switch
                 android:id="@+id/stPrintQR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:shadowColor="@color/color_white"
                 android:showText="true"
-                android:textColor="@color/color_white"
                 android:switchMinWidth="@dimen/x100"
+                android:textColor="@color/color_white"
                 android:textOff="关闭"
                 android:textOn="开启"
-                android:shadowColor="@color/color_white"
                 android:textSize="@dimen/sp16"
                 android:thumb="@drawable/thumb"
-                android:track="@drawable/track" />
-
+                android:track="@drawable/track"
+                tools:ignore="UnusedAttribute" />
         </LinearLayout>
 
-        <LinearLayout
+     <!--   <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
-
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -471,8 +442,6 @@
                     android:text="自动取上一笔单价"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
-
-
             </LinearLayout>
 
             <LinearLayout
@@ -516,7 +485,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp" />
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout>-->
 
     </LinearLayout>
 

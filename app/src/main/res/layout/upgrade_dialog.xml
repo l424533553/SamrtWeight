@@ -2,6 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText,ContentDescription"
+    android:theme="@style/MyAppTheme"
     android:background="#6000"
     android:gravity="center">
 
@@ -17,7 +20,8 @@
             android:id="@+id/imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo" />
+            android:src="@mipmap/logo"
+           />
         <!--通过tag设置的控件 -->
         <TextView
             android:tag="textview"
@@ -33,7 +37,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
             android:text="title"
             android:textColor="#273238"
             android:textSize="18sp" />
@@ -52,7 +57,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="4dp">
+                android:paddingStart="4dp"
+                android:paddingEnd="0dp"
+
+                >
                 <!-- 【必设】升级信息控件tag：beta_upgrade_info-->
                 <TextView
                     android:tag="beta_upgrade_info"

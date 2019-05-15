@@ -14,6 +14,7 @@
     <string name="string_home_pwd_hint_txt">请输入密码</string>
     <string name="string_home_remember_pwd_txt">记住密码</string>
     <string name="string_confirm">确&#160;认</string>
+    <string name="stringLauch">登&#160;录</string>
     <string name="string_cancel">取&#160;消</string>
     <string name="string_settings">设置</string>
     <string name="string_pay_cash">现金</string>
@@ -26,7 +27,6 @@
     <string name="string_operator">司磅员：</string>
     <string name="string_grand_total_txt">累&#160;计</string>
     <string name="string_clear_txt">清除</string>
-    <string name="string_useing_card">刷卡结算中...</string>
     <string name="string_cancel_txt">取&#160;&#160;&#160;消</string>
     <string name="string_cash_dialog_title">收银</string>
     <string name="string_weight_txt">重量：</string>
@@ -80,8 +80,16 @@
     <string name="v">V</string>
     <string name="axb">深圳市安鑫宝科技发展有限公司</string>
     <string name="kg">kg</string>
-    <string name="Total">合计：</string>
+    <string name="Total">总计：</string>
     <string name="gross_weight">总重：</string>
     <string name="baseUrl">http://119.23.43.64</string>
+
+    <string name="battary">电池图片</string>
+    <string name="middleBag">中袋</string>
+    <string name="middlePrice">0.1</string>
+    <string name="ele">ele</string>
+    <string name="bigBag">大袋</string>
+    <string name="smallBag">小袋</string>
+    <string name="headimg">headImg</string>
 
 </resources>

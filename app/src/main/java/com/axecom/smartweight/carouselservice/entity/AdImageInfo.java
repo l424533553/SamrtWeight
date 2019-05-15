@@ -1,5 +1,7 @@
 package com.axecom.smartweight.carouselservice.entity;
 
+import android.support.annotation.NonNull;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -14,9 +16,10 @@ public class AdImageInfo {
     private String localPath;
     @DatabaseField
     private String title;
+    //0:为头像地址    1:为广告图     2:为证照图
     @DatabaseField
     private int type;
-    
+
     public int getType() {
         return type;
     }
@@ -65,6 +68,8 @@ public class AdImageInfo {
         this.title = title;
     }
 
+
+    @NonNull
     @Override
     public String toString() {
         return "AdImageInfo{" +

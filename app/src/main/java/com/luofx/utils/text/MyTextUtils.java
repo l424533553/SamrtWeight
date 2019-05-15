@@ -7,7 +7,7 @@ import com.axecom.smartweight.utils.HexUtil;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 import static com.luofx.utils.text.StringUtils.bytesToHex;
@@ -24,18 +24,13 @@ public class MyTextUtils {
      * 转换成GBK
      *
      * @param str 字符串
-     * @return
      */
     public static String changeCharset(String str) {
-        try {
-            if (str != null) {
-                //用默认字符编码解码字符串。
-                byte[] bs = str.getBytes();
-                //用新的字符编码生成字符串
-                return new String(bs, "UTF-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (str != null) {
+            //用默认字符编码解码字符串。
+            byte[] bs = str.getBytes();
+            //用新的字符编码生成字符串
+            return new String(bs, StandardCharsets.UTF_8);
         }
         return null;
     }
@@ -43,8 +38,6 @@ public class MyTextUtils {
 
     /**
      * 清空文件内容
-     *
-     * @param fileName
      */
     public static void clearInfoForFile(String fileName) {
         File file = new File(fileName);
@@ -90,7 +83,7 @@ public class MyTextUtils {
         String md5 = "";
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");  // 创建一个md5算法对象
-            byte[] messageByte = message.getBytes("UTF-8");
+            byte[] messageByte = message.getBytes(StandardCharsets.UTF_8);
             byte[] md5Byte = md.digest(messageByte);              // 获得serialPort字节数组,16*8=128位
             md5 = bytesToHex(md5Byte);                            // 转换为16进制字符串
         } catch (Exception e) {

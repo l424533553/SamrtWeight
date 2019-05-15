@@ -228,7 +228,7 @@
 //
 //            ClientManager.getClient().connect(mDevice.getAddress(), options, new BleConnectResponse() {
 //                @Override
-//                public void onResponse(int code, BleGattProfile profile) {
+//                public void onStringResponse(int code, BleGattProfile profile) {
 //                    BluetoothLog.v(String.format("profile:\n%s", profile));
 //                    mTvTitle.setText(String.format("%s", mDevice.getAddress()));
 //                    mPbar.setVisibility(View.GONE);
@@ -258,7 +258,7 @@
 //            }
 //            ClientManager.getClient().read(device.getAddress(), mProfile.getServices().get(0).getUUID(), mProfile.getServices().get(0).getCharacters().get(0).getUuid(), new BleReadResponse() {
 //                @Override
-//                public void onResponse(int code, byte[] data) {
+//                public void onStringResponse(int code, byte[] data) {
 //                    mTvTitle.setText(code + ByteUtils.byteToString(data));
 //                }
 //            });
@@ -270,7 +270,7 @@
 //                }
 //
 //                @Override
-//                public void onResponse(int code) {
+//                public void onStringResponse(int code) {
 //
 //                }
 //            });

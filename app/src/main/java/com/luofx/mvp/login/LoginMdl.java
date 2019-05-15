@@ -2,9 +2,6 @@ package com.luofx.mvp.login;
 
 import com.luofx.mvp.base.model.BaseModel;
 import com.luofx.mvp.base.presenter.HttpResponseListener;
-import com.luofx.utils.text.MyTextUtils;
-
-import java.util.HashMap;
 
 
 /**
@@ -21,13 +18,9 @@ public class LoginMdl extends BaseModel implements LoginContacts.LoginMdl {
      */
     @Override
     public void login(String username, String password, HttpResponseListener callbak) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("username", username);
-
-
-        //TODO
-
-        map.put("password", MyTextUtils.getMD5(password));
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("username", username);
+//        map.put("password", MyTextUtils.getMD5(password));
 
 //        RequestBody body = ReqBodyHelper.createJson(map);
 //        // 发送网络请求

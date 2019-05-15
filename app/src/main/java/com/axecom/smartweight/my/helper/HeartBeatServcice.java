@@ -13,13 +13,16 @@ import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.AdResultBean;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
 import com.axecom.smartweight.my.entity.ResultInfo;
+import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.utils.AESHelper;
 import com.luofx.listener.VolleyListener;
-import com.luofx.utils.MyPreferenceUtils;
 import com.xuanyuan.library.MyLog;
+import com.xuanyuan.library.MyPreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
+
+import static com.axecom.smartweight.my.config.IEventBus.MARKET_NOTICE;
 
 /**
  * author: luofaxin
@@ -31,12 +34,7 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
     private boolean isLooper = true; //是否需要循环
     /**
      * 定义我们自己写的Binder对象
-     */
-//    private HttpHelper httpHelper;
-
-    /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
      * @param name Used to name the worker thread, important only for debugging.
      */
     public HeartBeatServcice(String name) {
@@ -62,7 +60,8 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
         while (isLooper) {
             try {
 //              MyLog.mylog(" 执行 心跳 命令");
-                HttpHelper.getmInstants(application).upStateEx(marketid, HeartBeatServcice.this, terid, 0, 1);  // scale
+                String note = ApkUtils.getVersionName(context);
+                HttpHelper.getmInstants(application).upStateEx(marketid, HeartBeatServcice.this, terid, note, 0, 1);  // scale
                 Thread.sleep(UPDATE_STATE_TIME);//2分钟
                 sendStatus2Fpms(0, HeartBeatServcice.this);
 //              sendCheck2Fpms(HeartBeatServcice.this);
@@ -84,22 +83,19 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
             return;
         }
         String cmdECB = AESHelper.encryptDESedeECB("updateStatus", dataKey);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("service=deviceService&cmd=" + cmdECB)
-                .append("&authenCode=" + authenCode)
-                .append("&appCode=FPMSWS")
-                .append("&deviceNo=123456789012")
-                .append("&deviceModel=xs-weight")
-                .append("&factoryName=xs-weight")
-                .append("&productionDate=2018-11-28")
-                .append("&macAddr=" + HttpHelper.getmInstants(application).getMac())
-                .append("&stallCode=")
-                .append("&businessEntity=")
-                .append("&creditCode=")
-                .append("&userStatus=" + userStatus);
-
-        String data = AESHelper.encryptDESedeECB(sb.toString(), MAIN_KEY);
+        String sb = ("service=deviceService&cmd=" + cmdECB) +
+                "&authenCode=" + authenCode +
+                "&appCode=FPMSWS" +
+                "&deviceNo=" + application.getUserInfo().getSno() +
+                "&deviceModel=" + application.getUserInfo().getModel() +
+                "&factoryName=" + application.getUserInfo().getProducer() +
+                "&productionDate=" + application.getUserInfo().getOuttime() +
+                "&macAddr=" + HttpHelper.getmInstants(application).getMac() +
+                "&stallCode=" + application.getUserInfo().getCompanyno() +
+                "&businessEntity=" +
+                "&creditCode=" +
+                "&userStatus=" + userStatus;
+        String data = AESHelper.encryptDESedeECB(sb, MAIN_KEY);
         HttpHelper.getmInstants(application).onFpmsLogin(listener, data, VOLLEY_FLAG_FPMS_STATE);
     }
 
@@ -113,24 +109,22 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
             return;
         }
         String cmdECB = AESHelper.encryptDESedeECB("deviceCheck", dataKey);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("service=deviceService&cmd=" + cmdECB)
-                .append("&authenCode=" + authenCode)
-                .append("&appCode=FPMSWS")
-                .append("&deviceNo=123456789012")
-                .append("&macAddr=" + HttpHelper.getmInstants(application).getMac())
-
-                .append("&weight=" + 15)//校准点的重量（kg）,整数
-                .append("&initAd=" + 2341289)//校准后的原始零位值
-                .append("&initAd=" + 2641289);//校准点的AD值
-
-        String data = AESHelper.encryptDESedeECB(sb.toString(), MAIN_KEY);
+        String sb = ("service=deviceService&cmd=" + cmdECB) +
+                "&authenCode=" + authenCode +
+                "&appCode=FPMSWS" +
+                "&deviceNo=123456789012" +
+                "&macAddr=" + HttpHelper.getmInstants(application).getMac() +
+                "&weight=" + 15 +//校准点的重量（kg）,整数
+                "&initAd=" + 2341289 +//校准后的原始零位值
+                "&initAd=" + 2641289;
+        String data = AESHelper.encryptDESedeECB(sb//校准点的AD值
+                , MAIN_KEY);
         HttpHelper.getmInstants(application).onFpmsLogin(listener, data, VOLLEY_FLAG_FPMS_CHECK);
     }
 
     private SysApplication application;
     private Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -191,7 +185,7 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
                             } else {
                                 // 用事件总线的方式取代BroadCast
                                 BaseBusEvent event = new BaseBusEvent();
-                                event.setEventType(BaseBusEvent.ACTION_UNLOCK_SOFT);
+                                event.setEventType(ACTION_UNLOCK_SOFT);
                                 EventBus.getDefault().post(event);
                                 isDisable = false;
                             }
@@ -216,13 +210,18 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
 
                                     //取代 发广播的方式
                                     BaseBusEvent event = new BaseBusEvent();
-                                    event.setEventType(BaseBusEvent.MARKET_NOTICE);
+                                    event.setEventType(MARKET_NOTICE);
                                     event.setOther(dataBean);
                                     EventBus.getDefault().post(event);
                                 }
                             }
                         }
                         break;
+                    case VOLLEY_FLAG_FPMS_STATE:
+
+                        MyLog.e("8888888", "计量院心跳成功");
+                        break;
+
                 }
             }
         });

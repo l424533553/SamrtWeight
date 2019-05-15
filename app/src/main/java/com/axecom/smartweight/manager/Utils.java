@@ -27,9 +27,10 @@ public class Utils {
     public static void toast(Context context, String message) {
         if (toast == null) {
             toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            toast.show();
         } else {
             toast.setText(message);
+            toast.show();
         }
-        toast.show();
     }
 }

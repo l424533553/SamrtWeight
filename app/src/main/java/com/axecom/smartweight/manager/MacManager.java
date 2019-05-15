@@ -1,5 +1,6 @@
 package com.axecom.smartweight.manager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
@@ -19,7 +20,9 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class MacManager {
-    private static MacManager macManager = new MacManager();
+    @SuppressLint("StaticFieldLeak")
+    private static final MacManager macManager = new MacManager();
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
 
     private MacManager(){
@@ -33,21 +36,18 @@ public class MacManager {
 
 
     public String getMac() {
-
-        String strMac = null;
-
+        String strMac;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             Log.e("=====", "6.0以下");
 //            Toast.makeText(context, "6.0以下", Toast.LENGTH_SHORT).show();
             strMac = getLocalMacAddressFromWifiInfo(context);
             return strMac;
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             Log.e("=====", "6.0以上7.0以下");
 //            Toast.makeText(context, "6.0以上7.0以下", Toast.LENGTH_SHORT).show();
             strMac = getMacAddress(context);
             return strMac;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else {
             Log.e("=====", "7.0以上");
             if (!TextUtils.isEmpty(getMacAddress())) {
                 Log.e("=====", "7.0以上1");
@@ -67,26 +67,24 @@ public class MacManager {
             }
         }
 
-        return "02:00:00:00:00:00";
     }
 
     /**
      * 根据wifi信息获取本地mac
-     * @param context
-     * @return
      */
+
+    @SuppressLint("HardwareIds")
     public static String getLocalMacAddressFromWifiInfo(Context context){
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo winfo = wifi.getConnectionInfo();
-        String mac =  winfo.getMacAddress();
+        String mac;
+        mac = winfo.getMacAddress();
         return mac;
     }
 
     /**
      * android 6.0及以上、7.0以下 获取mac地址
      *
-     * @param context
-     * @return
      */
     public static String getMacAddress(Context context) {
 
@@ -116,7 +114,7 @@ public class MacManager {
         } catch (Exception ex) {
             Log.e("----->" + "NetInfoManager", "getMacAddress:" + ex.toString());
         }
-        if (macSerial == null || "".equals(macSerial)) {
+        if ("".equals(macSerial)) {
             try {
                 return loadFileAsString("/sys/class/net/eth0/address")
                         .toUpperCase().substring(0, 17);
@@ -125,16 +123,16 @@ public class MacManager {
                 Log.e("----->" + "NetInfoManager",
                         "getMacAddress:" + e.toString());
             }
-
         }
         return macSerial;
     }
 
+    @SuppressLint("HardwareIds")
     private static String getMacAddress0(Context context) {
         if (isAccessWifiStateAuthorized(context)) {
-            WifiManager wifiMgr = (WifiManager) context
+            WifiManager wifiMgr = (WifiManager) context.getApplicationContext()
                     .getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = null;
+            WifiInfo wifiInfo ;
             try {
                 wifiInfo = wifiMgr.getConnectionInfo();
                 return wifiInfo.getMacAddress();
@@ -151,8 +149,6 @@ public class MacManager {
     /**
      * Check whether accessing wifi state is permitted
      *
-     * @param context
-     * @return
      */
     private static boolean isAccessWifiStateAuthorized(Context context) {
         if (PackageManager.PERMISSION_GRANTED == context
@@ -184,17 +180,15 @@ public class MacManager {
 
     /**
      * 根据IP地址获取MAC地址
-     *
-     * @return
      */
-    public static String getMacAddress() {
+    private static String getMacAddress() {
         String strMacAddr = null;
         try {
             // 获得IpD地址
             InetAddress ip = getLocalInetAddress();
             byte[] b = NetworkInterface.getByInetAddress(ip)
                     .getHardwareAddress();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < b.length; i++) {
                 if (i != 0) {
                     buffer.append(':');
@@ -204,7 +198,7 @@ public class MacManager {
             }
             strMacAddr = buffer.toString().toUpperCase();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         return strMacAddr;
@@ -212,8 +206,6 @@ public class MacManager {
 
     /**
      * 获取移动设备本地IP
-     *
-     * @return
      */
     private static InetAddress getLocalInetAddress() {
         InetAddress ip = null;
@@ -222,13 +214,13 @@ public class MacManager {
             Enumeration<NetworkInterface> en_netInterface = NetworkInterface
                     .getNetworkInterfaces();
             while (en_netInterface.hasMoreElements()) {// 是否还有元素
-                NetworkInterface ni = (NetworkInterface) en_netInterface
+                NetworkInterface ni = en_netInterface
                         .nextElement();// 得到下一个元素
                 Enumeration<InetAddress> en_ip = ni.getInetAddresses();// 得到一个ip地址的列举
                 while (en_ip.hasMoreElements()) {
                     ip = en_ip.nextElement();
                     if (!ip.isLoopbackAddress()
-                            && ip.getHostAddress().indexOf(":") == -1)
+                            && !ip.getHostAddress().contains(":"))
                         break;
                     else
                         ip = null;
@@ -247,8 +239,6 @@ public class MacManager {
 
     /**
      * 获取本地IP
-     *
-     * @return
      */
     private static String getLocalIpAddress() {
         try {
@@ -259,7 +249,7 @@ public class MacManager {
                         .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress().toString();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }
@@ -271,12 +261,7 @@ public class MacManager {
 
     /**
      * android 7.0及以上 （2）扫描各个网络接口获取mac地址
-     *
-     */
-    /**
      * 获取设备HardwareAddress地址
-     *
-     * @return
      */
     public static String getMachineHardwareAddress() {
         Enumeration<NetworkInterface> interfaces = null;
@@ -286,7 +271,7 @@ public class MacManager {
             e.printStackTrace();
         }
         String hardWareAddress = null;
-        NetworkInterface iF = null;
+        NetworkInterface iF;
         if (interfaces == null) {
             return null;
         }
@@ -306,8 +291,6 @@ public class MacManager {
     /***
      * byte转为String
      *
-     * @param bytes
-     * @return
      */
     private static String bytesToString(byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
@@ -325,25 +308,16 @@ public class MacManager {
 
     /**
      * android 7.0及以上 （3）通过busybox获取本地存储的mac地址
-     *
-     */
-
-    /**
      * 根据busybox获取本地Mac
-     *
-     * @return
      */
     public static String getLocalMacAddressFromBusybox() {
-        String result = "";
-        String Mac = "";
+        String result;
+        String Mac;
         result = callCmd("busybox ifconfig", "HWaddr");
         // 如果返回的result == null，则说明网络不可取
-        if (result == null) {
-            return "网络异常";
-        }
         // 对该行数据进行解析
         // 例如：eth0 Link encap:Ethernet HWaddr 00:16:E8:3E:DF:67
-        if (result.length() > 0 && result.contains("HWaddr") == true) {
+        if (result.length() > 0 && result.contains("HWaddr")) {
             Mac = result.substring(result.indexOf("HWaddr") + 6,
                     result.length() - 1);
             result = Mac;
@@ -352,22 +326,24 @@ public class MacManager {
     }
 
     private static String callCmd(String cmd, String filter) {
-        String result = "";
-        String line = "";
+        StringBuilder result = new StringBuilder();
+        String line;
         try {
             Process proc = Runtime.getRuntime().exec(cmd);
             InputStreamReader is = new InputStreamReader(proc.getInputStream());
             BufferedReader br = new BufferedReader(is);
 
             while ((line = br.readLine()) != null
-                    && line.contains(filter) == false) {
-                result += line;
+                    && !line.contains(filter)) {
+                result.append(line);
             }
 
-            result = line;
+            if (line != null) {
+                result = new StringBuilder(line);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return result.toString();
     }
 }

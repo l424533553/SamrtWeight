@@ -31,9 +31,9 @@ public class Deviceinfo {
     @DatabaseField
     private int phonetype = 1;    //手机类型 getPhoneType 手机类型 1
     @DatabaseField
-    private String mac = "53:ff:a4:53:65:te";        //mac地址 getMacAddress
+    private String mac = "53:ff:a4:53:65:te";        //mac地址 Address
      @DatabaseField
-    private String radioVersion = "646767567";        //固件版本
+    private String radioVersion = "64676";        //固件版本
 
 
 

@@ -13,14 +13,14 @@ import android.view.WindowManager;
  * 自定义的dailog
  */
 public class CustomDialog123 extends Dialog {
-    private Context context;
-    private int height, width;
-    private boolean cancelTouchout;
-    private View view;
+
+    private final int height;
+    private final int width;
+    private final boolean cancelTouchout;
+    private final View view;
 
     private CustomDialog123(Builder builder) {
         super(builder.context);
-        context = builder.context;
         height = builder.height;
         width = builder.width;
         cancelTouchout = builder.cancelTouchout;
@@ -30,7 +30,6 @@ public class CustomDialog123 extends Dialog {
 
     private CustomDialog123(Builder builder, int resStyle) {
         super(builder.context, resStyle);
-        context = builder.context;
         height = builder.height;
         width = builder.width;
         cancelTouchout = builder.cancelTouchout;
@@ -40,22 +39,22 @@ public class CustomDialog123 extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(view);
-
         setCanceledOnTouchOutside(cancelTouchout);
 
         Window win = getWindow();
-        WindowManager.LayoutParams lp = win.getAttributes();
-        lp.gravity = Gravity.CENTER;
-        lp.height = height;
-        lp.width = width;
-        win.setAttributes(lp);
+        if(win!=null){
+            WindowManager.LayoutParams lp = win.getAttributes();
+            lp.gravity = Gravity.CENTER;
+            lp.height = height;
+            lp.width = width;
+            win.setAttributes(lp);
+        }
     }
 
     public static final class Builder {
 
-        private Context context;
+        private final Context context;
         private int height, width;
         private boolean cancelTouchout;
         private View view;

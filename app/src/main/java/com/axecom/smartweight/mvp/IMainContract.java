@@ -1,7 +1,6 @@
 package com.axecom.smartweight.mvp;
 
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.UserInfo;
 import com.xuanyuan.library.mvp.view.IBaseView;
@@ -11,7 +10,6 @@ public interface IMainContract {
     interface IView extends IBaseView {
 
         SysApplication getMyAppliaction();
-
         //发送空消息
         void sendHanderEmptyMessage(int what);
     }
@@ -31,8 +29,6 @@ public interface IMainContract {
 
         //获取批次号
         void requestWebTraceNo(int sellerid);
-
-        //
         void getData(int dataType);
 
     }
@@ -47,7 +43,6 @@ public interface IMainContract {
     interface IModel {
         //获取数据
         String doData();
-
     }
 
 }

@@ -2,15 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/green_3CB371"
+    tools:ignore="HardcodedText,ContentDescription"
     android:gravity="center"
     android:padding="@dimen/x10">
 
     <RelativeLayout
+        android:id="@+id/rlmenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/shape_bg"
-        android:padding="@dimen/x60">
+
+        >
 
         <GridView
             android:id="@+id/settings_grid_view"
@@ -19,9 +23,10 @@
             android:layout_marginBottom="@dimen/x20"
             android:horizontalSpacing="@dimen/x40"
             android:numColumns="5"
+            android:padding="@dimen/x60"
             android:verticalSpacing="@dimen/x40" />
-
     </RelativeLayout>
+
 
     <LinearLayout
 
@@ -43,6 +48,7 @@
             android:gravity="center_horizontal"
             android:text="v"
             android:textSize="12sp" />
+
         <TextView
             android:id="@+id/tvDataUpdate_SystemVersion"
             android:layout_width="wrap_content"
@@ -54,11 +60,24 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/ivImageView123"
+        android:layout_width="@dimen/x200"
+        android:layout_height="@dimen/x200"
+        android:layout_margin="@dimen/x10"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:src="@mipmap/ic_launcher"
+       />
+
+    <ImageView
         android:id="@+id/ivImageView"
         android:layout_width="@dimen/x200"
         android:layout_height="@dimen/x200"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:src="@mipmap/ic_launcher"
-        />
+        android:layout_marginEnd="189dp"
+        android:visibility="gone"
+        android:layout_marginBottom="7dp"
+        android:src="@mipmap/ic_launcher" />
+
 </RelativeLayout>

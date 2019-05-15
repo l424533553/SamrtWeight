@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/x700"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:ignore="HardcodedText"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:padding="20dp"
+    tools:context=".my.activity.common.DataFlushActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="数据更新"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp25"
+        tools:ignore="HardcodedText" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="基础数据更新"
+        android:textColor="@color/color_red"
+        android:textSize="@dimen/sp16" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/y5"
+        android:paddingBottom="@dimen/y5">
+
+        <TextView
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:text="热键商品>>"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <TextView
+            android:id="@+id/tvHotGoodUpdate"
+            android:layout_width="@dimen/x250"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:text="待更新"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <Button
+            android:id="@+id/btnHotGoodUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:background="@drawable/selector_btn_clean"
+            android:paddingStart="@dimen/x10"
+            android:paddingEnd="@dimen/x10"
+            android:text="更新"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="@dimen/sp20" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/y5"
+        android:paddingBottom="@dimen/y5">
+
+        <TextView
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:text="商品类型>>"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <TextView
+            android:id="@+id/tvGoodTypeUpdate"
+            android:layout_width="@dimen/x250"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:text="待更新"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <Button
+            android:id="@+id/btnGoodTypeUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:background="@drawable/selector_btn_clean"
+            android:paddingStart="@dimen/x10"
+            android:paddingEnd="@dimen/x10"
+            android:text="更新"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="@dimen/sp20" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/y5"
+        android:paddingBottom="@dimen/y5">
+
+        <TextView
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:text="所有商品>>"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <TextView
+            android:id="@+id/tvAllGoodUpdate"
+            android:layout_width="@dimen/x250"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:text="待更新"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <Button
+            android:id="@+id/btnAllGoodUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:background="@drawable/selector_btn_clean"
+            android:paddingStart="@dimen/x10"
+            android:paddingEnd="@dimen/x10"
+            android:text="更新"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="@dimen/sp20" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/y5"
+        android:paddingBottom="@dimen/y5">
+
+        <TextView
+            android:layout_width="@dimen/x180"
+            android:layout_height="wrap_content"
+            android:text="二维码图片>>"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <TextView
+            android:id="@+id/tvSmallRoutine"
+            android:layout_width="@dimen/x250"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:text="待更新"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp20" />
+
+        <Button
+            android:id="@+id/btnSmallRoutine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/x20"
+            android:background="@drawable/selector_btn_clean"
+            android:paddingStart="@dimen/x10"
+            android:paddingEnd="@dimen/x10"
+            android:text="更新"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="@dimen/sp20" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/y10"
+            android:layout_marginBottom="4dp"
+            android:background="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="常规数据更新"
+            android:textColor="@color/color_red"
+            android:textSize="@dimen/sp16" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/y5"
+            android:paddingBottom="@dimen/y5">
+
+            <TextView
+                android:layout_width="@dimen/x180"
+                android:layout_height="wrap_content"
+                android:text="轮播图片>>"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20" />
+
+            <TextView
+                android:id="@+id/tvSecondImage"
+                android:layout_width="@dimen/x250"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x20"
+                android:text="待更新"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20" />
+
+            <Button
+                android:id="@+id/btnSecondImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x20"
+                android:background="@drawable/selector_btn_clean"
+                android:paddingStart="@dimen/x10"
+                android:paddingEnd="@dimen/x10"
+                android:text="更新"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="@dimen/sp20" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/y5"
+            android:paddingBottom="@dimen/y5">
+
+            <TextView
+                android:layout_width="@dimen/x180"
+                android:layout_height="wrap_content"
+                android:text="热键强制>>"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20" />
+
+            <TextView
+                android:id="@+id/tvHotGoodQZ"
+                android:layout_width="@dimen/x250"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x20"
+                android:text="待更新"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp20" />
+
+            <Button
+                android:id="@+id/btnHotGoodQZ"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/x20"
+                android:background="@drawable/selector_btn_clean"
+                android:paddingStart="@dimen/x10"
+                android:paddingEnd="@dimen/x10"
+                android:text="更新"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="@dimen/sp20" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnUpData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_btn_clean"
+        android:paddingStart="@dimen/x20"
+        android:paddingTop="@dimen/x5"
+        android:paddingEnd="@dimen/x20"
+        android:paddingBottom="@dimen/x5"
+        android:text="数据更新"
+        android:textColor="@color/selector_btn_text"
+        android:textSize="@dimen/sp30"
+        android:textStyle="bold"
+        tools:ignore="NestedWeights" />
+
+
+</LinearLayout>

@@ -6,7 +6,7 @@
     android:background="@color/btn_clicked"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    tools:context="com.axecom.smartweight.my.activity.common.MainActivity">
+    tools:context=".my.activity.common.MainActivity">
 
     <GridView
         android:id="@+id/gvGoodMenu"
@@ -19,7 +19,8 @@
         android:horizontalSpacing="@dimen/y4"
         android:numColumns="3"
         android:padding="@dimen/y9"
-        android:verticalSpacing="@dimen/y4" />
+        android:verticalSpacing="@dimen/y4"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/llorder"
@@ -31,11 +32,14 @@
         android:layout_weight="10"
         android:orientation="vertical"
         android:paddingBottom="@dimen/y2">
-        <LinearLayout
+
+
+        <RelativeLayout
+            android:id="@+id/rlTopWeight123"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y90"
+            android:layout_height="@dimen/x90"
             android:background="@color/color_middle_title"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:paddingTop="@dimen/y10"
             android:paddingBottom="@dimen/y10">
 
@@ -43,8 +47,8 @@
                 android:id="@+id/main_weight_top_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/y30"
                 android:gravity="center"
+                android:layout_marginStart="@dimen/x80"
                 android:text="@string/default_weight"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/sp40"
@@ -55,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/y5"
+                android:layout_toEndOf="@+id/main_weight_top_tv"
                 android:gravity="center"
                 android:text="@string/kilogram"
                 android:textColor="@color/color_white"
@@ -66,24 +71,73 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/y40"
+
+                android:layout_toEndOf="@+id/tvKg"
                 android:gravity="bottom"
                 android:text="@string/default_weight"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/sp20"
                 android:textStyle="bold" />
+  <!--          <include
+                layout="@layout/gg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
 
-            <!--          <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="match_parent"
-                          android:layout_marginStart="@dimen/y10"
-                          android:gravity="bottom"
-                          android:text="斤"
-                          android:textColor="@color/black"
-                          android:textSize="@dimen/sp20"
-                          android:textStyle="bold"
-                          android:visibility="gone" />-->
+                />-->
 
-        </LinearLayout>
+
+            <!--    <TextView
+                    android:id="@+id/main_weight_top_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/default_weight"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/sp40"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvKg"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/y5"
+                    android:layout_toEndOf="@+id/main_weight_top_tv"
+                    android:gravity="center"
+                    android:text="@string/kilogram"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/sp40"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCatty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/y40"
+                    android:layout_marginEnd="@dimen/x20"
+                    android:layout_toEndOf="@+id/tvKg"
+                    android:gravity="bottom"
+                    android:text="@string/default_weight"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/sp20"
+                    android:textStyle="bold" />
+
+                <com.xuanyuan.library.PowerConsumptionRankingsBatteryView
+                    android:id="@+id/pcrBatteryView"
+                    android:layout_width="@dimen/y25"
+                    android:layout_height="@dimen/y40"
+                    android:layout_marginTop="@dimen/x20"
+                    android:layout_toEndOf="@+id/tvCatty"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />-->
+
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,52 +198,61 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/y10"
-            android:paddingEnd="@dimen/x1">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/price"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp20" />
-
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:layout_width="0dp"
+                android:layout_weight="5"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/y10"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-                <!-- android:background="@drawable/shape_white_btn_bg"-->
-                <!--          style="@style/mytextEdit"-->
-                <EditText
-                    android:id="@+id/main_commodity_price_et"
-                    android:layout_width="@dimen/y150"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/default_price"
-                    android:inputType="numberDecimal"
-                    tools:ignore="Autofill"
-                    android:paddingLeft="@dimen/y5"
-                    android:paddingRight="@dimen/y5"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sp25"
-                    android:textStyle="bold"
-                     />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/y10"
+                android:paddingEnd="@dimen/x1">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/y5"
-                    android:layout_marginEnd="@dimen/y5"
-                    android:text="@string/rmb"
+                    android:text="@string/price"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp20" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/y10"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <!-- android:background="@drawable/shape_white_btn_bg"-->
+                    <!--          style="@style/mytextEdit"-->
+                    <EditText
+                        android:id="@+id/main_commodity_price_et"
+                        android:layout_width="@dimen/y120"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/default_price"
+                        android:inputType="numberDecimal"
+                        android:paddingLeft="@dimen/y5"
+                        android:paddingRight="@dimen/y5"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp25"
+                        android:focusable="false"
+                        android:textStyle="bold"
+                        tools:ignore="Autofill" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/y5"
+                        android:layout_marginEnd="@dimen/y5"
+                        android:text="@string/rmb"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp20" />
+                </LinearLayout>
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -280,12 +343,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <RelativeLayout
                 android:id="@+id/rlBagLarge"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/y55"
+                android:layout_height="@dimen/x55"
                 android:layout_marginStart="@dimen/x10"
                 android:layout_marginEnd="@dimen/x10"
                 android:layout_weight="1"
@@ -305,7 +369,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:padding="@dimen/x5"
-                    android:text="大袋"
+                    android:text="@string/bigBag"
                     android:textColor="@color/selector_btn_text"
                     android:textSize="@dimen/sp18"
                     android:textStyle="bold" />
@@ -319,7 +383,6 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:gravity="center"
-                    android:text="0.1"
                     android:textColor="@color/selector_btn_text"
                     android:textSize="@dimen/sp16" />
 
@@ -328,7 +391,7 @@
             <RelativeLayout
                 android:id="@+id/rlBagMiddle"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/y55"
+                android:layout_height="@dimen/x55"
                 android:layout_marginStart="@dimen/x10"
                 android:layout_marginEnd="@dimen/x10"
                 android:layout_weight="1"
@@ -346,7 +409,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:padding="@dimen/x5"
-                    android:text="中袋"
+                    android:text="@string/middleBag"
                     android:textColor="@color/selector_btn_text"
                     android:textSize="@dimen/sp18"
                     android:textStyle="bold" />
@@ -360,7 +423,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:gravity="center"
-                    android:text="0.1"
+                    android:text="@string/middlePrice"
                     android:textColor="@color/selector_btn_text"
                     android:textSize="@dimen/sp16" />
 
@@ -369,7 +432,7 @@
             <RelativeLayout
                 android:id="@+id/rlBagSmall"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/y55"
+                android:layout_height="@dimen/x55"
                 android:layout_marginStart="@dimen/x10"
                 android:layout_marginEnd="@dimen/x10"
                 android:layout_weight="1"
@@ -387,7 +450,7 @@
                     android:focusable="false"
                     android:gravity="center"
                     android:padding="@dimen/x5"
-                    android:text="小袋"
+                    android:text="@string/smallBag"
                     android:textColor="@color/selector_btn_text"
                     android:textSize="@dimen/sp18"
                     android:textStyle="bold" />
@@ -403,7 +466,8 @@
                     android:gravity="center"
                     android:text="0.1"
                     android:textColor="@color/selector_btn_text"
-                    android:textSize="@dimen/sp16" />
+                    android:textSize="@dimen/sp16"
+                    tools:ignore="HardcodedText" />
 
             </RelativeLayout>
 
@@ -428,7 +492,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y45"
+            android:layout_height="@dimen/x45"
             android:layout_marginTop="0dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
@@ -554,13 +618,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y90"
+            android:layout_height="@dimen/x90"
             android:background="@color/color_right_title"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y52"
+                android:layout_height="@dimen/y49"
                 android:background="@color/color_right_title"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -586,9 +650,9 @@
                         android:id="@+id/tvmarketName"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/y8"
+                        android:layout_marginTop="@dimen/y4"
                         android:layout_marginEnd="@dimen/y10"
-                        android:layout_marginBottom="@dimen/y8"
+                        android:layout_marginBottom="@dimen/y4"
                         android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/sp25"
@@ -618,7 +682,7 @@
                     android:layout_height="@dimen/y32"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="@dimen/y10"
-                    android:background="@drawable/settings8"
+                    android:background="@mipmap/settings8"
                     android:contentDescription="@string/btnSysSet"
                     android:gravity="center_horizontal"
                     android:padding="@dimen/y15"
@@ -628,15 +692,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y30"
-                android:layout_marginStart="@dimen/y12"
-                android:layout_marginTop="@dimen/y4"
-                android:layout_marginEnd="@dimen/y12"
-                android:layout_marginBottom="@dimen/y4"
+                android:layout_height="@dimen/y34"
+                android:layout_marginStart="@dimen/x10"
+                android:layout_marginTop="@dimen/y3"
+                android:layout_marginEnd="@dimen/x10"
+                android:layout_marginBottom="@dimen/y3"
                 android:background="#4277B5"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/y14"
-                android:paddingEnd="@dimen/y14">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/numberName"
@@ -671,10 +733,48 @@
                     android:id="@+id/tvSeller"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
+                    android:layout_toStartOf="@+id/ivImage"
                     android:gravity="center"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp16" />
+
+                <!--               <com.xuanyuan.library.PowerConsumptionRankingsBatteryView
+                                   android:id="@+id/pcrBatteryView"
+                                   android:layout_width="@dimen/y12"
+                                   android:layout_height="@dimen/y20"
+                                   android:layout_marginStart="@dimen/x8"
+                                   android:layout_marginTop="@dimen/y1"
+                                   android:layout_marginEnd="@dimen/x4"
+
+                                   android:visibility="gone"
+                                   android:layout_alignParentEnd="true"
+                                   app:layout_constraintBottom_toBottomOf="parent"
+                                   app:layout_constraintLeft_toLeftOf="parent"
+                                   app:layout_constraintRight_toRightOf="parent"
+                                   app:layout_constraintTop_toTopOf="parent"
+                                   />-->
+
+                <ImageView
+                    android:id="@+id/ivImage"
+                    android:layout_width="@dimen/x18"
+                    android:layout_height="@dimen/y20"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/x5"
+                    android:layout_marginTop="@dimen/y2"
+                    android:layout_marginEnd="@dimen/x2"
+                    android:src="@mipmap/ele3"
+                    android:contentDescription="@string/ele" />
+
+                <TextView
+                    android:id="@+id/tvElePrecent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ivImage"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/x2"
+                    android:textColor="@color/color_white"
+                    android:textSize="@dimen/sp8" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -766,8 +866,8 @@
                 android:layout_marginTop="@dimen/y2"
                 android:layout_weight="1"
 
-                android:text="@string/string_scan_pay"
                 android:background="@drawable/selector_btn_epay"
+                android:text="@string/string_scan_pay"
                 android:textColor="@color/selector_btn_text"
                 android:textSize="@dimen/sp30"
                 android:textStyle="bold"

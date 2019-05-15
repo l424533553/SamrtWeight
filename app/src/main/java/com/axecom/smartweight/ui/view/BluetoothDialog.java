@@ -15,7 +15,7 @@
 //import com.axecom.smartweight.R;
 //import com.axecom.smartweight.bean.BleAdvertisedData;
 //import com.axecom.smartweight.manager.ClientManager;
-//import com.axecom.smartweight.ui.adapter.DeviceListAdapter;
+//import com.axecom.smartweight.clean.DeviceListAdapter;
 //import com.axecom.smartweight.ui.uiutils.BleUtil;
 //import com.inuker.bluetooth.library.connect.listener.BluetoothStateListener;
 //import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
@@ -186,7 +186,7 @@
 //
 //            ClientManager.getClient(context).connect(mDevice.getAddress(), options, new BleConnectResponse() {
 //                @Override
-//                public void onResponse(int code, BleGattProfile profile) {
+//                public void onStringResponse(int code, BleGattProfile profile) {
 //                    BluetoothLog.v(String.format("profile:\n%s", profile));
 //                    mTvTitle.setText(String.format("%s", mDevice.getAddress()));
 //                    mPbar.setVisibility(View.GONE);

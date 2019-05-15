@@ -6,6 +6,7 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -22,37 +23,34 @@ import com.axecom.smartweight.my.activity.UserInfoFragment
  */
 class ApiTestActivity : AppCompatActivity(), UserInfoFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(uri: Uri) {
-        //TODO
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    lateinit var listView: ListView
-    lateinit var fragment: Fragment
+    private lateinit var listView: ListView
+    private lateinit var fragment: Fragment
     fun initView() {
         listView = findViewById(R.id.listView)
-        var frameLayout = findViewById<FrameLayout>(R.id.frameLayout)
+        findViewById<FrameLayout>(R.id.frameLayout)
         fragment = UserInfoFragment()
 
     }
 
     fun initData() {
-        val USER_INFO = "用户信息"
-        val OTHER_INFO = "其他信息"
-        val apiName = arrayOf(USER_INFO, OTHER_INFO, "北京", "上海", "香港", "澳门", "天津")  //定义一个数组，作为数据源
+        val userInfo = "用户信息"
+        val otherInfo = "其他信息"
+        val apiName = arrayOf(userInfo, otherInfo, "北京", "上海", "香港", "澳门", "天津")  //定义一个数组，作为数据源
         val arrayAdapter: ArrayAdapter<String>    //定义一个数组适配器对象
         //创建数组适配器对象，并且通过参数设置类item项的布局样式和数据源
         arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, apiName)
         //把数组适配器加载到ListView控件中
 
         listView.adapter = arrayAdapter
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
             var transaction = fragmentManager.beginTransaction()
             transaction.remove(fragment)
             when (apiName[position]) {
-                USER_INFO -> fragment = UserInfoFragment()
-                OTHER_INFO -> fragment = AdImageFragment()
-                else -> null
+                userInfo -> fragment = UserInfoFragment()
+                otherInfo -> fragment = AdImageFragment()
             }
             transaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.frameLayout, fragment)
@@ -61,11 +59,10 @@ class ApiTestActivity : AppCompatActivity(), UserInfoFragment.OnFragmentInteract
     }
 
     // 支持者
-    val fragmentManager = supportFragmentManager
+    private val fragmentManager: FragmentManager = supportFragmentManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api_test)
-
 
         initView()
         initData()

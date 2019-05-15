@@ -12,7 +12,7 @@ import android.widget.EditText;
  */
 public class CountTextWatcher implements TextWatcher {
 
-    private EditText countEt;
+    private final EditText countEt;
 
     public CountTextWatcher(EditText countEt) {
         this.countEt = countEt;

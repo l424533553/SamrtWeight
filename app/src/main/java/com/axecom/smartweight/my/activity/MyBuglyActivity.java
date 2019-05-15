@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,6 +24,7 @@ public class MyBuglyActivity extends AppCompatActivity implements View.OnClickLi
 //        Beta.loadLibrary("mylib");
 //    }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

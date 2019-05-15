@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * 现金过滤器
  */
 public class CashierInputFilter implements InputFilter {
-    Pattern mPattern;
+    final Pattern mPattern;
 
     //输入的最大金额
     private int MAX_VALUE = Integer.MAX_VALUE;
@@ -69,7 +69,7 @@ public class CashierInputFilter implements InputFilter {
                 return dest.subSequence(dstart, dend);
             }
         } else {
-            /**
+            /* *
              * 没有输入小数点的情况下，只能输入小数点和数字
              * 1. 首位不能输入小数点
              * 2. 如果首位输入0，则接下来只能输入小数点了

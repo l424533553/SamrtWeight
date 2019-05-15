@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,8 @@ import java.util.List;
  */
 
 public class DigitalAdapter extends BaseAdapter {
-
-    private Context context;
-    private List<String> list;
+    private final Context context;
+    private final List<String> list;
 
     public DigitalAdapter(Context context, List<String> list) {
         this.context = context;
@@ -42,7 +42,6 @@ public class DigitalAdapter extends BaseAdapter {
         list.add("删除");
         list.add("0");
         list.add(".");
-
         return list;
     }
 
@@ -62,9 +61,10 @@ public class DigitalAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.digital_item, null);
             holder = new ViewHolder();
@@ -74,17 +74,6 @@ public class DigitalAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.digitalBtn.setText(list.get(position));
-        if (position == 1) {
-//            holder.digitalBtn.setGravity(cen);
-
-
-        }
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
 
         return convertView;
     }

@@ -15,9 +15,7 @@ import java.io.IOException;
 public class Base64BitmapUtil {
     /**
      * bitmap转为base64
-     *
-     * @param bitmap
-     * @return
+
      */
     public static String bitmapToBase64(Bitmap bitmap) {
 
@@ -50,9 +48,6 @@ public class Base64BitmapUtil {
 
     /**
      * base64转为bitmap
-     *
-     * @param base64Data
-     * @return
      */
     public static Bitmap base64ToBitmap(String base64Data) {
         byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);

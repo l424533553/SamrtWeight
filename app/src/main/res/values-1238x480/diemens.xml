@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="yy320">32dp</dimen>
+    <dimen name="xx560">56dp</dimen>
+    <dimen name="sp12">10sp</dimen>
+    <dimen name="sp8">8sp</dimen>
+    <dimen name="sp6">6sp</dimen>
+    <dimen name="sp4">4sp</dimen>
+    <dimen name="sp16">12sp</dimen>
+    <dimen name="sp18">14sp</dimen>
+    <dimen name="sp20">18sp</dimen>
+    <dimen name="spSecondList">20sp</dimen>
+    <dimen name="sp22">20sp</dimen>
+    <dimen name="sp25">22sp</dimen>
+    <dimen name="sp30">26sp</dimen>
+    <dimen name="sp40">32sp</dimen>
+
+    <!--    <dimen name="btnHeight">70dp</dimen>-->
+</resources>

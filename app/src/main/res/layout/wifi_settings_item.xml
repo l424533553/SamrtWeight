@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="150dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    tools:ignore="HardcodedText"
     android:gravity="center">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_weight_display_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_weight_display_bg"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/wifi_setting" />
-
-            <TextView
-                android:id="@+id/wifi_settings_ssid_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="安鑫宝市场wifi"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
-        </LinearLayout>
         <ImageView
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="2dp"
-            android:id="@+id/wifi_settings_connected_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/u3192"/>
-    </FrameLayout>
-</LinearLayout>
+            android:background="@mipmap/wifi_setting"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/wifi_settings_ssid_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="安鑫宝市场wifi"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/wifi_settings_connected_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@mipmap/u3192"
+        tools:ignore="ContentDescription" />
+
+</FrameLayout>

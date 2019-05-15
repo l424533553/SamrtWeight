@@ -23,7 +23,7 @@ import java.util.List;
 public class TestJavaAdapter extends RecyclerView.Adapter<TestJavaAdapter.ViewHolder> {
 
     private List<SettingsBean> data;
-    private Context context;
+    private final Context context;
 
     public TestJavaAdapter(Context context) {
         this.context = context;
@@ -108,8 +108,8 @@ public class TestJavaAdapter extends RecyclerView.Adapter<TestJavaAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private RoundedCornerImageView roundedCornerImageView;
-        private TextView titleTv;
+        private final RoundedCornerImageView roundedCornerImageView;
+        private final TextView titleTv;
 
         public ViewHolder(View itemView) {
             super(itemView);

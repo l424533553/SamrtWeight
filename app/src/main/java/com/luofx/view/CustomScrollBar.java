@@ -1,12 +1,5 @@
 package com.luofx.view;
-
-/**
- * author: luofaxin
- * date： 2018/10/22 0022.
- * email:424533553@qq.com
- * describe:
- */
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -26,7 +19,12 @@ import com.axecom.smartweight.R;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
+/**
+ * author: luofaxin
+ * date： 2018/10/22 0022.
+ * email:424533553@qq.com
+ * describe:
+ */
 public class CustomScrollBar extends SurfaceView implements
         SurfaceHolder.Callback {
 
@@ -46,8 +44,6 @@ public class CustomScrollBar extends SurfaceView implements
 
     private int viewWidth = 0;// 控件的长度
     private int viewHeight = 0; // 控件的高度
-    private float textWidth = 0f;// 水平滚动时的文本长度
-    private float textHeight = 0f; // 垂直滚动时的文本高度
 
     private float textX = 0f;// 文字的横坐标
     private float textY = 0f;// 文字的纵坐标
@@ -92,6 +88,8 @@ public class CustomScrollBar extends SurfaceView implements
         getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
         setFocusable(true); // 设置焦点
+
+        arr.recycle();
     }
 
     @Override
@@ -101,14 +99,15 @@ public class CustomScrollBar extends SurfaceView implements
         viewWidth = MeasureSpec.getSize(widthMeasureSpec);//得到控件的宽度
         viewHeight = MeasureSpec.getSize(heightMeasureSpec);//得到控件的高度
         if (isHorizontal) { // 水平滚动
-            textWidth = viewWidth;
+            // 水平滚动时的文本长度
+            float textWidth;
 //            paint.measureText(text);// 获取text的长度
-            textWidth =     paint.measureText(text);// 获取text的长度
+            textWidth = paint.measureText(text);// 获取text的长度
             viewWidth_plus_textLength = viewWidth + textWidth;
-            textY = (viewHeight - getFontHeight(textSize)) / 2
-                    + getPaddingTop() - getPaddingBottom();
+            textY = (float) ((viewHeight - getFontHeight(textSize)) / 2 + getPaddingTop() - getPaddingBottom());
         } else { // 垂直滚动
-            textHeight = getFontHeight(textSize) * text.length();// 获取text的长度
+            // 垂直滚动时的文本高度
+            float textHeight = getFontHeight(textSize) * text.length();// 获取text的长度
             viewWidth_plus_textLength = viewHeight + textHeight;
             textX = (viewWidth - textSize) / 2 + getPaddingLeft()
                     - getPaddingRight();
@@ -159,7 +158,7 @@ public class CustomScrollBar extends SurfaceView implements
 
     public void setText(String text) {
         this.text = text;
-        textColor=Color.BLACK;
+        textColor = Color.BLACK;
 
     }
 
@@ -174,18 +173,20 @@ public class CustomScrollBar extends SurfaceView implements
     /**
      * 当屏幕被触摸时调用
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!clickEnable) {
             return true;
         }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                bStop = !bStop;
-                if (!bStop && time == 0) {
-                    time = times;
-                }
-                break;
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            bStop = !bStop;
+            if (!bStop && time == 0) {
+                time = times;
+            }
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            performClick();
         }
         return true;
     }

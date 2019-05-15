@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.activity.datasummary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,20 +27,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 服务 模块
  * Created by Administrator on 2016/9/19.
  */
+@SuppressLint("SetTextI18n")
 public class MonthFragment extends Fragment implements View.OnClickListener {
-    private String TAG = "com.axecom.smartweight.ui.activity.datasummary.MonthFragment";
-
     /***************************************************************************/
-
-
     private Context context;
     private SysApplication sysApplication;
-    private ListView lvDaySummary;
     private List<ReportResultBean> data;
     private Date time;
     private TextView tvMonth;
@@ -55,13 +53,14 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = null;
-        sysApplication = (SysApplication) getActivity().getApplication();
+        sysApplication = (SysApplication) Objects.requireNonNull(getActivity()).getApplication();
         context = getContext();
         if (inflater != null) {
             view = inflater.inflate(R.layout.fragment_month_summary, container, false);
             initView(view);
             initHandler();
             getData(true);
+            String TAG = "com.axecom.smartweight.ui.activity.datasummary.MonthFragment";
             LogWriteUtils.e(TAG, "测试专用");
         }
         return view;
@@ -83,7 +82,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.btnBeforeMonth).setOnClickListener(this);
         view.findViewById(R.id.btnNextMonth).setOnClickListener(this);
 
-        lvDaySummary = view.findViewById(R.id.lvMonthSummary);
+        ListView lvDaySummary = view.findViewById(R.id.lvMonthSummary);
         data = new ArrayList<>();
         dataAdapter = new MonthAdapter(context, data);
         lvDaySummary.setAdapter(dataAdapter);
@@ -109,13 +108,12 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public boolean handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 913:
-                        dataAdapter.notifyDataSetChanged();
-                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
-                        break;
+                if (msg.what == 913) {
+                    dataAdapter.notifyDataSetChanged();
+                    tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
                 }
 
                 return false;
@@ -194,6 +192,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
     @Override
     public void onClick(View v) {
         try {
@@ -227,8 +226,8 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
 
 
     public class MonthAdapter extends BaseAdapter {
-        private Context context;
-        private List<ReportResultBean> list;
+        private final Context context;
+        private final List<ReportResultBean> list;
 
         public MonthAdapter(Context context, List<ReportResultBean> list) {
             this.context = context;
@@ -250,6 +249,7 @@ public class MonthFragment extends Fragment implements View.OnClickListener {
             return position;
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;

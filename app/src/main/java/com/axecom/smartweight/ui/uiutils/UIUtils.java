@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.uiutils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -149,7 +150,7 @@ public class UIUtils {
 
 
     private static String getNumberFormat(float price, NumberFormat nf, boolean rounding) {
-        String formatprice = "";
+        String formatprice;
         if (rounding)
             nf.setRoundingMode(RoundingMode.HALF_UP);
         nf.setGroupingUsed(true);
@@ -184,6 +185,7 @@ public class UIUtils {
 
     private static Properties pro;
 
+    @SuppressLint("ClickableViewAccessibility")
     public static void fixScrollEditText(ScrollView scrollView) {
         scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         scrollView.setFocusable(true);
@@ -194,6 +196,8 @@ public class UIUtils {
                 v.requestFocusFromTouch();
                 return false;
             }
+
+
         });
     }
 }

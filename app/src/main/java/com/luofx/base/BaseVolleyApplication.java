@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.axecom.smartweight.my.config.IConstants;
 import com.luofx.listener.OkHttpListener;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
@@ -27,8 +26,6 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
-import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
-
 /**
  * 说明：
  * 作者：User_luo on 2018/7/24 13:52
@@ -36,13 +33,14 @@ import static com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES;
  * 需要导入Volley.jar 或者  远程依赖
  */
 @SuppressLint("Registered")
-public class BaseVolleyApplication extends BaseBuglyApplication implements IConstants {
+public class BaseVolleyApplication extends BaseBuglyApplication  {
+//public class BaseVolleyApplication extends MultiDexApplication implements IConstants {
     /**
      * 先创建一个请求队列，因为这个队列是全局的，所以在Application中声明这个队列
      */
-    protected RequestQueue queues;
+    RequestQueue queues;
 
-    public RequestQueue getQueues() {
+    private RequestQueue getQueues() {
         return queues;
     }
 
@@ -209,40 +207,6 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
     }
 
     /**
-     * 获取硬件信息
-     */
-//    private void getHardwareInfo() {
-//        TelephonyManager phone = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//
-//        @SuppressLint("HardwareIds")
-//        String mac = wifi.getConnectionInfo().getMacAddress();   // mac 地址
-//        int phonetype = phone.getPhoneType();  //  手机类型
-//        String model = Build.MODEL; // ****  手机型号
-//        String sdk = String.valueOf(Build.VERSION.SDK_INT); // 系统版本值
-//
-//        String brand = Build.BRAND;
-//        String release = phone.getDeviceSoftwareVersion();// 系统版本 ,
-//        int networktype = phone.getNetworkType();   // 网络类型
-//        String networkoperatorname = phone.getNetworkOperatorName();   // 网络类型名
-//        String radioVersion = Build.getRadioVersion();   // 固件版本
-//
-//        // 数据
-//        Deviceinfo deviceinfo = new Deviceinfo(release, sdk, brand, model, networkoperatorname, networktype, phonetype, mac, radioVersion);
-//        DeviceInfoDao deviceInfoDao = new DeviceInfoDao(context);
-//        deviceInfoDao.insert(deviceinfo);
-//        setDeviceinfo(deviceinfo);
-//    }
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-    }
-
-    /**
      * Volley Get 请求方式
      *
      * @param url      网址
@@ -263,7 +227,7 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
                 }
             });
             // 设置Volley超时重试策略
-            request.setRetryPolicy(new DefaultRetryPolicy(5000, DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             getQueues().add(request);
         }
     }
@@ -280,18 +244,18 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
             StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    listener.onResponse(response, flag);
+                    listener.onStringResponse(response, flag);
 
 //                    MyLog.logTest(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    listener.onResponseError(error, flag);
+                    listener.onStringResponse(error, flag);
                 }
             });
             // 设置Volley超时重试策略
-            request.setRetryPolicy(new DefaultRetryPolicy(5000, DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             getQueues().add(request);
         }
     }
@@ -322,7 +286,7 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
                 }
             };
             // 设置Volley超时重试策略
-            request.setRetryPolicy(new DefaultRetryPolicy(5000, DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             getQueues().add(request);
         }
     }
@@ -342,7 +306,7 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
             });
 //            RequestBody body = RequestBody.create(MEDia_MEDIA_TYPE_JSON, json);
             // 设置Volley超时重试策略
-            request.setRetryPolicy(new DefaultRetryPolicy(5000, DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             getQueues().add(request);
         }
     }
@@ -352,12 +316,12 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    volleyListener.onResponse(response, flag);
+                    volleyListener.onStringResponse(response, flag);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    volleyListener.onResponseError(error, flag);
+                    volleyListener.onStringResponse(error, flag);
                 }
             }) {
                 @Override
@@ -376,7 +340,7 @@ public class BaseVolleyApplication extends BaseBuglyApplication implements ICons
             };
 
             // 设置Volley超时重试策略  ,  当次数 为零时就是不试 ，当为一时就是 可有两次
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             getQueues().add(stringRequest);
         }
     }

@@ -3,6 +3,7 @@ package com.luofx.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.AppCompatTextView;
@@ -22,7 +23,6 @@ public class ScrollTextView extends AppCompatTextView implements View.OnClickLis
     public final static String TAG = AutoScrollTextView.class.getSimpleName();
 
     private float textLength = 0f;//文本长度
-    private float viewWidth = 0f;
     private float step = 0f;//文字的横坐标
     private float y = 0f;//文字的纵坐标
     private float temp_view_plus_text_length = 0.0f;//用于计算的临时变量
@@ -57,11 +57,21 @@ public class ScrollTextView extends AppCompatTextView implements View.OnClickLis
         paint = getPaint();
         text = getText().toString();
         textLength = paint.measureText(text);
-        viewWidth = getWidth();
+        float viewWidth = getWidth();
         if (viewWidth == 0) {
             if (windowManager != null) {
-                Display display = windowManager.getDefaultDisplay();
-                viewWidth = display.getWidth();
+                //该种方法过时了，以下两种方法都可用。
+//                Display display = windowManager.getDefaultDisplay();
+//                viewWidth =getWidth();
+
+                Display display =windowManager.getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                viewWidth = size.x;
+
+//                DisplayMetrics metrics = new DisplayMetrics();
+//                windowManager.getDefaultDisplay().getMetrics(metrics);
+//                viewWidth = metrics.widthPixels;
             }
         }
         step = textLength;
@@ -128,9 +138,7 @@ public class ScrollTextView extends AppCompatTextView implements View.OnClickLis
         private SavedState(Parcel in) {
             super(in);
             boolean[] b = null;
-            in.readBooleanArray(b);
-            if (b != null && b.length > 0)
-                isStarting = b[0];
+            in.readBooleanArray(null);
             step = in.readFloat();
         }
     }

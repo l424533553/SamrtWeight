@@ -8,7 +8,6 @@
     <Button
         android:id="@+id/main_digitial_btn"
         android:background="@drawable/selector_btn_click"
-        android:text="1"
         android:textSize="@dimen/sp30"
         style="@style/btnClick"
         />

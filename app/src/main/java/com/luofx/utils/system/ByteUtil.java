@@ -4,23 +4,19 @@ package com.luofx.utils.system;
 /**
  * Created by Administrator on 2018/6/15.
  */
-
 public class ByteUtil {
 
     /**
      * 字符串转化成为16进制字符串
-     *
-     * @param s
-     * @return
      */
     public static String strTo16(String s) {
-        String str = "";
+        StringBuilder str = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             int ch = (int) s.charAt(i);
             String s4 = Integer.toHexString(ch);
-            str = str + s4;
+            str.append(s4);
         }
-        return str;
+        return str.toString();
     }
 
     /**
@@ -44,24 +40,24 @@ public class ByteUtil {
      * 接收到的字节数组转换16进制字符串
      */
     public static String bytes2HexString(byte[] b,int size) {
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (int i = 0; i < size; i++) {
             String hex = Integer.toHexString(b[i] & 0xFF);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
-            ret += hex.toUpperCase();
+            ret.append(hex.toUpperCase());
         }
-        return ret;
+        return ret.toString();
     }
 
     public static String bytesToHexString(byte[] src) {
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         if (src == null || src.length <= 0) {
             return null;
         }
-        for (int i = 0; i < src.length; i++) {
-            int v = src[i] & 0xFF;
+        for (byte b : src) {
+            int v = b & 0xFF;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
                 stringBuilder.append(0);
@@ -74,18 +70,17 @@ public class ByteUtil {
     /**
      * 接收到的字节数组转换16进制字符串
      */
-    public static String byteToStr(byte[] b, int size) {
-        String ret = "";
+    private static String byteToStr(byte[] b, int size) {
+        StringBuilder ret = new StringBuilder();
         for (int i = 0; i < size; i++) {
             String hex = Integer.toHexString(b[i] & 0xFF);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
-            ret += hex.toUpperCase();
+            ret.append(hex.toUpperCase());
         }
-        return ret;
+        return ret.toString();
     }
-
 
 
     /**
@@ -122,17 +117,17 @@ public class ByteUtil {
         long mSum = 0;
         byte[] mByte = new byte[length];
 
-        /** 逐Byte添加位数和 */
+        // 逐Byte添加位数和
         for (byte byteMsg : msg) {
             long mNum = ((long) byteMsg >= 0) ? (long) byteMsg : ((long) byteMsg + 256);
             mSum += mNum;
-        } /** end of for (byte byteMsg : msg) */
+        }
 
-        /** 位数和转化为Byte数组 */
+        //* 位数和转化为Byte数组
         for (int liv_Count = 0; liv_Count < length; liv_Count++) {
             mByte[length - liv_Count - 1] = (byte) (mSum >> (liv_Count * 8) & 0xff);
-        } /** end of for (int liv_Count = 0; liv_Count < length; liv_Count++) */
-        return byteToStr(msg, length) + byteToStr(mByte, mByte.length).substring(byteToStr(mByte, mByte.length).length() - 4, byteToStr(mByte, mByte.length).length());
+        }
+        return byteToStr(msg, length) + byteToStr(mByte, mByte.length).substring(byteToStr(mByte, mByte.length).length() - 4);
     }
 
 }

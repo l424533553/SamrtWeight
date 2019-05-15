@@ -1,7 +1,5 @@
 package com.luofx.newclass.weighter;
 
-import android.os.Handler;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -14,28 +12,26 @@ import android_serialport_api.SerialPort;
  * 说明：
  */
 public abstract class MyBaseWeighter {
-//    protected Handler handler;
-    private  String path;
-    private  int baudrate;
-    private  SerialPort serialPort;
+    //    protected Handler handler;
+    private String path;
+    private int baudrate;
+    private SerialPort serialPort;
 
-    public boolean open() {
-        return false;
-    }
+    public abstract boolean open();
 
     protected boolean open(String path, int baudrate) {
         try {
             this.path = path;
             this.baudrate = baudrate;
             serialPort = getSerialPort();
-            if (serialPort.getOutputStream() == null || serialPort.getInputStream() == null) {
-                return false;
+            if (serialPort.getOutputStream() != null && serialPort.getInputStream() != null) {
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return false;
     }
 
 
@@ -44,7 +40,7 @@ public abstract class MyBaseWeighter {
      *
      * @return 打印机串口
      */
-    public  SerialPort getSerialPort() {
+    public SerialPort getSerialPort() {
         try {
             if (serialPort == null) {
                 serialPort = new SerialPort(new File(path), baudrate, 0);
@@ -91,5 +87,20 @@ public abstract class MyBaseWeighter {
     public abstract void resetBalance();
 
     public abstract void getKValue();
+
+    /**
+     * 置零
+     */
+    public abstract void sendZer();
+
+    /**
+     * 移除标识符
+     */
+    public abstract void sendRemoveSign();
+
+    /**
+     * @param isCalibration10kg 开始标定数据
+     */
+    public abstract void sendCalibrationData(boolean isCalibration10kg);
 
 }

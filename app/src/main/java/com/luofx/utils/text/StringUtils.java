@@ -25,31 +25,24 @@ public class StringUtils {
      * 判断字符串是否有值，如果为null或者是空字符串或者只有空格或者为"null"字符串，则返回true，否则则返回false
      */
     public static boolean isEmpty(String value) {
-        if (value != null && !"".equalsIgnoreCase(value.trim())
-                && !"null".equalsIgnoreCase(value.trim())) {
-            return false;
-        } else {
-            return true;
-        }
+        return value == null || "".equalsIgnoreCase(value.trim())
+                || "null".equalsIgnoreCase(value.trim());
     }
 
     /**
      * desc:将数组转为16进制
-     * @param bArray
-     * @return
-     * modified:
      */
     public static String bytesToHexString(byte[] bArray) {
-        if(bArray == null){
+        if (bArray == null) {
             return null;
         }
-        if(bArray.length == 0){
+        if (bArray.length == 0) {
             return "";
         }
-        StringBuffer sb = new StringBuffer(bArray.length);
+        StringBuilder sb = new StringBuilder(bArray.length);
         String sTemp;
-        for (int i = 0; i < bArray.length; i++) {
-            sTemp = Integer.toHexString(0xFF & bArray[i]);
+        for (byte b : bArray) {
+            sTemp = Integer.toHexString(0xFF & b);
             if (sTemp.length() < 2)
                 sb.append(0);
             sb.append(sTemp.toUpperCase());
@@ -60,49 +53,46 @@ public class StringUtils {
     /**
      * desc:将16进制的数据转为数组
      * <p>创建人：聂旭阳 , 2014-5-25 上午11:08:33</p>
-     * @param data
-     * @return
-     * modified:
+
      */
-    public static byte[] StringToBytes(String data){
-        String hexString=data.toUpperCase().trim();
-        if (hexString.length()%2!=0) {
+    public static byte[] StringToBytes(String data) {
+        String hexString = data.toUpperCase().trim();
+        if (hexString.length() % 2 != 0) {
             return null;
         }
-        byte[] retData=new byte[hexString.length()/2];
-        for(int i=0;i<hexString.length();i++)
-        {
+        byte[] retData = new byte[hexString.length() / 2];
+        for (int i = 0; i < hexString.length(); i++) {
             int int_ch;  // 两位16进制数转化后的10进制数
             char hex_char1 = hexString.charAt(i); ////两位16进制数中的第一位(高位*16)
             int int_ch1;
-            if(hex_char1 >= '0' && hex_char1 <='9')
-                int_ch1 = (hex_char1-48)*16;   //// 0 的Ascll - 48
-            else if(hex_char1 >= 'A' && hex_char1 <='F')
-                int_ch1 = (hex_char1-55)*16; //// A 的Ascll - 65
+            if (hex_char1 >= '0' && hex_char1 <= '9')
+                int_ch1 = (hex_char1 - 48) * 16;   //// 0 的Ascll - 48
+            else if (hex_char1 >= 'A' && hex_char1 <= 'F')
+                int_ch1 = (hex_char1 - 55) * 16; //// A 的Ascll - 65
             else
                 return null;
             i++;
             char hex_char2 = hexString.charAt(i); ///两位16进制数中的第二位(低位)
             int int_ch2;
-            if(hex_char2 >= '0' && hex_char2 <='9')
-                int_ch2 = (hex_char2-48); //// 0 的Ascll - 48
-            else if(hex_char2 >= 'A' && hex_char2 <='F')
-                int_ch2 = hex_char2-55; //// A 的Ascll - 65
+            if (hex_char2 >= '0' && hex_char2 <= '9')
+                int_ch2 = (hex_char2 - 48); //// 0 的Ascll - 48
+            else if (hex_char2 >= 'A' && hex_char2 <= 'F')
+                int_ch2 = hex_char2 - 55; //// A 的Ascll - 65
             else
                 return null;
-            int_ch = int_ch1+int_ch2;
-            retData[i/2]=(byte) int_ch;//将转化后的数放入Byte里
+            int_ch = int_ch1 + int_ch2;
+            retData[i / 2] = (byte) int_ch;//将转化后的数放入Byte里
         }
         return retData;
     }
 
 
     // 二进制转十六进制
-    public static String bytesToHex(byte[] bytes) {
-        StringBuffer hexStr = new StringBuffer();
+    static String bytesToHex(byte[] bytes) {
+        StringBuilder hexStr = new StringBuilder();
         int num;
-        for (int i = 0; i < bytes.length; i++) {
-            num = bytes[i];
+        for (byte aByte : bytes) {
+            num = aByte;
             if (num < 0) {
                 num += 256;
             }
@@ -113,13 +103,13 @@ public class StringUtils {
         }
         return hexStr.toString().toUpperCase();
     }
+
     /**
      * 判断多个字符串是否相等，如果其中有一个为空字符串或者null，则返回false，只有全相等才返回true
      */
     public static boolean isEquals(String... agrs) {
         String last = null;
-        for (int i = 0; i < agrs.length; i++) {
-            String str = agrs[i];
+        for (String str : agrs) {
             if (isEmpty(str)) {
                 return false;
             }
@@ -159,11 +149,10 @@ public class StringUtils {
      * @param resId 文字资源
      * @return 返回链接样式的字符串
      */
-    public static Spanned getHtmlStyleString(int resId,Context context) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<a href=\"\"><u><b>").append(context.getResources().getString(resId))
-                .append(" </b></u></a>");
-        return Html.fromHtml(sb.toString());
+    public static Spanned getHtmlStyleString(int resId, Context context) {
+        String sb = "<a href=\"\"><u><b>" + context.getResources().getString(resId) +
+                " </b></u></a>";
+        return Html.fromHtml(sb);
     }
 
     /**
@@ -181,42 +170,38 @@ public class StringUtils {
         DecimalFormat formatKeepTwoZero = new DecimalFormat("#.00");
         DecimalFormat formatKeepOneZero = new DecimalFormat("#.0");
         if (len < 1024) {
-            size = String.valueOf(len + "B");
+            size = len + "B";
         } else if (len < 10 * 1024) {
             // [0, 10KB)，保留两位小数
-            size = String.valueOf(len * 100 / 1024 / (float) 100) + "KB";
+            size = (len * 100 / 1024 / (float) 100) + "KB";
         } else if (len < 100 * 1024) {
             // [10KB, 100KB)，保留一位小数
-            size = String.valueOf(len * 10 / 1024 / (float) 10) + "KB";
+            size = len * 10 / 1024 / (float) 10 + "KB";
         } else if (len < 1024 * 1024) {
             // [100KB, 1MB)，个位四舍五入
-            size = String.valueOf(len / 1024) + "KB";
+            size = (len / 1024) + "KB";
         } else if (len < 10 * 1024 * 1024) {
             // [1MB, 10MB)，保留两位小数
             if (keepZero) {
-                size = String.valueOf(formatKeepTwoZero.format(len * 100 / 1024
-                        / 1024 / (float) 100))
-                        + "MB";
+                size = formatKeepTwoZero.format((double) (len * 100 / 1024 / 1024 / (float) 100)) + "MB";
             } else {
-                size = String.valueOf(len * 100 / 1024 / 1024 / (float) 100)
+                size = (len * 100 / 1024 / 1024 / (float) 100)
                         + "MB";
             }
         } else if (len < 100 * 1024 * 1024) {
             // [10MB, 100MB)，保留一位小数
             if (keepZero) {
-                size = String.valueOf(formatKeepOneZero.format(len * 10 / 1024
-                        / 1024 / (float) 10))
+                size = (formatKeepOneZero.format((double) (len * 10 / 1024 / 1024) / 10))
                         + "MB";
             } else {
-                size = String.valueOf(len * 10 / 1024 / 1024 / (float) 10)
-                        + "MB";
+                size = (len * 10 / 1024 / 1024 / (float) 10) + "MB";
             }
         } else if (len < 1024 * 1024 * 1024) {
             // [100MB, 1GB)，个位四舍五入
-            size = String.valueOf(len / 1024 / 1024) + "MB";
+            size = (len / 1024 / 1024) + "MB";
         } else {
             // [1GB, ...)，保留两位小数
-            size = String.valueOf(len * 100 / 1024 / 1024 / 1024 / (float) 100)
+            size = (len * 100 / 1024 / 1024 / 1024 / (float) 100)
                     + "GB";
         }
         return size;
@@ -230,8 +215,7 @@ public class StringUtils {
      */
     public static String changeFolatToString(float f) {
         DecimalFormat decimalFormat = new DecimalFormat("0.00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-        String p = decimalFormat.format(f);
-        return p;
+        return decimalFormat.format(f);
     }
 
 
@@ -240,7 +224,6 @@ public class StringUtils {
      *
      * @param regex  规则
      * @param source 源字符串
-     * @return
      */
     public static String getMatcher(String regex, String source) {
         String result = "";

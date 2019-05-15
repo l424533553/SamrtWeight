@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -34,8 +35,9 @@ public class CustomDialog extends Dialog {
         private View.OnClickListener negativeButtonClickListener;
         private View.OnClickListener singleButtonClickListener;
 
-        private View layout;
-        private CustomDialog dialog;
+        private final View layout;
+        private final CustomDialog dialog;
+        @SuppressLint("InflateParams")
         public Builder(Context context) {
             //这里传入自定义的style，直接影响此Dialog的显示效果。style具体实现见style.xml
             dialog = new CustomDialog(context, R.style.dialog);
@@ -74,7 +76,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * 创建单按钮对话框
-         * @return
          */
         public CustomDialog createSingleButtonDialog() {
             showSingleButton();
@@ -91,7 +92,6 @@ public class CustomDialog extends Dialog {
 
         /**
          * 创建双按钮对话框
-         * @return
          */
         public CustomDialog createTwoButtonDialog() {
             showTwoButton();

@@ -10,6 +10,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -27,13 +28,13 @@ public class QRHelper {
         if (contents1 == null || "".equals(contents1) || contents1.length() < 1) {
             return null;
         }
-        String contents = null;
+        String contents;
         List<byte[]> list = new ArrayList<>();
 //        Bitmap bitmap = null;
         int QR_WIDTH = width * 8;  //  二维码宽
         int QR_HEIGHT = height * 8; //  二维码高
         try {
-            contents = new String(contents1.getBytes("UTF-8"), "gbk");
+            contents = new String(contents1.getBytes(StandardCharsets.UTF_8), "gbk");
             Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "gbk");
             //图像数据转换，使用了矩阵转换
@@ -121,7 +122,7 @@ public class QRHelper {
                 return null;
             }
 
-            Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
+            Hashtable<EncodeHintType, String> hints = new Hashtable<>();
             hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
             //图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(contents, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);

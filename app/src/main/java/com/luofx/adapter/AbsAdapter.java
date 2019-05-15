@@ -1,5 +1,6 @@
 package com.luofx.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,10 @@ import java.util.List;
  */
 public abstract class AbsAdapter<T> extends BaseAdapter {
     private Context context;
-    protected ArrayList<T> list;
+    /**
+     *
+     */
+    private ArrayList<T> list;
     private int resId;
 
     public AbsAdapter(Context context, int resId) {
@@ -28,8 +32,7 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
     /**
      * 设置 单个数据
      * 原有数据 将被清除
-     *
-     * @param t
+
      */
     public void setData(T t) {
         this.list.clear();
@@ -39,10 +42,8 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
     /**
      * 设置 多个 数据
      * 原有数据 将被清除
-     *
-     * @param list
      */
-    public void setDatas(List<T> list) {
+    public void setData(List<T> list) {
         this.list.clear();
         addDatas(list);
     }
@@ -50,10 +51,8 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
     /**
      * 添加 单个 数据
      * 原有数据不会 被清除
-     *
-     * @param t
      */
-    public void addData(T t) {
+    private void addData(T t) {
         if (t == null) {
             return;
         }
@@ -64,18 +63,12 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-    }
-
     /**
      * 添加 多个 数据
      * 原有 数据 不会被清除
      *
-     * @param list
      */
-    public void addDatas(List<T> list) {
+    private void addDatas(List<T> list) {
         if (list == null) {
             return;
         }
@@ -126,6 +119,7 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
         return position;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
@@ -141,13 +135,14 @@ public abstract class AbsAdapter<T> extends BaseAdapter {
         return convertView;
     }
 
-    public abstract void bindDatas(ViewHolder viewHolder, T t, int position);
+    abstract void bindDatas(ViewHolder viewHolder, T t, int position);
 
-    public class ViewHolder {
-        private HashMap<Integer, View> map;
+    class ViewHolder {
+        private final HashMap<Integer, View> map;
         private View viewGroup;
 
-        public ViewHolder(View viewGroup) {
+        @SuppressLint("UseSparseArrays")
+        ViewHolder(View viewGroup) {
             this.viewGroup = viewGroup;
             this.map = new HashMap<>();
         }

@@ -18,7 +18,7 @@
 //import com.axecom.smartweight.my.entity.ResultInfo;
 //import com.axecom.smartweight.my.activity.common.LockActivity;
 //import com.luofx.listener.VolleyListener;
-//import com.luofx.utils.MyPreferenceUtils;
+//import com.xuanyuan.library.MyPreferenceUtils;
 //import com.xuanyuan.library.MyLog;
 //
 //import org.json.JSONObject;
@@ -125,7 +125,7 @@
 //    }
 //
 //    @Override
-//    public void onResponse(VolleyError volleyError, int flag) {
+//    public void onStringResponse(VolleyError volleyError, int flag) {
 //        MyLog.myInfo("错误" + volleyError.getMessage());
 //    }
 //
@@ -136,7 +136,7 @@
 //     * @param flag       请求索引标识
 //     */
 //    @Override
-//    public void onResponse(final JSONObject jsonObject, final int flag) {
+//    public void onStringResponse(final JSONObject jsonObject, final int flag) {
 //        application.getThreadPool().execute(new Runnable() {
 //            @Override
 //            public void run() {

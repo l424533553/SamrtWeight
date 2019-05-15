@@ -1,5 +1,6 @@
 package com.luofx.newclass;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,11 +28,11 @@ import java.util.Iterator;
 public class USB_Print {
     private static final String ACTION_USB_PERMISSION = "com.usb.printer.USB_PERMISSION";
 
+    @SuppressLint("StaticFieldLeak")
     private static USB_Print mInstance;
 
     private Context mContext;
     private UsbDevice mUsbDevice;
-    private PendingIntent mPermissionIntent;
     private UsbManager mUsbManager;
     private UsbDeviceConnection mUsbDeviceConnection;
     private UsbEndpoint epBulkOut;
@@ -98,7 +99,7 @@ public class USB_Print {
     private void init(Context context) {
         mContext = context;
         mUsbManager = (UsbManager) mContext.getSystemService(Context.USB_SERVICE);
-        mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        PendingIntent mPermissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(ACTION_USB_PERMISSION), 0);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         mContext.registerReceiver(mUsbDeviceReceiver, filter);
@@ -149,7 +150,8 @@ public class USB_Print {
 
 
     // 寻找设备接口
-    private UsbInterface Interface1,Interface2;
+    private UsbInterface Interface1;
+
     private boolean getDeviceInterface() {
         if (mUsbDevice != null) {
             MyLog.e("1",mUsbDevice.getInterfaceCount()+"");
@@ -161,8 +163,7 @@ public class USB_Print {
                     Log.e("成功获得设备接口1:","" + Interface1.getId());
                 }
                 if (i == 1) {
-                    Interface2 = intf;
-                    Log.e("成功获得设备接口2:","" + Interface2.getId());
+                    Log.e("成功获得设备接口2:","" + intf.getId());
                 }
             }
             return true;
@@ -179,7 +180,7 @@ public class USB_Print {
      */
     private UsbEndpoint epIntEndpointOut;
     private UsbEndpoint epIntEndpointIn;
-    private UsbEndpoint assignEndpoint(UsbInterface mInterface) {
+    private void assignEndpoint(UsbInterface mInterface) {
 
         for (int i = 0; i < mInterface.getEndpointCount(); i++) {
             UsbEndpoint ep = mInterface.getEndpoint(i);
@@ -209,7 +210,6 @@ public class USB_Print {
                 && epIntEndpointOut == null && epIntEndpointIn == null) {
             throw new IllegalArgumentException("not endpoint is founded!");
         }
-        return epIntEndpointIn;
     }
     // 打开设备
     public void openDevice(UsbInterface mInterface) {
@@ -228,8 +228,7 @@ public class USB_Print {
             MyLog.e("tag","conn3");
             if (conn.claimInterface(mInterface, true)) {
                 mUsbDeviceConnection = conn;
-                if (mUsbDeviceConnection != null)//
-                    Log.e("open", "设备成功！");
+                Log.e("open", "设备成功！");
             } else {
                 conn.close();
             }

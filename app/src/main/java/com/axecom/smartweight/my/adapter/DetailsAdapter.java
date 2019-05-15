@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
-import com.luofx.listener.IMyItemOnLongclick;
 
 import java.util.List;
 
@@ -22,12 +22,6 @@ import java.util.List;
  */
 public class DetailsAdapter extends BaseExpandableListAdapter {
 
-    private IMyItemOnLongclick myItemOnLongclick;
-
-    public void setMyItemOnClickListener(IMyItemOnLongclick myItemOnClickListener) {
-        this.myItemOnLongclick = myItemOnClickListener;
-    }
-
     private IMyItemOnclick myItemOnclick;
 
     public void setMyItemOnclick(IMyItemOnclick myItemOnclick) {
@@ -36,15 +30,13 @@ public class DetailsAdapter extends BaseExpandableListAdapter {
 
 
     public interface IMyItemOnclick {
-//        void myItemChildClick(int groupPosition, int childPosition, boolean isLastChild);
-
         void myItemGroupClick(int groupPosition, OrderInfo orderInfo);
 
     }
 
 
-    private Context context;
-    private List<OrderInfo> data;
+    private final Context context;
+    private final List<OrderInfo> data;
 
     public DetailsAdapter(Context context, List<OrderInfo> data) {
         this.data = data;
@@ -152,6 +144,7 @@ public class DetailsAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getChildView(final int groupPosition, final int childPosition, final boolean isLastChild, View convertView, ViewGroup parent) {
         ChildHolder holder;

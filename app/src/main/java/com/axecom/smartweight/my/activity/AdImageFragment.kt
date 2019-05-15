@@ -15,12 +15,11 @@ import com.axecom.smartweight.base.SysApplication
 import com.axecom.smartweight.carouselservice.entity.*
 import com.axecom.smartweight.my.config.IConstants
 import com.axecom.smartweight.my.helper.HttpHelper
-
 import com.axecom.smartweight.my.unittest.ImageTestAdapter
 import com.luofx.listener.VolleyStringListener
 import com.luofx.utils.DateUtils
-import com.luofx.utils.MyPreferenceUtils
 import com.luofx.utils.file.FileUtils
+import com.xuanyuan.library.MyPreferenceUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -36,7 +35,7 @@ import java.util.*
  *说明：进行广告图片的测试
  */
 class AdImageFragment : Fragment(), VolleyStringListener, IConstants {
-    override fun onResponse(response: String?, flag: Int) {
+    override fun onStringResponse(response: String?, flag: Int) {
 
         val netImageInfo: AdUserInfo = JSON.parseObject(response, AdUserInfo::class.java)
         if (netImageInfo.status == 0) {
@@ -167,7 +166,7 @@ class AdImageFragment : Fragment(), VolleyStringListener, IConstants {
         }
     }
 
-    override fun onResponseError(volleyError: VolleyError?, flag: Int) {
+    override fun onStringResponse(volleyError: VolleyError?, flag: Int) {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -177,14 +176,13 @@ class AdImageFragment : Fragment(), VolleyStringListener, IConstants {
         return view
     }
 
-    var tvData: TextView? = null
-    var tvphotoData: TextView? = null
-    var tvWebData: TextView? = null
-    var tvAdvertiseData: TextView? = null
-    var listView: ListView? = null
-    var btnTest: Button? = null
+    private var tvData: TextView? = null
+    private var tvphotoData: TextView? = null
+    private var tvWebData: TextView? = null
+    private  var tvAdvertiseData: TextView? = null
+    private var listView: ListView? = null
 
-    var imageTestAdapter: ImageTestAdapter? = null
+    private var imageTestAdapter: ImageTestAdapter? = null
 
     private var imageDao: ImageDao? = null
     private var adUserDao: AdUserDao? = null
@@ -229,7 +227,7 @@ class AdImageFragment : Fragment(), VolleyStringListener, IConstants {
         val photos1: List<AdImageInfo> = imageDao?.queryAll() as List<AdImageInfo>
         var adString = ""
         for (item in photos1) {
-            adString += "  " + item.toString()
+            adString += "  $item"
         }
         tvAdvertiseData?.text = adString
 

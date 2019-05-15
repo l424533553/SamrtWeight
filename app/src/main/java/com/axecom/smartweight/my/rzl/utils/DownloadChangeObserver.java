@@ -10,9 +10,9 @@ import android.util.Log;
 
 //监控uri下载过程中的内容变化
 public class DownloadChangeObserver extends ContentObserver {
-    private Handler _handler;//向ui线程发送消息
-    private Context _context;//下载管理器附属的context
-    public DownloadChangeObserver( Context context, Handler handler){
+    private final Handler _handler;//向ui线程发送消息
+    private final Context _context;//下载管理器附属的context
+    DownloadChangeObserver(Context context, Handler handler){
         super(handler);
         _handler=handler;
         _context=context;
@@ -23,22 +23,16 @@ public class DownloadChangeObserver extends ContentObserver {
         super.onChange(selfChange);
         DownloadManager.Query query=new DownloadManager.Query().setFilterById(ApkUtils.getInstance().getDownloadId());
         final DownloadManager dm=(DownloadManager) this._context.getSystemService(Context.DOWNLOAD_SERVICE);
-        Cursor cs=null;
-        try{
-            cs=dm.query(query);
-            if(cs.moveToFirst()){
-                int downloadedBytes=cs.getInt(cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                int totalBytes=cs.getInt(cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                Log.i("rzl","download apk process " + downloadedBytes + "/" + totalBytes);
-                Message msg=Message.obtain();
-                msg.what=10012;
-                msg.arg1=downloadedBytes;
-                msg.arg2=totalBytes;
+        try (Cursor cs = dm.query(query)) {
+            if (cs.moveToFirst()) {
+                int downloadedBytes = cs.getInt(cs.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                int totalBytes = cs.getInt(cs.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                Log.i("rzl", "download apk process " + downloadedBytes + "/" + totalBytes);
+                Message msg = Message.obtain();
+                msg.what = 10012;
+                msg.arg1 = downloadedBytes;
+                msg.arg2 = totalBytes;
                 _handler.sendMessage(msg);
-            }
-        }finally {
-            if(cs!=null){
-                cs.close();
             }
         }
     }

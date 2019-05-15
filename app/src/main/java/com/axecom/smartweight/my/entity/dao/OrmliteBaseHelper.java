@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.axecom.smartweight.carouselservice.entity.AdImageInfo;
 import com.axecom.smartweight.carouselservice.entity.AdUserBean;
 import com.axecom.smartweight.my.entity.AllGoods;
-import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
+import com.axecom.smartweight.my.entity.HotGood;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.UserInfo;
@@ -39,14 +39,14 @@ import java.util.Map;
  */
 public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     // 数据库名称
-    private static String DATABASE_NAME = "r2011.db";
+    private static final String DATABASE_NAME = "data.db";
 
-    public final static int version = 6;
+    public final static int version = 7;
     // 本类的单例实例
     private static OrmliteBaseHelper instance;
 
     // 存储APP中所有的DAO对象的Map集合
-    private Map<String, Dao> daos = new HashMap<>();
+    private final Map<String, Dao> daos = new HashMap<>();
 
     // 获取本类单例对象的方法
     public static synchronized OrmliteBaseHelper getInstance(Context context) {
@@ -82,12 +82,12 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
     @Override // 创建数据库时调用的方法
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-//            TableUtils.createTable(connectionSource, Goods.class);
+//            TableUtils.createTable(connectionSource, HotGood.class);
             TableUtils.createTable(connectionSource, OrderInfo.class);
             TableUtils.createTable(connectionSource, OrderBean.class);
 //            TableUtils.createTable(connectionSource, Teacher.class);
             TableUtils.createTable(connectionSource, UserInfo.class);
-            TableUtils.createTable(connectionSource, Goods.class);
+            TableUtils.createTable(connectionSource, HotGood.class);
             TableUtils.createTable(connectionSource, GoodsType.class);
 
             TableUtils.createTable(connectionSource, AllGoods.class);
@@ -117,7 +117,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 //            }
 
             //删掉数据库然后从新建表
-            TableUtils.dropTable(connectionSource, Goods.class, true);
+            TableUtils.dropTable(connectionSource, HotGood.class, true);
             TableUtils.dropTable(connectionSource, GoodsType.class, true);
             TableUtils.dropTable(connectionSource, OrderBean.class, true);
             TableUtils.dropTable(connectionSource, OrderInfo.class, true);
@@ -128,6 +128,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, AdImageInfo.class, true);
             TableUtils.dropTable(connectionSource, AdUserBean.class, true);
             TableUtils.dropTable(connectionSource, Deviceinfo.class, true);
+
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,15 +153,4 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 //        }
     }
 
-    // 释放资源
-    @Override
-    public void close() {
-        super.close();
-        for (String key : daos.keySet()) {
-            Dao dao = daos.get(key);
-            if (dao != null) {
-                dao = null;
-            }
-        }
-    }
 }

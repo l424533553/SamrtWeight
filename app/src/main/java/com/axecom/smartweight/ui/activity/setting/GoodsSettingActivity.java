@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.activity.setting;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,19 +34,20 @@ import com.axecom.smartweight.my.adapter.HotGoodsAdapter;
 import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.AllGoods;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
-import com.axecom.smartweight.my.entity.Goods;
 import com.axecom.smartweight.my.entity.GoodsType;
+import com.axecom.smartweight.my.entity.HotGood;
 import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
 import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
 import com.axecom.smartweight.my.entity.dao.HotGoodsDao;
 import com.luofx.listener.MyOnItemClickListener2;
 import com.luofx.newclass.ActivityController;
-import com.xuanyuan.xinyu.MyToast;
+import com.xuanyuan.library.MyToast;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.reactivex.Observable;
@@ -53,7 +56,8 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.axecom.smartweight.my.entity.BaseBusEvent.NOTIFY_HOT_GOOD_CHANGE;
+import static com.axecom.smartweight.my.config.IEventBus.NOTIFY_HOT_GOOD_CHANGE;
+
 
 /**
  * 商品 设置  ： 提供功能，添加删除菜品菜单
@@ -83,7 +87,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
     /**
      * 销售商品列表
      */
-    private List<Goods> hotGoodsList;
+    private List<HotGood> hotHotGoodList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +114,10 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                switch (msg.what) {
-                    case NOTIFY_INITDAT:
-                        classAdapter.notifyDataSetChanged();
-                        goodsTypeAdapter.notifyDataSetChanged();
-                        hotGoodsAdapter.notifyDataSetChanged();
-                        break;
+                if (msg.what == NOTIFY_INITDAT) {
+                    classAdapter.notifyDataSetChanged();
+                    goodsTypeAdapter.notifyDataSetChanged();
+                    hotGoodsAdapter.notifyDataSetChanged();
                 }
                 return false;
             }
@@ -143,7 +145,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
         };
         ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
                 //设置拖拽方向，上下左右
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
                 final int swipeFlags = 0;
@@ -151,19 +153,19 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             }
 
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 //拖拽元素交换
                 int fromPosition = viewHolder.getAdapterPosition();
                 int toPosition = target.getAdapterPosition();
-                Goods from = hotGoodsList.get(fromPosition);
-                Goods to = hotGoodsList.get(toPosition);
+                HotGood from = hotHotGoodList.get(fromPosition);
+                HotGood to = hotHotGoodList.get(toPosition);
                 Log.i("rzl", "from:" + from.getName() + ",to:" + to.getName() + "," + fromPosition + "<->" + toPosition);
                 if (fromPosition < toPosition) {
                     for (int i = fromPosition; i < toPosition; i++) {
-                        Goods from1 = hotGoodsList.get(i);
-                        Goods to1 = hotGoodsList.get(i + 1);
+                        HotGood from1 = hotHotGoodList.get(i);
+                        HotGood to1 = hotHotGoodList.get(i + 1);
                         //内存排序
-                        Collections.swap(hotGoodsList, i, i + 1);
+                        Collections.swap(hotHotGoodList, i, i + 1);
                         //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
                         int fromId = from1.getId();
                         int toId = to1.getId();
@@ -175,10 +177,10 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                     }
                 } else {
                     for (int i = fromPosition; i > toPosition; i--) {
-                        Goods from1 = hotGoodsList.get(i);
-                        Goods to1 = hotGoodsList.get(i - 1);
+                        HotGood from1 = hotHotGoodList.get(i);
+                        HotGood to1 = hotHotGoodList.get(i - 1);
                         //内存排序
-                        Collections.swap(hotGoodsList, i, i - 1);
+                        Collections.swap(hotHotGoodList, i, i - 1);
                         //数据库排序
                         int fromId = from1.getId();
                         int toId = to1.getId();
@@ -188,13 +190,13 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
                         hotGoodsDao.update(to1);
                     }
                 }
-                recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
 
                 return true;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
             }
         });
@@ -224,25 +226,25 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AllGoods allGoods = classAdapter.getItem(position);
-                Goods goods = new Goods();
-                goods.setCid(allGoods.getCid());
-                goods.setPrice(allGoods.getPrice());
-                goods.setBatchCode(allGoods.getBatchCode());
-                goods.setName(allGoods.getName());
+                HotGood hotGood = new HotGood();
+                hotGood.setCid(allGoods.getCid());
+                hotGood.setPrice(allGoods.getPrice());
+                hotGood.setBatchCode(allGoods.getBatchCode());
+                hotGood.setName(allGoods.getName());
 
-                goods.setType(allGoods.getType());
-                goods.setTypeid(allGoods.getTypeid());
-                if (!hotGoodsList.contains(goods)) {
-                    hotGoodsList.add(goods);
-                    hotGoodsAdapter.notifyItemChanged(hotGoodsList.size() - 1);
+                hotGood.setType(allGoods.getType());
+                hotGood.setTypeid(allGoods.getTypeid());
+                if (!hotHotGoodList.contains(hotGood)) {
+                    hotHotGoodList.add(hotGood);
+                    hotGoodsAdapter.notifyItemChanged(hotHotGoodList.size() - 1);
                     int typeid = allGoods.getTypeid();
 
                     GoodsType goodsType = goodsTypeDao.queryById(typeid);
                     if (goodsType != null) {
-                        goods.setBatchCode(goodsType.getTraceno());
+                        hotGood.setBatchCode(goodsType.getTraceno());
                     }
 
-                    int count = hotGoodsDao.insert(goods);
+                    int count = hotGoodsDao.insert(hotGood);
                     if (count > 0) {
                         addCount++;
                         MyToast.toastShort(context, "添加成功");
@@ -272,11 +274,11 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             case 1:
                 try {
                     // 进行 删除操作
-                    Goods goods = hotGoodsAdapter.getItem(position);
+                    HotGood hotGood = hotGoodsAdapter.getItem(position);
                     hotGoodsAdapter.removeList(position);
-                    if (goods != null) {
+                    if (hotGood != null) {
                         addCount++;
-                        hotGoodsDao.delete(goods);
+                        hotGoodsDao.delete(hotGood);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -307,8 +309,8 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             sysApplication.getThreadPool().execute(new Runnable() {
                 @Override
                 public void run() {
-                    hotGoodsList = hotGoodsDao.queryAll();//获取热键商品
-                    hotGoodsAdapter.setDatas(hotGoodsList);
+                    hotHotGoodList = hotGoodsDao.queryAll();//获取热键商品
+                    hotGoodsAdapter.setDatas(hotHotGoodList);
                     goodsTypeAdapter.setDatas(goodsTypes);
                     List<AllGoods> goodsList = allGoodsDao.queryByTypeId(-1);
 //                goodsSelectAdapter.setDatas(goodsList);
@@ -418,7 +420,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
 
     private class ClassAdapter extends BaseAdapter {
         List<AllGoods> list;
-        private Context context;
+        private final Context context;
 
         ClassAdapter(Context context) {
             this.context = context;
@@ -443,6 +445,7 @@ public class GoodsSettingActivity extends Activity implements View.OnClickListen
             return position;
         }
 
+        @SuppressLint("InflateParams")
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;

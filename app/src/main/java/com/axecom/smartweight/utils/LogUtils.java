@@ -14,7 +14,7 @@ public class LogUtils {
     /**
      * 日志输出时的TAG
      */
-    private static String mTag = "DDM";
+    private static final String mTag = "DDM";
     /**
      * 日志输出级别NONE
      */
@@ -52,7 +52,7 @@ public class LogUtils {
     /**
      * 是否允许输出log
      */
-    private static int mDebuggable = LEVEL_ALL;
+    private static final int mDebuggable = LEVEL_ALL;
 
     /**
      * 用于记时的变量
@@ -63,57 +63,46 @@ public class LogUtils {
      */
     private static final Object mLogLock = new Object();
 
-    /**---------------日志输出,已固定TAG  begin---------------**/
-    /**
+    /**---------------日志输出,已固定TAG  begin---------------*
      * 以级别为 d 的形式输出LOG
      */
     public static void v(String msg) {
-        if (mDebuggable >= LEVEL_VERBOSE) {
-            Log.v(mTag, msg);
-        }
+        Log.v(mTag, msg);
     }
 
     /**
      * 以级别为 d 的形式输出LOG
      */
     public static void d(String msg) {
-        if (mDebuggable >= LEVEL_DEBUG) {
-            Log.d(mTag, msg);
-        }
+        Log.d(mTag, msg);
     }
 
     /**
      * 以级别为 i 的形式输出LOG
      */
     public static void i(String msg) {
-        if (mDebuggable >= LEVEL_INFO) {
-            Log.i(mTag, msg);
-        }
+        Log.i(mTag, msg);
     }
 
     /**
      * 以级别为 w 的形式输出LOG
      */
     public static void w(String msg) {
-        if (mDebuggable >= LEVEL_WARN) {
-            Log.w(mTag, msg);
-        }
+        Log.w(mTag, msg);
     }
 
     /**
      * 以级别为 w 的形式输出Throwable
      */
     public static void w(Throwable tr) {
-        if (mDebuggable >= LEVEL_WARN) {
-            Log.w(mTag, "", tr);
-        }
+        Log.w(mTag, "", tr);
     }
 
     /**
      * 以级别为 w 的形式输出LOG信息和Throwable
      */
     public static void w(String msg, Throwable tr) {
-        if (mDebuggable >= LEVEL_WARN && null != msg) {
+        if (null != msg) {
             Log.w(mTag, msg, tr);
         }
     }
@@ -122,96 +111,76 @@ public class LogUtils {
      * 以级别为 e 的形式输出LOG
      */
     public static void e(String msg) {
-        if (mDebuggable >= LEVEL_ERROR) {
-            Log.e(mTag, msg);
-        }
+        Log.e(mTag, msg);
     }
 
     /**
      * 以级别为 s 的形式输出LOG,主要是为了System.out.println,稍微格式化了一下
      */
     public static void sf(String msg) {
-        if (mDebuggable >= LEVEL_ERROR) {
-            System.out.println("----------" + msg + "----------");
-        }
+        System.out.println("----------" + msg + "----------");
     }
 
     /**
      * 以级别为 s 的形式输出LOG,主要是为了System.out.println
      */
     public static void s(String msg) {
-        if (mDebuggable >= LEVEL_ERROR) {
-            System.out.println(msg);
-        }
+        System.out.println(msg);
     }
 
     /**
      * 以级别为 e 的形式输出Throwable
      */
     public static void e(Throwable tr) {
-        if (mDebuggable >= LEVEL_ERROR) {
-            Log.e(mTag, "", tr);
-        }
+        Log.e(mTag, "", tr);
     }
 
     /**
      * 以级别为 e 的形式输出LOG信息和Throwable
      */
     public static void e(String msg, Throwable tr) {
-        if (mDebuggable >= LEVEL_ERROR && null != msg) {
+        if (null != msg) {
             Log.e(mTag, msg, tr);
         }
     }
+    /* *---------------日志输出,已固定TAG  end---------------**/
 
-    /**---------------日志输出,已固定TAG  end---------------**/
-
-    /**---------------日志输出,未固定TAG  begin---------------**/
-    /**
+    /**---------------日志输出,未固定TAG  begin---------------**
      * 以级别为 d 的形式输出LOG
      */
     public static void v(String tag, String msg) {
-        if (mDebuggable >= LEVEL_VERBOSE) {
-            Log.v(tag, msg);
-        }
+        Log.v(tag, msg);
     }
 
     /**
      * 以级别为 d 的形式输出LOG
      */
     public static void d(String tag, String msg) {
-        if (mDebuggable >= LEVEL_DEBUG) {
-            Log.d(tag, msg);
-        }
+        Log.d(tag, msg);
     }
 
     /**
      * 以级别为 i 的形式输出LOG
      */
     public static void i(String tag, String msg) {
-        if (mDebuggable >= LEVEL_INFO) {
-            Log.i(tag, msg);
-        }
+        Log.i(tag, msg);
     }
 
     /**
      * 以级别为 w 的形式输出LOG
      */
     public static void w(String tag, String msg) {
-        if (mDebuggable >= LEVEL_WARN) {
-            Log.w(tag, msg);
-        }
+        Log.w(tag, msg);
     }
 
     /**
      * 以级别为 e 的形式输出LOG
      */
     public static void e(String tag, String msg) {
-        if (mDebuggable >= LEVEL_ERROR) {
-            Log.e(tag, msg);
-        }
+        Log.e(tag, msg);
     }
 
-    /**---------------日志输出,未固定TAG  end---------------**/
+    /* *---------------日志输出,未固定TAG  end---------------**/
 
     /**
      * 把Log存储到文件中

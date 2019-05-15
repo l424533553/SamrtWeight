@@ -18,7 +18,7 @@ import com.axecom.smartweight.my.entity.UserInfo
 import com.axecom.smartweight.my.entity.dao.UserInfoDao
 import com.axecom.smartweight.my.helper.HttpHelper
 import com.luofx.listener.VolleyListener
-import com.xuanyuan.xinyu.MyToast
+import com.xuanyuan.library.MyToast
 import org.json.JSONObject
 
 private const val ARG_PARAM1 = "param1"
@@ -75,9 +75,8 @@ class UserInfoFragment : Fragment(), VolleyListener {
     }
 
 
-    var tvData: TextView? = null
-    var tvWebData: TextView? = null
-    var btnTest: Button? = null
+    private var tvData: TextView? = null
+    private var tvWebData: TextView? = null
     private var userInfoDao: UserInfoDao? = null
 
     fun initView(view: View) {
@@ -98,16 +97,16 @@ class UserInfoFragment : Fragment(), VolleyListener {
 
     }
 
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 

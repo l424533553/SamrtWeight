@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <LinearLayout
+    android:gravity="center"
+
+
         android:layout_width="580dp"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_weight_display_bg"
@@ -13,17 +13,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="键盘操作"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            android:background="@color/black" />
+            android:background="@color/black"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/soft_keybroad_input_tv"
@@ -41,7 +43,7 @@
         <GridView
             android:id="@+id/soft_keyboard_gridview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="10dp"
@@ -63,11 +65,12 @@
                 android:id="@+id/soft_keyboard_confirm_btn"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="1dp"
+                android:layout_marginEnd="1dp"
                 android:layout_weight="2"
                 android:background="@drawable/shape_weight_display_bg"
                 android:text="@string/string_confirm"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/soft_keyboard_cancel_btn"
@@ -76,7 +79,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/shape_weight_display_bg"
                 android:text="@string/string_cancel_txt"
-                android:textSize="30sp" />
+                android:textSize="30sp"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+

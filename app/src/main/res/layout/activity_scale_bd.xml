@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".my.activity.common.ScaleBDACActivity">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_clean"
+        android:gravity="center_horizontal"
+        android:padding="8dp"
+        android:text="秤标定"
+        android:textColor="@color/color_white"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/rgWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/shape_light_green_bg"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="10dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定重量:"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/rbWeight10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="10kg砝码"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <RadioButton
+            android:id="@+id/rbWeight20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="20kg砝码"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="20sp" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp"
+
+        >
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_light_green_bg"
+            android:clickable="false"
+            android:enabled="false"
+            android:text="标定流程："
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:id="@+id/btnZeroSetting"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_btn_epay"
+            android:text="第一步\n清空置零"
+            android:textColor="@color/selector_btn_text"
+            android:textSize="20sp"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_light_green_bg"
+            android:enabled="false"
+            android:text="第二步\n放置砝码"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+        <Button
+            android:id="@+id/btnCalibration"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_light_green_bg"
+            android:text="第三步\n标定"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:ignore="ButtonStyle,HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="净重：" />
+
+            <TextView
+                android:id="@+id/tvWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="硬件K值：" />
+
+            <TextView
+                android:id="@+id/tvkValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:text="计算K值：" />
+
+            <TextView
+                android:id="@+id/tvkValue2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="标定零位AD:" />
+
+            <TextView
+                android:id="@+id/tvsbZeroAd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:text="置零AD:" />
+
+            <TextView
+                android:id="@+id/tvsbZeroAd2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="标定AD:" />
+
+            <TextView
+                android:id="@+id/tvsbAd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100dp"
+                android:text="当前AD:" />
+
+            <TextView
+                android:id="@+id/tvsbAd2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnGetK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取K值"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/btnsbSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="标定值发送"
+                tools:ignore="ButtonStyle" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

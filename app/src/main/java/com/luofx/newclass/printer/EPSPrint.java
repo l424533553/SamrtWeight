@@ -5,11 +5,19 @@ import android.text.TextUtils;
 
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.luofx.help.QRHelper;
+import com.xuanyuan.library.MyLog;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
@@ -39,6 +47,11 @@ public class EPSPrint extends MyBasePrinter {
 
     }
 
+    @Override
+    public boolean open() {
+        return super.open(path, baudrate);
+    }
+
     public EPSPrint(String path, int baudrate) {
         this.path = path;
         this.baudrate = baudrate;
@@ -46,14 +59,6 @@ public class EPSPrint extends MyBasePrinter {
 
     public final static int BAUDRATE_ST = 9600;
     public static final String PATH_ST = "/dev/ttyS1";
-
-    @Override
-    public boolean open() {
-//        /dev/ttyS0  試一試
-        return super.open(path, baudrate);
-//        return true;
-    }
-
 
     public void PrintST(Context context) {
         center("====+++++++++++++++++++++++++++++++++====", true);
@@ -98,8 +103,6 @@ public class EPSPrint extends MyBasePrinter {
 
     /**
      * 重置打印机
-     *
-     * @throws IOException
      */
     public void reset() throws IOException {
         getSerialPortPrinter().getOutputStream().write(PRINT_Reset);
@@ -128,7 +131,6 @@ public class EPSPrint extends MyBasePrinter {
      *          n最低位有效，
      *          等于0时取消字体加粗
      *          非0时设置字体加粗
-     * @throws IOException
      */
     public void isWordBlod(byte n) throws IOException {
         byte[] by = {27, 69, n};
@@ -223,6 +225,192 @@ public class EPSPrint extends MyBasePrinter {
         return QRHelper.createPixelsQR2(message, width, height);
     }
 
+    /**
+     * @param printMsg    打印数据
+     * @param width       宽
+     * @param height      高
+     * @param printSize   根据数据大小   确定打印时间间隔
+     * @param isInversion 是否倒置打印  true 15寸打法
+     */
+    private void printQR(String printMsg, int width, int height, int printSize, boolean isInversion) {
+        int time;
+        if (printSize < 300) {
+            time = 105;
+        } else if (printSize < 400) {
+            time = 110;
+        } else if (printSize < 500) {
+            time = 115;
+        } else if (printSize < 600) {
+            time = 120;
+        } else if (printSize < 700) {
+            time = 125;
+        } else if (printSize < 1400) {
+            time = 130;
+        } else {
+            time = 140;
+        }
+        List<byte[]> data = createQR222(printMsg, width, height);
+
+        byte[] by0 = {27, 49, 0};// 设置行距 0 像素
+//        byte[] by0 = {27, 51, 0, 27, 49, 0, 27, 74, 0};// 设置行距 0 像素
+        write(by0);
+
+        flush();
+        for (int i = 0; i < data.size(); i++) {
+            try {
+                Thread.sleep(time);
+                write(data.get(i));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        finishPrinterQR((byte) 0);
+    }
+
+
+    public static List<byte[]> createQR222(String contents1, int width, int height) {
+        //判断URL合法性
+        if (contents1 == null || "".equals(contents1) || contents1.length() < 1) {
+            return null;
+        }
+
+        List<byte[]> list = new ArrayList<>();
+//        Bitmap bitmap = null;
+        int QR_WIDTH = width * 8;  //  二维码宽
+        int QR_HEIGHT = height * 8; //  二维码高
+        try {
+            String contents = new String(contents1.getBytes(), "gbk");
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "gbk");
+//            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+            hints.put(EncodeHintType.MARGIN, 0);  //设置白边
+            //图像数据转换，使用了矩阵转换
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(contents, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
+            MyLog.blue("图片大小   getHeight=" + bitMatrix.getHeight() + " getRowSize= " + bitMatrix.getRowSize() + "   bitMatrix.getWidth()=" + bitMatrix.getWidth());
+
+            int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
+            //下面这里按照二维码的算法，逐个生成二维码的图片，
+            //两个for循环是图片横列扫描的结果
+
+            for (int i = 0; i < height; i++) {
+//                int length = QR_WIDTH + 4;
+//                byte[] rowByte = new byte[length];// 384+4
+                byte[] rowByte = new byte[width * 8 + 6];// 384+4
+                rowByte[0] = 27;
+                rowByte[1] = 42;
+                rowByte[2] = 1;
+                rowByte[3] = (byte) 192;
+                rowByte[4] = 0;
+                for (int j = 5; j < width * 8 + 5; j++) {
+                    int[] dest = new int[8];
+                    dest[0] = getPixels(bitMatrix, i * 8, j - 5);
+                    dest[1] = getPixels(bitMatrix, i * 8 + 1, j - 5);
+                    dest[2] = getPixels(bitMatrix, i * 8 + 2, j - 5);
+                    dest[3] = getPixels(bitMatrix, i * 8 + 3, j - 5);
+                    dest[4] = getPixels(bitMatrix, i * 8 + 4, j - 5);
+                    dest[5] = getPixels(bitMatrix, i * 8 + 5, j - 5);
+                    dest[6] = getPixels(bitMatrix, i * 8 + 6, j - 5);
+                    dest[7] = getPixels(bitMatrix, i * 8 + 7, j - 5);
+                    rowByte[j] = dealArray(dest);
+                }
+                rowByte[width * 8 + 5] = 10;
+//                rowByte[length-2]=10;
+//                rowByte[length-1]=13;
+                list.add(rowByte);
+            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+//      MyLog.myInfo("byte数组数据===" + list.size());
+        return list;
+    }
+
+    public static byte[] createQR333(String contents1, int width, int height) {
+        //判断URL合法性
+        if (contents1 == null || "".equals(contents1) || contents1.length() < 1) {
+            return null;
+        }
+        byte[] bytes = null;
+
+//        Bitmap bitmap = null;
+        int QR_WIDTH = width * 8;  //  二维码宽
+        int QR_HEIGHT = height * 8; //  二维码高
+        try {
+            String contents = new String(contents1.getBytes(), "gbk");
+            Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "gbk");
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+            hints.put(EncodeHintType.MARGIN, 0);  //设置白边
+            //图像数据转换，使用了矩阵转换
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(contents, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT, hints);
+            MyLog.blue("图片大小   getHeight=" + bitMatrix.getHeight() + " getRowSize= " + bitMatrix.getRowSize() + "   bitMatrix.getWidth()=" + bitMatrix.getWidth());
+
+            int[] pixels = new int[QR_WIDTH * QR_HEIGHT];
+            //下面这里按照二维码的算法，逐个生成二维码的图片，
+            //两个for循环是图片横列扫描的结果
+
+            bytes = new byte[(width * 8 + 6) * height];
+
+            int srcPos = 0;
+            for (int i = 0; i < height; i++) {
+//                int length = QR_WIDTH + 4;
+//                byte[] rowByte = new byte[length];// 384+4
+
+                byte[] rowByte = new byte[width * 8 + 6];// 384+4
+                rowByte[0] = 27;
+                rowByte[1] = 42;
+                rowByte[2] = 1;
+                rowByte[3] = (byte) 192;
+                rowByte[4] = 0;
+                for (int j = 5; j < width * 8 + 5; j++) {
+                    int[] dest = new int[8];
+                    dest[0] = getPixels(bitMatrix, i * 8, j - 5);
+                    dest[1] = getPixels(bitMatrix, i * 8 + 1, j - 5);
+                    dest[2] = getPixels(bitMatrix, i * 8 + 2, j - 5);
+                    dest[3] = getPixels(bitMatrix, i * 8 + 3, j - 5);
+                    dest[4] = getPixels(bitMatrix, i * 8 + 4, j - 5);
+                    dest[5] = getPixels(bitMatrix, i * 8 + 5, j - 5);
+                    dest[6] = getPixels(bitMatrix, i * 8 + 6, j - 5);
+                    dest[7] = getPixels(bitMatrix, i * 8 + 7, j - 5);
+                    rowByte[j] = dealArray(dest);
+                }
+                rowByte[width * 8 + 5] = 10;
+
+                System.arraycopy(rowByte, 0, bytes, srcPos, width * 8 + 6);
+                srcPos += width * 8 + 6;
+            }
+        } catch (WriterException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return bytes;
+    }
+
+    private static int getPixels(BitMatrix bitMatrix, int y, int x) {
+        if (bitMatrix.get(x, y)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private static byte dealArray(int[] dest) {
+        int be = 0;
+        int temp;
+        for (int j = 0; j < 8; j++) {
+            temp = dest[j];
+            if (j == 0) {
+                be = temp;
+            } else {
+                be = (be << 1) | temp;
+            }
+        }
+        return (byte) be;
+    }
+
 /*
     public void printQR(String message) {
         try {
@@ -243,25 +431,20 @@ public class EPSPrint extends MyBasePrinter {
     public void PrintNetLine2(Context context) throws UnsupportedEncodingException {
         byte[] by = {61, 43, 43, 43, 61};
         byte[] wrap = new byte[]{10, 61, 61, 43, 43, 43, 61, 61, 10};//换行  LF
-
 //      resetBalance(PRINT_Wrap);
 //      resetBalance(PRINT_Reset);
-
 ////    resetBalance(PRINT_Wrap);
 //      resetBalance(wrap);
 
         String sty = "==你打奶的打得完==\n";
         byte[] s1_byte = sty.getBytes();
         byte[] s2_byte = sty.getBytes("GBK");
-
         resetBalance(s1_byte);
         resetBalance(s2_byte);
-
     }
 
-
     //居中
-    void center(String s1, boolean big) {
+    private void center(String s1, boolean big) {
         int i = big ? 2 : 1;
         if (big) {
             resetBalance(PRINT_Small);
@@ -273,7 +456,7 @@ public class EPSPrint extends MyBasePrinter {
             int length = s1_byte.length;
             if (length < 32 / i) {
                 byte[] s2_byte = new byte[32 / i];
-                System.arraycopy(s1_byte, 0, s2_byte, (int) ((32 / i - s1_byte.length) / 2), s1_byte.length);
+                System.arraycopy(s1_byte, 0, s2_byte, ((32 / i - s1_byte.length) / 2), s1_byte.length);
                 resetBalance(s2_byte);
             } else {
                 resetBalance(s1_byte);
@@ -285,15 +468,6 @@ public class EPSPrint extends MyBasePrinter {
             resetBalance(PRINT_Wrap);
             resetBalance(PRINT_Wrap);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void alignment(byte n) {
-        byte[] by = {27, 97, n};
-        try {
-            getSerialPortPrinter().getOutputStream().write(by);
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -331,9 +505,7 @@ public class EPSPrint extends MyBasePrinter {
 
         try {
             getSerialPortPrinter().getOutputStream().write(order);
-            //TODO 自己 加的 待验证
             Thread.sleep(100);
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -344,11 +516,9 @@ public class EPSPrint extends MyBasePrinter {
      */
     @Override
     public void printOrder(ExecutorService executorService, final OrderInfo orderInfo) {
-
         if (orderInfo == null) {
             return;
         }
-
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -357,36 +527,34 @@ public class EPSPrint extends MyBasePrinter {
                     orderBeans = new ArrayList<>(orderInfo.getOrderBeans());
                 }
 
-                setLineSpacing((byte) 18);
+                setLineSpacing((byte) 24);
                 alignment((byte) 1);
 //                alignment22((byte) 1);
-                printString(orderInfo.getMarketName() + ",欢迎你!\n");
+                 printString(orderInfo.getMarketName() + ",欢迎你!\n");
                 setLineSpacing((byte) 48);
                 alignment((byte) 0);
-                printString("交易日期：" + orderInfo.getTime() + "\n");
+                 printString("交易日期：" + orderInfo.getTime() + "\n");
 
                 StringBuilder sb = new StringBuilder();
-
                 sb.append("交易单号：").append(orderInfo.getBillcode()).append("\n");
-                sb.append("卖方名称：").append(orderInfo.getSeller()).append("\n");
                 if (1 == orderInfo.getSettlemethod()) {
-                    sb.append("结算方式：微信支付\n");
+                    sb.append("结算方式：扫码支付\n");
                 }
                 if (2 == orderInfo.getSettlemethod()) {
-                    sb.append("结算方式：支付宝支付\n");
+                    sb.append("结算方式：扫码支付\n");
                 }
                 if (0 == orderInfo.getSettlemethod()) {
                     sb.append("结算方式：现金支付\n");
                 }
+
                 sb.append("摊位号：").append(orderInfo.getStallNo()).append("\n");
-                sb.append("司磅员：").append(orderInfo.getSeller()).append("\t\b\b\b秤号：").append(orderInfo.getTerid() + "\n");
+                sb.append("司磅员：").append(orderInfo.getSeller()).append("\t\b\b\b秤号：").append(orderInfo.getTerid()).append("\n");
                 setLineSpacing((byte) 32);
                 alignment((byte) 0);
                 alignment22((byte) 0);
-                printString(sb.toString());
-
+                 printString(sb.toString());
                 setLineSpacing((byte) 42);
-                printString("------------商品明细------------\n");
+                 printString("------------商品明细------------\n");
 
                 StringBuilder sb1 = new StringBuilder();
                 sb1.append("商品名\b" + "单价/元\b" + "重量/kg\b" + "金额/元" + "\n");
@@ -399,19 +567,16 @@ public class EPSPrint extends MyBasePrinter {
                 setLineSpacing((byte) 32);
                 alignment((byte) 0);
                 alignment22((byte) 0);
-                printString(sb1.toString());
-
+                  printString(sb1.toString());
                 setLineSpacing((byte) 22);
-                printString("--------------------------------");
-
+                  printString("--------------------------------");
                 alignment((byte) 2);
                 alignment22((byte) 0);
                 printString("合计(元)：" + orderInfo.getTotalamount() + "\b\b\b\n");
-
                 setLineSpacing((byte) 42);
                 alignment((byte) 0);
                 alignment22((byte) 0);
-                printString(BASE_COMPANY_NAME + "\n");
+               printString(BASE_COMPANY_NAME + "\n");
 
 //                boolean isAvailable = NetworkUtil.isAvailable(context);// 有网打印二维码
 //                if (!isAvailable) {
@@ -420,20 +585,22 @@ public class EPSPrint extends MyBasePrinter {
 //                    epsPrint.PrintString(sb.toString());
 //                } else {
 
-                if(!isNoQR){
+                if (!isNoQR) {
                     String qrString = "http://data.axebao.com/smartsz/trace/?no=" + orderInfo.getBillcode();
-                    byte[] bytes = getbyteData(qrString, 32, 32);
-                    if (bytes != null) {
-                        setLineSpacing((byte) 32);
-                        printString("扫一扫获取溯源信息：\n");
-                        printQR(bytes);
-//                        epsPrint.PrintltString("--------------------------------\n\n\n");
-                        PrintltString("\n\n\n\n");
-                    }
-                }
+                    setLineSpacing((byte) 8);
+                    printString("扫一扫获取溯源信息：\n");
 
+//                  epsPrint.PrintltString("--------------------------------\n\n\n");
+                    byte[] bytes = createQR333(qrString, 24, 24);
+                    printQR(bytes);
+
+                    // 使用 测试
+
+//                    printQR(qrString, 24, 24, printSize, false);
+
+                    printString("\n\n\n\n");
+                }
             }
         });
     }
-
 }

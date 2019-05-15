@@ -1,13 +1,12 @@
 package com.axecom.smartweight.my.activity.common;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,23 +29,18 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.carouselservice.entity.AdImageInfo;
-import com.axecom.smartweight.carouselservice.entity.AdUserBean;
-import com.axecom.smartweight.carouselservice.entity.AdUserDao;
-import com.axecom.smartweight.carouselservice.entity.AdUserInfo;
-import com.axecom.smartweight.carouselservice.entity.ImageDao;
 import com.axecom.smartweight.carouselservice.service.SecondScreen;
 import com.axecom.smartweight.fpms_chinaap.LoginFpmsInfo;
-
 import com.axecom.smartweight.mvp.MainPresenter;
-import com.axecom.smartweight.my.CustomDialog123;
 import com.axecom.smartweight.my.activity.SystemLoginActivity;
 import com.axecom.smartweight.my.adapter.BackgroundData;
 import com.axecom.smartweight.my.adapter.DigitalAdapter;
+import com.axecom.smartweight.my.adapter.GoodMenuAdapter;
 import com.axecom.smartweight.my.adapter.OrderAdapter;
+import com.axecom.smartweight.my.config.IEventBus;
 import com.axecom.smartweight.my.entity.AdResultBean;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
-import com.axecom.smartweight.my.entity.Goods;
+import com.axecom.smartweight.my.entity.HotGood;
 import com.axecom.smartweight.my.entity.OrderBean;
 import com.axecom.smartweight.my.entity.OrderInfo;
 import com.axecom.smartweight.my.entity.ResultInfo;
@@ -58,36 +53,31 @@ import com.axecom.smartweight.my.entity.netresult.OrderResultBean;
 import com.axecom.smartweight.my.helper.DateTimeUtil;
 import com.axecom.smartweight.my.helper.HeartBeatServcice;
 import com.axecom.smartweight.my.helper.HttpHelper;
-import com.axecom.smartweight.my.helper.NetUtil;
 import com.axecom.smartweight.my.rzl.utils.ApkUtils;
 import com.axecom.smartweight.my.rzl.utils.DownloadDialog;
 import com.axecom.smartweight.my.rzl.utils.Version;
 import com.axecom.smartweight.my.service.CustomAlertDialog;
-import com.axecom.smartweight.ui.adapter.GoodMenuAdapter;
 import com.axecom.smartweight.utils.AESHelper;
+import com.jeremyliao.liveeventbus.LiveEventBus;
+import com.luofx.base.BaseBuglyApplication;
 import com.luofx.help.CashierInputFilter;
 import com.luofx.listener.VolleyListener;
 import com.luofx.listener.VolleyStringListener;
 import com.luofx.newclass.ActivityController;
 import com.luofx.utils.DateUtils;
-import com.luofx.utils.MyPreferenceUtils;
 import com.luofx.utils.ToastUtils;
-import com.xuanyuan.xinyu.MyToast;
-import com.luofx.utils.file.FileUtils;
-import com.xuanyuan.library.MyLog;
 import com.luofx.utils.net.NetWorkJudge;
+import com.xuanyuan.library.MyLog;
+import com.xuanyuan.library.MyPreferenceUtils;
+import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.PowerConsumptionRankingsBatteryView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -100,8 +90,7 @@ import java.util.TimerTask;
 import static com.axecom.smartweight.mvp.MainPresenter.NOTIFY_GOODS_DATA_CHANGE;
 import static com.axecom.smartweight.utils.CommonUtils.parseFloat;
 
-public class MainActivity extends MainBaseActivity implements VolleyListener, VolleyStringListener, View.OnClickListener, View.OnLongClickListener {
-
+public class MainActivity extends MainBaseACActivity implements IEventBus, VolleyListener, VolleyStringListener, View.OnClickListener, View.OnLongClickListener {
     private GridView gvGoodMenu;
     private GridView digitalGridView;
     private ListView commoditysListView;
@@ -113,14 +102,18 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private TextView tvgrandTotal;
     private TextView tvTotalWeight;
     private TextView weightTv;
+    /**
+     * 总计 控件
+     */
     private TextView tvTotalPrice;
+//    private PowerConsumptionRankingsBatteryView pcrBatteryView;
 
     //摊位号
     private TextView tvNumber;
     // 公斤   ，市斤
     private TextView weightTopTv, tvCatty;
     private List<OrderBean> orderBeans;
-    private Goods selectedGoods;
+    private HotGood selectedHotGood;
     public SecondPresentation banner;
 //    boolean switchSimpleOrComplex;// 是否是计件模式
 
@@ -131,14 +124,22 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     private TextView tvmarketName, tvSeller, tvTid, tvKg;
     //订单区和按键区的父控件
     private LinearLayout llKey, llorder;
+    // 电量图标
+    private ImageView ivImage;
+    private TextView tvElePrecent;
+
 
     private void initViewFirst() {
         llorder = findViewById(R.id.llorder);
         llKey = findViewById(R.id.llKey);
+        // 初始化菜单按钮
+        gvGoodMenu = findViewById(R.id.gvGoodMenu);
         tvSeller = findViewById(R.id.tvSeller);
         tvmarketName = findViewById(R.id.tvmarketName);
         tvTid = findViewById(R.id.tvTid);
         tvNumber = findViewById(R.id.tvNumber);
+        ivImage = findViewById(R.id.ivImage);
+        tvElePrecent = findViewById(R.id.tvElePrecent);
 
         findViewById(R.id.rlBagSmall).setOnClickListener(this);
         findViewById(R.id.rlBagMiddle).setOnClickListener(this);
@@ -190,9 +191,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
 
-    /**
-     * 小计金额的变动
-     */
   /*  private void grandMoney() {
         tvgrandTotal.addTextChangedListener(new TextWatcher() {
 
@@ -216,13 +214,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                         grandTotalMoneyOld = grandTotalMoneyNew;
                         String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
                         orderBeanTemp.setPrice(price);
-//                    selectedGoods.setPrice(price);
+//                    selectedHotGood.setPrice(price);
                         String weight = weightTopTv.getText().toString();
                         orderBeanTemp.setWeight(weight);
                         orderBeanTemp.setMoney(grandTotal);
-                        orderBeanTemp.setItemno(String.valueOf(selectedGoods.getCid()));
+                        orderBeanTemp.setItemno(String.valueOf(selectedHotGood.getCid()));
                         orderBeanTemp.setName(tvGoodsName.getText().toString());
-                        orderBeanTemp.setTraceno(selectedGoods.getBatchCode());
+                        orderBeanTemp.setTraceno(selectedHotGood.getBatchCode());
                     }
                 } else {//传输订单
                     grandTotalMoneyOld = 0.00f;
@@ -239,6 +237,8 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
      * 是否已经发送了订单
      */
     private boolean isSendOrder = false;
+    private UserInfoDao userInfoDao;
+    private UserInfo userInfo;
 
     /**
      * OK 非正常订单,自动上传的订单
@@ -252,44 +252,40 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         if (!ableUpLoad()) {
             return;
         }
-
-        if (Float.valueOf(orderBean.getWeight()) <= 0) {
+        if (Float.valueOf(orderBean.getWeight()) <= 0.005) {
             return;
         }
 
-        sysApplication.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                OrderInfo orderInfo = new OrderInfo();
-                List<OrderBean> orderlist = new ArrayList<>();
-                orderlist.add(orderBean);
-                orderInfo.setOrderItem(orderlist);
-                String billcode = "AN" + userInfo.getTid() + DateUtils.getSampleNo();
-                Date date = new Date();
-                String currentTime = DateUtils.getYY_TO_ss(date);
-                String hourTime = DateUtils.getHH(date);
-                String dayTime = DateUtils.getDD(date);
-                orderInfo.setBillstatus("0");//待支付
+        final OrderInfo orderInfo = new OrderInfo();
+        List<OrderBean> orderlist = new ArrayList<>();
+        orderlist.add(orderBean);
+        orderInfo.setOrderItem(orderlist);
+        String billcode = "AN" + userInfo.getTid() + DateUtils.getSampleNo();
+        Date date = new Date();
+        String currentTime = DateUtils.getYY_TO_ss(date);
+        String hourTime = DateUtils.getHH(date);
+        String dayTime = DateUtils.getDD(date);
+        orderInfo.setBillstatus("0");//待支付
 
-                orderInfo.setSeller(userInfo.getSeller());
-                orderInfo.setSellerid(userInfo.getSellerid());
-                orderInfo.setMarketName(tvmarketName.getText().toString());
-                orderInfo.setTerid(userInfo.getTid());
-                orderInfo.setTotalamount(tvTotalPrice.getText().toString());
-                orderInfo.setTotalweight(tvTotalWeight.getText().toString());
+        orderInfo.setSeller(userInfo.getSeller());
+        orderInfo.setSellerid(userInfo.getSellerid());
+        orderInfo.setMarketName(tvmarketName.getText().toString());
+        orderInfo.setTerid(userInfo.getTid());
+        orderInfo.setTotalamount(tvgrandTotal.getText().toString());
+        orderInfo.setTotalweight(weightTopTv.getText().toString());
 
-                orderInfo.setMarketid(userInfo.getMarketid());
-                orderInfo.setTime(currentTime);
-                orderInfo.setTimestamp(Timestamp.valueOf(currentTime));
-                orderInfo.setHour(Integer.valueOf(hourTime));
-                orderInfo.setDay(Integer.valueOf(dayTime));
-                orderInfo.setSettlemethod(0);
-                orderInfo.setBillcode(billcode);
-                orderInfo.setStallNo(tvNumber.getText().toString());
-                presenter.send2AxeWebOrderInfo(orderInfo);
-            }
-        });
+        orderInfo.setMarketid(userInfo.getMarketid());
+        orderInfo.setTime(currentTime);
+        orderInfo.setTimestamp(Timestamp.valueOf(currentTime));
+        orderInfo.setHour(Integer.valueOf(hourTime));
+        orderInfo.setDay(Integer.valueOf(dayTime));
+        orderInfo.setSettlemethod(0);
+        orderInfo.setBillcode(billcode);
+        orderInfo.setStallNo(tvNumber.getText().toString());
+        presenter.send2AxeWebOrderInfo(orderInfo);
+        presenter.send2FpmsWebOrderInfo(orderInfo);
     }
+
 
     /**
      * OK 初始化 版本
@@ -323,30 +319,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         ApkUtils.checkRemoteVersion(marketId, sysApplication, handler);
     }
 
-    private UserInfoDao userInfoDao;
-    private UserInfo userInfo;
-
-
-    //TODO 使用MVP模式后屏蔽了
-    private boolean initUserInfo(Context context) {
-        if (userInfo == null) {
-            MyToast.toastLong(context, "未读取到用户基本信息!关闭软件");
-//            ActivityController.finishAll();
-            Intent intent = new Intent(context, HomeActivity.class);
-            //放在startActivity前后无关，生命周期实质一样
-            this.finish();
-            startActivity(intent);
-            return false;
-        } else {
-            MyPreferenceUtils.getSp(context).edit().putInt("shellerid", userInfo.getSellerid()).apply();
-            return true;
-        }
-    }
-
     /**
      * 上下文。使用上下文
      */
-    DecimalFormat decimalFormat = new DecimalFormat("0.000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+    final DecimalFormat decimalFormat = new DecimalFormat("0.000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
 
     /**
      * 控制器
@@ -372,29 +348,24 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             initView();
             //初始化背景色
             setBackground();
-            //注销注册
-            EventBus.getDefault().register(this);
             //显示菜单信息 及对应的批次号
             presenter.getData(NOTIFY_GOODS_DATA_CHANGE);
-
-            //获取批次号信息
-            presenter.requestWebTraceNo(userInfo.getSellerid());
         }
+
+        //注销注册
+        EventBus.getDefault().register(this);
+
+        //观察者注册,订阅消息  ，不需要主动取消订阅
+        LiveEventBus.get()
+                .with(EVENT_BUS_COMMON, String.class)
+                .observe(MainActivity.this, new Observer<String>() {
+                    @Override
+                    public void onChanged(@Nullable String s) {
+                        onLiveEvent(s);
+                    }
+                });
     }
 
-    //接收广播信息，已注册*
-    @Override
-    protected void onBroadCastReceive(Context context, Intent intent) {
-        if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            int netWorkState = NetUtil.getNetWorkState(context);
-            if (netWorkState >= 0) {// 0 用流量  ，1  wifi
-                if (orderInfoDao == null) {
-                    orderInfoDao = new OrderInfoDao(getApplication());
-                }
-                HttpHelper.getmInstants(sysApplication).updateDataEx(orderInfoDao);
-            }
-        }
-    }
 
     private boolean isInit = false;//是否初始化
 
@@ -402,29 +373,20 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     protected void onStart() {
         super.onStart();
         if (!isInit) {
-
             //初始化 键盘 设置
             initDigital();
             initHeartBeat();
-
             checkVersion(userInfo.getMarketid());//检查版本更新
+//            HttpHelper.getmInstants(sysApplication).onCheckVersion(this, userInfo.getMarketid(), 777);
+
             initSecondScreen();
             askOrderState();
             initDate();
-
             orderInfoDao = new OrderInfoDao(context);
             orderBeanDao = new OrderBeanDao(context);
-
             judegIsLock();
             isInit = true;
 
-            //更新图片
-            sysApplication.getThreadPool().execute(new Runnable() {
-                @Override
-                public void run() {
-                    questImage(MainActivity.this);
-                }
-            });
             //进行计量院登记信息记录
             sysApplication.getThreadPool().execute(new Runnable() {
                 @Override
@@ -440,34 +402,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 }
             });
         }
-
-
     }
-
-    /**
-     * 请求图片更新
-     */
-    private void questImage(VolleyStringListener listener) {
-        UserInfo userInfo = sysApplication.getUserInfo();
-        if (userInfo == null) {
-            return;
-        }
-        int shellerid = sysApplication.getUserInfo().getSellerid();
-        if (shellerid == 0) {
-            return;
-        }
-        if (shellerid > 0) {
-            HttpHelper.getmInstants(sysApplication).httpQuestImageEx(listener, shellerid, 11);
-        }
-    }
-
 
     private void initDate() {
         TextView date = findViewById(R.id.date);
         DateTimeUtil dateTimeUtil = DateTimeUtil.getInstance();
         date.setText(dateTimeUtil.getCurrentDate());//显示年月日
     }
-
 
     /**
      * 是否锁定
@@ -482,14 +423,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     @Override
     public void sendHanderEmptyMessage(int what) {
-        switch (what) {
-            case NOTIFY_GOODS_DATA_CHANGE:
-                handler.sendEmptyMessage(NOTIFY_GOODS_DATA_CHANGE);
-                break;
+        if (NOTIFY_GOODS_DATA_CHANGE == what) {
+            handler.sendEmptyMessage(NOTIFY_GOODS_DATA_CHANGE);
         }
-
     }
-
 
     /**
      * 更新用户信息控件
@@ -572,13 +509,11 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             public boolean handleMessage(final Message msg) {
                 int what = msg.what;
                 switch (what) {
-
                     case WEIGHT_NOTIFY_XS8:
 //                        try {
 //                            String data = (String) msg.obj;
 //                            String[] array = data.split(" ");
 //                            if (array.length >= 10 && array[0].length() == 7 && array[1].length() == 7 && array[2].length() == 7 && array[3].length() == 7) {
-//                                MyLog.logTest("Main  获取的称重数据" + array[2]);
 //                                currentAd = array[0];
 //                                zeroAd = array[1];
 //                                currentWeight = array[2];
@@ -599,23 +534,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //                            break;
 //                        }
                         break;
-                    case WEIGHT_NOTIFY_XS15:
-//                        String weightString = (String) msg.obj;
-//                        weight = weightString.substring(15, 23).replace(" ", "");
-//                        dealWeight(weight, null);
+                    case NOTIFY_GOODS_DATA_CHANGE:
+                        goodMenuAdapter.setDatas(presenter.getHotGoodList());
                         break;
 
-                    case NOTIFY_GOODS_DATA_CHANGE:
-                        goodMenuAdapter.setDatas(presenter.getGoodsList());
-                        break;
-                    case NOTIFY_AD_SECOND:// 副屏刷新
-                        if (sysApplication.getTestMode() > 0) {
-                            SecondScreen secondScreen = sysApplication.getBanner();
-                            if (secondScreen != null) {
-                                sysApplication.getBanner().initData();
-                            }
-                        }
-                        break;
                     case NOTIFY_EPAY_SUCCESS:
                         MyLog.blue("支付测试   微信支付");
                         String message = msg.obj.toString();
@@ -671,36 +593,30 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         });
     }
 
-    private void dealWeight(int weight, int isNegativeFlag) {
+    @SuppressLint("SetTextI18n")
+    private void dealWeight(float weightFloat, int isNegativeFlag) {
         boolean isNegative;
-        if (isNegativeFlag == 0) {
-            isNegative = false;
-        } else {
-            isNegative = true;
-        }
+        isNegative = isNegativeFlag != 0;
 
         try {
-            float weightFloat = (float) weight / 1000;
-//            if (oldFloat == weightFloat) {//前后一样就不在刷新控件
-//                return;
-//            }
-
             if (weightFloat == 0.000f) {
-//                              etPrice.getText().clear();
                 weightTopTv.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
                 tvKg.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
             } else {
                 weightTopTv.setTextColor(context.getResources().getColor(R.color.white));
                 tvKg.setTextColor(context.getResources().getColor(R.color.white));
             }
-
             if (weightFloat <= 0) {
-//                if (oldFloat > weightFloat) {
-                Selection.selectAll(etPrice.getText());
-                isEdSelect = true;
-//                }
+                if (oldFloat > weightFloat) {
+                    etPrice.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
+                    Selection.selectAll(etPrice.getText());
+                    isEdSelect = true;
+                } else {
+                    if (!isEdSelect) {
+                        etPrice.setTextColor(context.getResources().getColor(R.color.black));
+                    }
+                }
             }
-
             String weight2 = decimalFormat.format(weightFloat * 2);//format 返回的是字符串
             if (isNegative) {
                 weightTv.setText("-" + decimalFormat.format(weightFloat));
@@ -711,9 +627,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 weightTopTv.setText(decimalFormat.format(weightFloat));
                 tvCatty.setText(weight2);
             }
-            setGrandTotalTxt();
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            MyLog.logTest("异常称重数据异常");
         }
     }
 
@@ -761,41 +677,65 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     /**
+     * 数字按键操作
+     */
+    private DigitalAdapter digitalAdapter;
+
+    /**
      * 初始化键盘
      */
     private void initDigital() {
-        final DigitalAdapter digitalAdapter = new DigitalAdapter(this, null);
+        digitalAdapter = new DigitalAdapter(this, null);
         digitalGridView.setAdapter(digitalAdapter);
         digitalGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (selectedGoods == null) {
-                    return;
-                }
-                if (isEdSelect) {
-                    etPrice.getText().clear();
-                    isEdSelect = false;
-                }
-                String text = digitalAdapter.getItem(position);
-                String price = etPrice.getText().toString();
-                if ("删除".equals(text)) {
-                    if (price.length() > 0) {
-                        String priceNew = price.substring(0, price.length() - 1);
-                        etPrice.setText(priceNew);
-                    }
-                } else {
-                    if (".".equals(text)) {
-                        if (!price.contains(".")) {
-                            String priceNew = price + text;
-                            etPrice.setText(priceNew);
-                        }
-                    } else {
-                        String priceNew = price + text;
-                        etPrice.setText(priceNew);
-                    }
-                }
+                pressDigital(position);
+
             }
         });
+    }
+
+    /**
+     * 价格按键被点击过，即价格变换了
+     */
+    private boolean keyHadPressed;
+
+    /**
+     * 按键操作
+     */
+    @Override
+    public void pressDigital(int position) {
+        if (selectedHotGood == null) {
+            return;
+        }
+        keyHadPressed = true;
+        long currentTime = System.currentTimeMillis();
+        orderBeanTemp.setTime1(currentTime);
+        if (isEdSelect) {
+            etPrice.getText().clear();
+            isEdSelect = false;
+        }
+        String text = digitalAdapter.getItem(position);
+        String price = etPrice.getText().toString();
+        if ("删除".equals(text)) {
+            if (price.length() > 0) {
+                String priceNew = price.substring(0, price.length() - 1);
+                etPrice.setText(priceNew);
+            }
+        } else {
+            if (".".equals(text)) {
+                if (!price.contains(".")) {
+                    String priceNew = price + text;
+                    etPrice.setText(priceNew);
+                }
+            } else {
+                String priceNew = price + text;
+                etPrice.setText(priceNew);
+            }
+        }
+
+
     }
 
     /**
@@ -804,30 +744,40 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     public void initView() {
         //初始化结算列表
         initSettlement();
-        // 初始化菜单按钮
-        gvGoodMenu = findViewById(R.id.gvGoodMenu);
+
         goodMenuAdapter = new GoodMenuAdapter(this);
         gvGoodMenu.setAdapter(goodMenuAdapter);
         gvGoodMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @SuppressLint("DefaultLocale")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedGoods = goodMenuAdapter.getItem(position);
-                tvGoodsName.setText(selectedGoods.getName());
-                etPrice.setText("");
-                etPrice.setHint(selectedGoods.getPrice());
-
-                //切换了商品，计算重量从0开始
-                orderBeanTemp.setWeight(null);
-                BigDecimal bigPrice = new BigDecimal(selectedGoods.getPrice());
-                BigDecimal bigWeight = new BigDecimal(weightTopTv.getText().toString());
-                bigPrice = bigPrice.multiply(bigWeight).setScale(2, BigDecimal.ROUND_HALF_UP);
-                tvgrandTotal.setText(bigPrice.toPlainString());
-
-                goodMenuAdapter.setCheckedAtPosition(position);
-                goodMenuAdapter.notifyDataSetChanged();
+                selectOrderBean(position);
             }
         });
+    }
+
+    /**
+     * 进行菜单选择操作
+     *
+     * @param position 菜单索引
+     */
+    @Override
+    public void selectOrderBean(int position) {
+        selectedHotGood = goodMenuAdapter.getItem(position);
+        tvGoodsName.setText(selectedHotGood.getName());
+        etPrice.setText("");
+        etPrice.setHint(selectedHotGood.getPrice());
+
+        //切换了商品，计算重量从0开始
+        orderBeanTemp.setWeight(null);
+        orderBeanTemp.setName(selectedHotGood.getName());
+        BigDecimal bigPrice = new BigDecimal(selectedHotGood.getPrice());
+        BigDecimal bigWeight = new BigDecimal(weightTopTv.getText().toString());
+        bigPrice = bigPrice.multiply(bigWeight).setScale(2, BigDecimal.ROUND_HALF_UP);
+        tvgrandTotal.setText(bigPrice.toPlainString());
+
+        goodMenuAdapter.setCheckedAtPosition(position);
+        goodMenuAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -870,140 +820,268 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     /**
-     * 自动发送订单
+     * 自动发送订单，上传规则 大于5毛  ，大于50g才上传数据
      */
-    private void autoSendOrder(float weightFloat) {
-        if (weightFloat < 0.005) {
-            isSendOrder = false;
-        }
-        /*   自动上传非正常订单   Start *******************************************************/
-        if (!isSendOrder) { //可以上传订单
-            long currentTime = System.currentTimeMillis();
-            float weightFloatOld = Float.parseFloat(orderBeanTemp.getWeight());
-            if (Math.abs(weightFloat - weightFloatOld) < 0.010) {//稳定的
-                if (currentTime - orderBeanTemp.getTime1() >= 1000) {
-                    if (Float.valueOf(orderBeanTemp.getWeight()) > 0) {
-                        //上传非正常订单
-                        if (!TextUtils.isEmpty(tvGoodsName.getText().toString())) {
-                            String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
-                            if (TextUtils.isEmpty(price)) {
-                                price = "0.00";
-                            }
-                            float priceF = Float.valueOf(price);
-                            if (priceF < 0.0009) {//金额太小,将不自动上传数据
-                                return;
-                            }
-                            orderBeanTemp.setPrice(price);
-                            String weight2 = weightTopTv.getText().toString();
-                            tvTotalWeight.setText(weight2);
-                            orderBeanTemp.setWeight(weight2);
-                            orderBeanTemp.setX0(zeroAd + "");
-                            orderBeanTemp.setX1(sbZeroAd + "");
-                            orderBeanTemp.setX2(tareWeight + "");
-                            orderBeanTemp.setWeight0(sbAd + "");
-                            orderBeanTemp.setXcur(currentAd + "");
-                            orderBeanTemp.setK(kValue + "");
-
-                            String grandTotal2 = tvgrandTotal.getText().toString();
-                            tvTotalPrice.setText(grandTotal2);
-                            orderBeanTemp.setMoney(grandTotal2);
-                            orderBeanTemp.setTraceno(selectedGoods.getBatchCode());
-                            orderBeanTemp.setItemno(String.valueOf(selectedGoods.getCid()));
-                            orderBeanTemp.setName(tvGoodsName.getText().toString());
-
-                            OrderBean orderBean = orderBeanTemp.clone();
-                            sendOrder2AxeWeb(orderBean);
-                            isSendOrder = true;//锁定不让上传订单
-                            orderBeanTemp.setTime1(currentTime);
-                        }
-                    }
+    private void autoSendOrder(long currentTime) {
+        if (!isSendOrder) {
+            if (orderBeanTemp.getTime2() - orderBeanTemp.getTime1() >= 1000) {
+                if (Float.valueOf(orderBeanTemp.getWeight()) <= 0) {
+                    return;
                 }
-            } else {
-                orderBeanTemp.setTime1(currentTime);
+                //上传非正常订单
+                if (TextUtils.isEmpty(tvGoodsName.getText().toString())) {
+                    return;
+                }
+                String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
+                if (TextUtils.isEmpty(price)) {
+                    return;
+                }
+                float priceF = Float.valueOf(price);
+                if (priceF < 0.20) {//金额太小,将不自动上传数据
+                    return;
+                }
+                sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+                sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+                kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
+
+                orderBeanTemp.setPrice(price);
                 String weight2 = weightTopTv.getText().toString();
-                orderBeanTemp.setWeight(weight2);
+//                tvTotalWeight.setText(weight2);
+                orderBeanTemp.setWeight(orderBeanTemp.getWeight());
+                orderBeanTemp.setX0(zeroAd + "");
+                orderBeanTemp.setX1(sbZeroAd + "");
+                orderBeanTemp.setX2(tareWeight + "");
+                orderBeanTemp.setWeight0(sbAd + "");
+                orderBeanTemp.setXcur(currentAd + "");
+                orderBeanTemp.setK(kValue + "");
+
+                String grandTotal2 = tvgrandTotal.getText().toString();
+//                tvTotalPrice.setText(grandTotal2);
+                orderBeanTemp.setMoney(grandTotal2);
+                orderBeanTemp.setTraceno(selectedHotGood.getBatchCode());
+                orderBeanTemp.setItemno(String.valueOf(selectedHotGood.getCid()));
+                orderBeanTemp.setName(tvGoodsName.getText().toString());
+                OrderBean orderBean = orderBeanTemp.clone();
+                isSendOrder = true;//锁定不让上传订单
+
+                orderBeanTemp.setTime1(currentTime);
+                sendOrder2AxeWeb(orderBean);
+
+            }
+        }
+
+//        /*   自动上传非正常订单   Start *******************************************************/
+//        //可以上传订单
+//        if (!isSendOrder) {
+//            long currentTime = System.currentTimeMillis();
+//            float weightFloatOld = Float.parseFloat(orderBeanTemp.getWeight());
+//            //稳定的
+//            if (Math.abs(weightFloat - weightFloatOld) < 0.005) {
+//                if (currentTime - orderBeanTemp.getTime1() >= 1000) {
+//                    if (Float.valueOf(orderBeanTemp.getWeight()) <= 0) {
+//                        return;
+//                    }
+//                    //上传非正常订单
+//                    if (TextUtils.isEmpty(tvGoodsName.getText().toString())) {
+//                        return;
+//                    }
+//                    String price = TextUtils.isEmpty(etPrice.getText().toString()) ? etPrice.getHint().toString() : etPrice.getText().toString();
+//                    if (TextUtils.isEmpty(price)) {
+////                                price = "0.00";
+//                        return;
+//                    }
+//                    float priceF = Float.valueOf(price);
+//                    if (priceF < 0.01) {//金额太小,将不自动上传数据
+//                        return;
+//                    }
+//                    sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+//                    sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+//                    kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
+//
+//                    orderBeanTemp.setPrice(price);
+//                    String weight2 = weightTopTv.getText().toString();
+//                    tvTotalWeight.setText(weight2);
+//                    orderBeanTemp.setWeight(weight2);
+//                    orderBeanTemp.setX0(zeroAd + "");
+//                    orderBeanTemp.setX1(sbZeroAd + "");
+//                    orderBeanTemp.setX2(tareWeight + "");
+//                    orderBeanTemp.setWeight0(sbAd + "");
+//                    orderBeanTemp.setXcur(currentAd + "");
+//                    orderBeanTemp.setK(kValue + "");
+//
+//                    String grandTotal2 = tvgrandTotal.getText().toString();
+//                    tvTotalPrice.setText(grandTotal2);
+//                    orderBeanTemp.setMoney(grandTotal2);
+//                    orderBeanTemp.setTraceno(selectedHotGood.getBatchCode());
+//                    orderBeanTemp.setItemno(String.valueOf(selectedHotGood.getCid()));
+//                    orderBeanTemp.setName(tvGoodsName.getText().toString());
+//
+//                    OrderBean orderBean = orderBeanTemp.clone();
+//                    MyLog.blue("上传一次数据");
+//                    sendOrder2AxeWeb(orderBean);
+//
+//
+//                    isSendOrder = true;//锁定不让上传订单
+//                    orderBeanTemp.setTime1(currentTime);
+//                }
+//            } else {
+//                orderBeanTemp.setTime1(currentTime);
+//                String weight2 = weightTopTv.getText().toString();
+//                orderBeanTemp.setWeight(weight2);
+//            }
+//        }
+    }
+
+
+    /**
+     * 进行LiveDataBus事件处理
+     *
+     * @param type 事件类型
+     */
+    private void onLiveEvent(String type) {
+        if (EVENT_NET_WORK_AVAILABLE.equals(type)) {
+            if (NetWorkJudge.isNetworkAvailable(context)) {// 0 用流量  ，1  wifi
+                MyLog.i("44447777", "网络变好了可以使用");
+                if (orderInfoDao == null) {
+                    orderInfoDao = new OrderInfoDao(context.getApplicationContext());
+                }
+                HttpHelper.getmInstants(sysApplication).updateDataEx(orderInfoDao);
             }
         }
     }
 
+    /**
+     * @param event 事件
+     */
     //定义处理接收的方法
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(BaseBusEvent event) {
-        String array[];
+        String[] array;
+        float weightFloat;
+        String weight2;
+        long currentTime;
+//        float weightFloatOld;
         switch (event.getEventType()) {
-            case BaseBusEvent.MARKET_NOTICE:
+            case MARKET_NOTICE:
                 AdResultBean.DataBean dataBean = (AdResultBean.DataBean) event.getOther();
                 CustomAlertDialog alertDialog = new CustomAlertDialog(context, dataBean);
                 alertDialog.show();
                 break;
-            case BaseBusEvent.BACKGROUND_CHANGE://背景色改变
+            case BACKGROUND_CHANGE://背景色改变
                 setBackground();
                 break;
-            case BaseBusEvent.NOTIFY_WEIGHT_ST://称重数据变化
+            case NOTIFY_AD_SECOND:// 副屏刷新广告图
+                if (!BaseBuglyApplication.DEBUG_MODE) {
+                    SecondScreen secondScreen = sysApplication.getBanner();
+                    if (secondScreen != null) {
+                        sysApplication.getBanner().initData();
+                    }
+                }
+                break;
+            case WEIGHT_ST://称重数据变化
                 String weight = (String) event.getOther();
-                try {
-                    float weightFloat = Float.parseFloat(weight);
-                    if (weightFloat == 0.000f) {
-//                              etPrice.getText().clear();
-                        weightTopTv.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
-                        tvKg.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
-                    } else {
-                        weightTopTv.setTextColor(context.getResources().getColor(R.color.white));
-                        tvKg.setTextColor(context.getResources().getColor(R.color.white));
-                    }
+                weightFloat = Float.parseFloat(weight);
+                oldFloat = Float.parseFloat(orderBeanTemp.getWeight());
 
-                    autoSendOrder(weightFloat);
-
-                    /*   自动上传非正常订单   End *******************************************************/
-
-                    if (oldFloat == weightFloat) {//前后一样就不在刷新控件
-                        break;
-                    }
-
-                    if (weightFloat <= 0) {
-                        if (oldFloat > weightFloat) {
-                            Selection.selectAll(etPrice.getText());
-                            isEdSelect = true;
-                        }
-                    }
-
-                    oldFloat = weightFloat;
-                    String weight2 = decimalFormat.format(weightFloat * 2);//format 返回的是字符串
-                    weightTv.setText(decimalFormat.format(weightFloat));
-                    weightTopTv.setText(decimalFormat.format(weightFloat));
-                    tvCatty.setText(weight2);
-                    setGrandTotalTxt();
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+                dealWeight(weightFloat, 0);
+                if (weightFloat < 0.005) {
+                    isSendOrder = false;
                 }
+                currentTime = System.currentTimeMillis();
+                //稳定的
+                if (Math.abs(weightFloat - oldFloat) < 0.005) {
+                    orderBeanTemp.setTime2(currentTime);
+                } else {
+                    orderBeanTemp.setTime1(currentTime);
+                }
+                weight2 = weightTopTv.getText().toString();
+                orderBeanTemp.setWeight(weight2);
+                setGrandTotalTxt();
+                if (weightFloat > 0.05) {
+                    autoSendOrder(currentTime);
+                }
+
+                /*   自动上传非正常订单   End *******************************************************/
                 break;
-            case BaseBusEvent.NOTIFY_WEIGHT_SX15:// 重量
+            case WEIGHT_SX15:// 重量
                 array = event.getOther().toString().split(" ");
-                if (array.length >= 10 && array[0].length() == 7 && array[1].length() == 7 && array[2].length() == 7 && array[3].length() == 7) {
-                    MyLog.logTest("Main  获取的称重数据" + array[2]);
+                if (array.length >= 6 && array[1].length() == 7
+                        && array[2].length() == 7 && array[3].length() == 7
+                        && array[4].length() == 7 && array[5].length() == 7) {
+                    MyLog.logTest("Main15 获取的称重数据" + array[3]);
 
-                    currentAd = Integer.parseInt(array[0]);
-                    zeroAd = Integer.parseInt(array[1]);
-                    currentWeight = Integer.parseInt(array[2]);
-                    tareWeight = Integer.parseInt(array[3]);
-                    cheatSign = Integer.parseInt(array[4]);
-                    isNegative = Integer.parseInt(array[5]);
-                    isOver = Integer.parseInt(array[6]);
-                    isZero = Integer.parseInt(array[7]);
-                    isPeeled = Integer.parseInt(array[8]);
-                    isStable = Integer.parseInt(array[9]);
+                    currentAd = Integer.parseInt(array[1]);
+                    zeroAd = Integer.parseInt(array[2]);
+                    currentWeight = Integer.parseInt(array[3]);
+                    tareWeight = Integer.parseInt(array[4]);
+                    cheatSign = array[5].charAt(0) - 48;
+                    isNegative = array[5].charAt(1) - 48;
+                    isOver = array[5].charAt(2) - 48;
+                    isZero = array[5].charAt(3) - 48;
+                    isPeeled = array[5].charAt(4) - 48;
+                    isStable = array[5].charAt(5) - 48;
 
-                    dealWeight(currentWeight, isNegative);
-                    float weightFloat = (float) currentWeight / 1000;
-                    //自动发送订单
-                    autoSendOrder(weightFloat);
+                    weightFloat = (float) currentWeight / 1000;
+                    dealWeight(weightFloat, isNegative);
+                    if (0.005 > weightFloat) {
+                        isSendOrder = false;
+                    }
+
+                    currentTime = System.currentTimeMillis();
+                    oldFloat = Float.parseFloat(orderBeanTemp.getWeight());
+                    //稳定的
+                    if (Math.abs(weightFloat - oldFloat) < 0.005) {
+                        orderBeanTemp.setTime2(currentTime);
+                    } else {
+                        orderBeanTemp.setTime1(currentTime);
+                    }
+                    weight2 = weightTopTv.getText().toString();
+                    orderBeanTemp.setWeight(weight2);
+
+                    setGrandTotalTxt();
+
+                    if (currentWeight > 50) {
+                        autoSendOrder(currentTime);
+                    }
                 }
-
                 break;
-            case BaseBusEvent.NOTIFY_HOT_GOOD_CHANGE:
+            case WEIGHT_ELECTRIC:
+                array = event.getOther().toString().split(" ");
+                if (array.length >= 3 && array[1].length() == 4 && array[2].length() == 2) {
+                    float eleData = Float.valueOf(array[1]);
+                    if (eleData < 1130) {
+                        eleData = 1130f;
+                    }
+                    int precent = (int) ((eleData - PowerConsumptionRankingsBatteryView.MinEleve) * PowerConsumptionRankingsBatteryView.ConstantEleve);
+//                    int precent = electric / 100;
+                    int electricState = array[2].charAt(0) - 48;
+                    if (electricState == 0) {//无充电
+                        if (precent <= 20) {
+                            ivImage.setImageResource(R.mipmap.ele1);
+                            MyToast.showError(context, "电量不足,请及时接通电源！");
+                        } else if (precent <= 50) {
+                            ivImage.setImageResource(R.mipmap.ele2);
+                        } else if (precent <= 80) {
+                            ivImage.setImageResource(R.mipmap.ele3);
+                        } else {
+                            ivImage.setImageResource(R.mipmap.ele4);
+                        }
+                    } else if (electricState == 1) {//充电状态
+                        ivImage.setImageResource(R.mipmap.ele0);
+                    }
+                    if (precent < 0) {
+                        precent = 0;
+                    } else {
+                        precent = 100;
+                    }
+                    tvElePrecent.setText(precent + "%");
+                }
+                break;
+            case NOTIFY_HOT_GOOD_CHANGE:
                 presenter.getData(NOTIFY_GOODS_DATA_CHANGE);
                 break;
-            case BaseBusEvent.NOTIFY_USERINFO://用户信息更改过
+            case NOTIFY_USERINFO://用户信息更改过
                 userInfo = sysApplication.getUserInfo();
                 notifyUserInfoView();
                 break;
@@ -1012,16 +1090,20 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         }
     }
 
+    /**
+     * 检验合格
+     */
     @Override
     protected void onDestroy() {
         if (sysApplication.getMyBaseWeighter() != null) {
             sysApplication.getMyBaseWeighter().closeSerialPort();
         }
+        if (sysApplication.getPrint() != null) {
+            sysApplication.getPrint().closeSerialPort();
+        }
         isAskOrdering = false;
         if (banner != null) {
-            if (banner.isShowing()) {
-                banner.dismiss();
-            }
+            banner.dismiss();
             banner = null;
         }
         super.onDestroy();
@@ -1043,9 +1125,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                 Intent intent = new Intent(this, SettingsActivity.class);
                 intent.putExtra(STRING_TYPE, 1);
                 startActivityForResult(intent, 1111);
-            } else if (requestCode == 1111) {
+            } else if (requestCode == 1111) {// 数据改变了
+
                 boolean isDataChange = data.getBooleanExtra("isDataChange", false); //将计算的值回传回去
-                boolean isLocalChange = data.getBooleanExtra("isLocalChange", false); //将计算的值回传回去
                 if (isDataChange) {// 设置改变了
                     if (userInfoDao == null) {
                         userInfoDao = new UserInfoDao(context);
@@ -1062,23 +1144,19 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_cash_btn:
-//                if (orderBeans.size() == 0) {
-//                    AddDirectlyOrder();
-//                } else if (orderBeans.size() == 1) {
-//                    OrderBean orderBean = orderBeans.get(0);
-//                    if (DEFAULT_BAG_ITEM_NO.equalsIgnoreCase(orderBean.getItemno())) {
-//                        AddDirectlyOrder();
-//                    }
-//                }
                 if (isCanAdd) {
                     AddDirectlyOrder();
                 }
                 payCashDirect(0);
                 break;
             case R.id.main_scan_pay:
-                if (!NetWorkJudge.checkedNetWork(context)) {
+                if (NetWorkJudge.isNetWorkError(context)) {
                     ToastUtils.showToast(this, "使用第三方支付需要连接网络！");
-                    break;
+                } else {
+                    if (isCanAdd) {
+                        AddDirectlyOrder();
+                    }
+                    payCashDirect(1);
                 }
 
 //                if (orderBeans.size() == 0) {
@@ -1089,21 +1167,17 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 //                        AddDirectlyOrder();
 //                    }
 //                }
-                if (isCanAdd) {
-                    AddDirectlyOrder();
-                }
 
-                payCashDirect(1);
                 break;
             case R.id.main_settings_btn:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivityForResult(intent, 1111);
                 break;
             case R.id.main_clear_btn:
-                clear(0, false);
+                clear(0);
                 break;
             case R.id.btnClearn:
-                clear(1, false);
+                clear(1);
                 break;
             case R.id.btnAdd:
                 accumulative();
@@ -1127,7 +1201,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
      * 直接添加商品
      */
     private void AddDirectlyOrder() {
-        if (selectedGoods == null) {
+        if (selectedHotGood == null) {
             return;
         }
         if (TextUtils.isEmpty(etPrice.getText()) && TextUtils.isEmpty(etPrice.getHint())) {
@@ -1143,11 +1217,15 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             price = "0.00";
         }
         orderBean2.setPrice(price);
-        selectedGoods.setPrice(price);
+        selectedHotGood.setPrice(price);
         if (hotGoodsDao == null) {
             hotGoodsDao = new HotGoodsDao(context);
         }
-        hotGoodsDao.update(selectedGoods);
+        hotGoodsDao.update(selectedHotGood);
+
+        sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+        sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+        kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
 
         String weight2 = weightTopTv.getText().toString();
         tvTotalWeight.setText(weight2);
@@ -1163,27 +1241,21 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         String grandTotal2 = tvgrandTotal.getText().toString();
         tvTotalPrice.setText(grandTotal2);
         orderBean2.setMoney(grandTotal2);
-        orderBean2.setTraceno(selectedGoods.getBatchCode());
+        orderBean2.setTraceno(selectedHotGood.getBatchCode());
 
-        orderBean2.setItemno(String.valueOf(selectedGoods.getCid()));
+        orderBean2.setItemno(String.valueOf(selectedHotGood.getCid()));
         orderBean2.setName(tvGoodsName.getText().toString());
         if (!TextUtils.isEmpty(tvGoodsName.getText().toString())) {
             orderBeans.add(orderBean2);
         }
     }
 
-    private void appendCurrentGood() {
-        if (orderBeans.size() == 0)
-            accumulative();
-    }
-
-
     /**
      * 累计 菜品价格
      */
     private void accumulative() {
 
-        if (selectedGoods == null) {
+        if (selectedHotGood == null) {
             return;
         }
         if (TextUtils.isEmpty(etPrice.getText()) && TextUtils.isEmpty(etPrice.getHint())) {
@@ -1202,17 +1274,21 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             price = "0.00";
         }
         orderBean.setPrice(price);
-        selectedGoods.setPrice(price);
+        selectedHotGood.setPrice(price);
         if (hotGoodsDao == null) {
             hotGoodsDao = new HotGoodsDao(context);
         }
-        hotGoodsDao.update(selectedGoods);
+        hotGoodsDao.update(selectedHotGood);
 
         String weight = weightTopTv.getText().toString();
         orderBean.setWeight(weight);
 
         String grandTotal = tvgrandTotal.getText().toString();
         orderBean.setMoney(grandTotal);
+
+        sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+        sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+        kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
 
         orderBean.setX0(zeroAd + "");
         orderBean.setX1(sbZeroAd + "");
@@ -1221,9 +1297,9 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         orderBean.setXcur(currentAd + "");
         orderBean.setK(kValue + "");
 
-        orderBean.setItemno(String.valueOf(selectedGoods.getCid()));
+        orderBean.setItemno(String.valueOf(selectedHotGood.getCid()));
         orderBean.setName(tvGoodsName.getText().toString());
-        orderBean.setTraceno(selectedGoods.getBatchCode());
+        orderBean.setTraceno(selectedHotGood.getBatchCode());
 
         isCanAdd = false;
         orderBeans.add(orderBean);
@@ -1271,6 +1347,10 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             orderBean.setWeight("1");
             orderBean.setMoney(String.valueOf(price));
 
+            sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
+            sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
+            kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, null);
+
             orderBean.setX0(zeroAd + "");
             orderBean.setX1(sbZeroAd + "");
             orderBean.setX2(tareWeight + "");
@@ -1309,11 +1389,11 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     @SuppressLint("SetTextI18n")
-    public void clear(int type, boolean b) {
+    public void clear(int type) {
         if (type == 0) {
             //置零
             if (oldFloat <= 1.2f) {
-                sysApplication.getMyBaseWeighter().resetBalance();
+                sysApplication.getMyBaseWeighter().sendZer();
             }
         }
         if (type == 1) {
@@ -1330,12 +1410,12 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
             orderAdapter = new OrderAdapter(this, orderBeans);
             commoditysListView.setAdapter(orderAdapter);
-            selectedGoods = null;
+            selectedHotGood = null;
             goodMenuAdapter.cleanCheckedPosition();
             goodMenuAdapter.notifyDataSetChanged();
         }
         if (type == 3) {
-            selectedGoods = null;
+            selectedHotGood = null;
             tvGoodsName.setText("");
             goodMenuAdapter.cleanCheckedPosition();
             goodMenuAdapter.notifyDataSetChanged();
@@ -1419,8 +1499,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         orderBeanDao.insert(orderlist);
 
         presenter.send2AxeWebOrderInfo(orderInfo);
-        //上传计量院数据
-        presenter.send2FpmsWebOrderInfo(orderInfo);
 
         if (payType == 1) {
             clearnContext(0);
@@ -1429,7 +1507,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
         banner.notifyData(orderInfo);
     }
 
-    private List<OrderInfo> askInfos = new ArrayList<>();
+    private final List<OrderInfo> askInfos = new ArrayList<>();
 
     /**
      * 连接错误
@@ -1439,7 +1517,6 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
      */
     @Override
     public void onResponse(VolleyError volleyError, int flag) {
-
         switch (flag) {
             case 3:
                 MyLog.myInfo("错误" + volleyError.getMessage());
@@ -1450,13 +1527,28 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
             case 5:
                 MyLog.myInfo("错误" + volleyError.getMessage());
                 break;
+            case 777:
+                MyLog.myInfo("更新错误" + volleyError.getMessage());
+                break;
+            case VOLLEY_FLAG_FPMSLOGIN://计量院 登陆接口
+                MyLog.blue("计量院上传数据失败");
+//                if (volleyError != null) {
+//                    volleyError.printStackTrace();
+//                    MyLog.blue(volleyError.getMessage());
+//                }
+                break;
         }
     }
 
+    //    http://fpms.chinaap.com/admin/trade?executor=http&appCode=FPMSWS&data=1338EC0CF5D288B7F5694100704A1978E7E2506C8D7EE17E94FD4BFA7C6AD12EC00EA1F620E91FBD40A3ACB407A2E0D048E0A976CEC4AB9A5656A17BB56A2755007BC3F4E143AD90A4DF50EAFDBF1A13
     @Override
     public void onResponse(final JSONObject jsonObject, final int flag) {
         switch (flag) {
             case 3:
+                MyLog.myInfo("成功" + jsonObject.toString());
+                break;
+            case 777:
+
                 MyLog.myInfo("成功" + jsonObject.toString());
                 break;
             case 4://询问支付状态
@@ -1470,9 +1562,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
                                 for (OrderInfo orderInfo : askInfos) {
                                     if (orderInfo.getBillcode().equals(orderNo)) {
-                                        // TODO
                                         askInfos.remove(orderInfo);
-                                        //TODO 电子订单支付成功
                                         Message message = new Message();
                                         String msg = "支付金额：" + orderInfo.getTotalamount() + "元";
                                         message.what = NOTIFY_EPAY_SUCCESS;// 订单支付成功
@@ -1486,14 +1576,13 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
                     }
                 });
                 break;
-
             case VOLLEY_FLAG_FPMSLOGIN://计量院 登陆接口
                 LoginFpmsInfo resultInfo = JSON.parseObject(jsonObject.toString(), LoginFpmsInfo.class);
                 if (resultInfo != null) {
                     LoginFpmsInfo.ResultBean resultBean = resultInfo.getResult();
                     if (resultBean != null) {
                         if (resultBean.isSuccess()) {//正确获取数据
-                            // 保存参数 
+                            // 保存参数
                             MyPreferenceUtils.getSp(context).edit()
                                     .putString(FPMS_LOGINTIME, resultInfo.getLogintime())
                                     .putString(FPMS_EXPIRETIME, resultInfo.getExpiretime())
@@ -1511,7 +1600,7 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
     }
 
     @Override
-    public void onResponseError(VolleyError volleyError, int flag) {
+    public void onStringResponse(VolleyError volleyError, int flag) {
         MyLog.myInfo("错误" + volleyError);
         switch (flag) {
             case 3:
@@ -1527,23 +1616,18 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     //  返回支付状态
     @Override
-    public void onResponse(String response, int flag) {
+    public void onStringResponse(String response, int flag) {
         try {
-            switch (flag) {
-                case 3:
-                    OrderResultBean resultInfo = JSON.parseObject(response, OrderResultBean.class);
-                    if (resultInfo != null && resultInfo.getStatus() == 0) {
-                        String billstatus = resultInfo.getData().getBillstatus();
-                        String billcode = resultInfo.getData().getBillcode();//交易号
-
-                        if (!TextUtils.isEmpty(billcode)) {
-                            orderInfoDao.update(billcode);
-                        }
+            if (flag == 3) {
+                OrderResultBean resultInfo = JSON.parseObject(response, OrderResultBean.class);
+                if (resultInfo != null && resultInfo.getStatus() == 0) {
+//                        // 交易状态
+//                        String billstatus = resultInfo.getData().getBillstatus();
+                    String billcode = resultInfo.getData().getBillcode();//交易号
+                    if (!TextUtils.isEmpty(billcode)) {
+                        orderInfoDao.update(billcode);
                     }
-                    break;
-                case 11:
-                    new ImageDownThread(response).start();
-                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1605,204 +1689,12 @@ public class MainActivity extends MainBaseActivity implements VolleyListener, Vo
 
     @Override
     public boolean onLongClick(View v) {
-        switch (v.getId()) {
-//            case R.id.btnClearn:
-//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                builder.setMessage("是否删除待支付订单")
-//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                askInfos.clear();
-//                                handler.sendEmptyMessage(NOTIFY_MARQUEE);
-////                                banner.notifyData(askInfos);
-//                            }
-//                        })
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                            }
-//                        });
-//                builder.create().show();
-//                break;
-            case R.id.main_settings_btn://进入系统设置，密码验证界面
-                Intent intent2 = new Intent(context, SystemLoginActivity.class);
-                startActivityForResult(intent2, RC_SYS_SET);
-                break;
+        //进入系统设置，密码验证界面
+        if (v.getId() == R.id.main_settings_btn) {
+            Intent intent2 = new Intent(context, SystemLoginActivity.class);
+            startActivityForResult(intent2, RC_SYS_SET);
         }
         return false;
     }
 
-
-    private Dialog dialog;
-
-    /**
-     * @param context  上下文对象
-     * @param dataBean 数据
-     */
-    private void showAdDialog(Context context, AdResultBean.DataBean dataBean) {
-        if (dialog != null) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
-            dialog = null;
-        }
-        CustomDialog123.Builder builder = new CustomDialog123.Builder(context);
-
-//          .style(R.style.Dialog123)
-        dialog = builder
-                .style(R.style.Dialog123)
-                .heightDimenRes(R.dimen.yy320)
-                .widthDimenRes(R.dimen.xx560)
-                .cancelTouchout(false)
-                .view(R.layout.dialog_admessage)
-                .addViewOnclick(R.id.btnAdSubmit, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                }).build();
-        dialog.show();
-    }
-
-
-    //为了下载图片资源，开辟一个新的子线程
-    private class ImageDownThread extends Thread {
-        private String response;
-
-        ImageDownThread(String response) {
-            this.response = response;
-        }
-
-        public void run() {
-
-            AdUserInfo netImageInfo = JSON.parseObject(response, AdUserInfo.class);
-            if (netImageInfo != null) {
-                if (netImageInfo.getStatus() == 0) {
-                    AdUserBean adUserBean = netImageInfo.getData();
-                    if (adUserBean != null) {
-                        String screenImageState = MyPreferenceUtils.getSp(context).getString(IMAGE_STATE, "default");
-                        assert screenImageState != null;
-                        if (!screenImageState.equals(adUserBean.getStatus())) {
-                            downImage(adUserBean, screenImageState);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void downImage(AdUserBean adUserBean, String screenImageState) {
-            String dir = FileUtils.getDownloadDir(context, FileUtils.DOWNLOAD_DIR);
-            //下载图片的路径
-            FileOutputStream fileOutputStream = null;
-            InputStream inputStream = null;
-            try {
-                String baseUrl = adUserBean.getBaseurl();
-                List<AdImageInfo> imageInfos = new ArrayList<>();
-                String prefix = DateUtils.getSampleNo();
-
-                //2018.12.18 取消证照图片的下载
-//                String licences = adUserBean.getLicence();
-//                boolean issuccess = FileUtils.deleteDir(dir);
-//                if (licences != null) {
-//                    String[] adArray = licences.split(";");
-//                    if (adArray.length > 0) {
-//                        for (int i = 0; i < adArray.length; i++) {
-//                            String netUrl = baseUrl + adArray[i];
-//                            URL url = new URL(netUrl);
-//                            //再一次打开
-//                            inputStream = url.openStream();
-//                            String localPath = dir + prefix + "licence" + i + ".png";
-//                            File file = new File(localPath);
-//                            fileOutputStream = new FileOutputStream(file);
-//                            int hasRead;
-//                            while ((hasRead = inputStream.read()) != -1) {
-//                                fileOutputStream.write(hasRead);
-//                            }
-//                            AdImageInfo AdImageInfo = new AdImageInfo();
-//                            AdImageInfo.setNetPath(netUrl);
-//                            AdImageInfo.setLocalPath(localPath);
-//                            AdImageInfo.setType(2);
-//                            imageInfos.add(AdImageInfo);
-//                        }
-//                    }
-//                }
-
-                String ads = adUserBean.getAd();
-                if (ads != null) {
-                    String[] adArray = ads.split(";");
-                    if (adArray.length > 0) {
-                        int piclength = 0;
-
-                        if (adArray.length > 8) {
-                            piclength = 8;
-                        } else {
-                            piclength = adArray.length;
-                        }
-
-                        for (int i = 0; i < piclength; i++) {
-                            String netUrl = (baseUrl + adArray[i]).replace(" ", "");
-                            URL url = new URL(netUrl);
-                            //再一次打开
-                            inputStream = url.openStream();
-                            String localPath = dir + prefix + "ad" + i + ".png";
-                            File file = new File(localPath);
-                            fileOutputStream = new FileOutputStream(file);
-                            int hasRead;
-                            while ((hasRead = inputStream.read()) != -1) {
-                                fileOutputStream.write(hasRead);
-                            }
-                            AdImageInfo AdImageInfo = new AdImageInfo();
-                            AdImageInfo.setNetPath(netUrl);
-                            AdImageInfo.setLocalPath(localPath);
-                            AdImageInfo.setType(1);
-                            imageInfos.add(AdImageInfo);
-                        }
-                    }
-                }
-
-                String photo = adUserBean.getPhoto();
-                if (photo != null) {
-                    String netUrl = (baseUrl + photo).replace(" ", "");
-                    URL url = new URL(netUrl);
-                    //再一次打开
-                    inputStream = url.openStream();
-                    String localPath = dir + prefix + "photo.png";
-                    File file = new File(localPath);
-                    fileOutputStream = new FileOutputStream(file);
-                    int hasRead;
-                    while ((hasRead = inputStream.read()) != -1) {
-                        fileOutputStream.write(hasRead);
-                    }
-                    AdImageInfo AdImageInfo = new AdImageInfo();
-                    AdImageInfo.setNetPath(netUrl);
-                    AdImageInfo.setLocalPath(localPath);
-                    AdImageInfo.setType(0);
-                    imageInfos.add(AdImageInfo);
-                }
-
-                ImageDao imageDao = new ImageDao(context);
-                AdUserDao adUserDao = new AdUserDao(context);
-                imageDao.deleteAll();
-                imageDao.inserts(imageInfos);
-
-                adUserDao.deleteAll();
-                adUserBean.setId(1);
-                adUserDao.insert(adUserBean);
-                MyPreferenceUtils.getSp(context).edit().putString(IMAGE_STATE, screenImageState).apply();
-                handler.sendEmptyMessage(NOTIFY_AD_SECOND);
-            } catch (Exception e) {
-                handler.sendEmptyMessage(NOTIFY_AD_PICTURE_FORMAT);
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (fileOutputStream != null) {
-                        fileOutputStream.close();
-                    }
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

@@ -14,9 +14,11 @@ import com.axecom.smartweight.my.adapter.BackgroundAdapter;
 import com.axecom.smartweight.my.config.IConstants;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
 import com.luofx.aar.help.CashierInputFilter;
-import com.luofx.utils.MyPreferenceUtils;
+import com.xuanyuan.library.MyPreferenceUtils;
 
 import org.greenrobot.eventbus.EventBus;
+
+import static com.axecom.smartweight.my.config.IEventBus.BACKGROUND_CHANGE;
 
 public class LocalSettingActivity extends Activity implements View.OnClickListener, IConstants {
 //    CircleProgressBar color_progress_view;
@@ -118,7 +120,7 @@ public class LocalSettingActivity extends Activity implements View.OnClickListen
 //                sendBroadcast(intent);
 
                 BaseBusEvent event = new BaseBusEvent();
-                event.setEventType(BaseBusEvent.BACKGROUND_CHANGE);
+                event.setEventType(BACKGROUND_CHANGE);
                 EventBus.getDefault().post(event);//解除事件总线问题
             }
 

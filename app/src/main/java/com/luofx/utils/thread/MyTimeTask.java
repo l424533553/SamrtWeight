@@ -11,9 +11,9 @@ import java.util.TimerTask;
  */
 public class MyTimeTask {
     private Timer timer;
-    private TimerTask task;
-    private long time;
-    private long delayTime;
+    private final TimerTask task;
+    private final long time;
+    private final long delayTime;
 
     public MyTimeTask(long delayTime, long time, TimerTask task) {
         this.task = task;

@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,8 @@ import java.util.List;
 public class SettingsAdapter extends BaseAdapter {
 
 
-    private Context context;
-    private List<SettingsBean> settingList;
+    private final Context context;
+    private final List<SettingsBean> settingList;
 
     public SettingsAdapter(Context context, List<SettingsBean> settingList) {
         this.context = context;
@@ -45,9 +46,10 @@ public class SettingsAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.settings_item, null);
             holder = new ViewHolder();

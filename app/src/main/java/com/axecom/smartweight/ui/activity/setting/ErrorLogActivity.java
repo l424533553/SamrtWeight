@@ -36,7 +36,6 @@ public class ErrorLogActivity extends AppCompatActivity {
 
     /**
      * 读取文件内容
-     * @param args
      */
     public static void main(String[] args) {
         //InputStream:是一个抽象类
@@ -50,12 +49,12 @@ public class ErrorLogActivity extends AppCompatActivity {
             //先定义一个字节数组存放数据
             byte[] b = new byte[5];//把所有的数据读取到这个字节当中
             //完整的读取一个文件
-            is.read(b);
+            int count = is.read(b);
             //read:返回的是读取的文件大小
             //最大不超过b.length，返回实际读取的字节个数
             System.out.println(Arrays.toString(b));//读取的是字节数组
             //把字节数组转成字符串
-            System.out.println(new String(b));
+            System.out.println(new String(b) + "数据大小size=" + count);
             //关闭流
             is.close();
         } catch (FileNotFoundException e) {
@@ -77,7 +76,7 @@ public class ErrorLogActivity extends AppCompatActivity {
         BufferedReader reader = null;
         StringBuilder sb = new StringBuilder();
         try {
-            String tempString = null;
+            String tempString;
             System.out.println("以行为单位读取文件内容，一次读一整行：");
             reader = new BufferedReader(new FileReader(file));
             int line = 1;
@@ -93,6 +92,7 @@ public class ErrorLogActivity extends AppCompatActivity {
                 try {
                     reader.close();
                 } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         }

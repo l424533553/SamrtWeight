@@ -14,7 +14,7 @@ public class BaseDialog {
 
     private SweetAlertDialog mSweetAlertDialog;
     protected SysApplication sysApplication; //
-    private Context context;  // 数据功能
+    private final Context context;  // 数据功能
 
     public BaseDialog(Context context) {
         this.context = context;
@@ -56,14 +56,6 @@ public class BaseDialog {
         mSweetAlertDialog.show();
     }
 
-
-    /**
-     * 功能测试
-     */
-    private void testFunction() {
-        // 数据功能选项 ，测试功能 功能
-
-    }
 
     public void showLoading(String titleText, String confirmText, long times) {
         showLoading(titleText, confirmText);

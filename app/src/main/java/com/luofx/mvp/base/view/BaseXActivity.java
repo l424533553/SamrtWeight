@@ -1,4 +1,7 @@
 package com.luofx.mvp.base.view;
+import android.app.Activity;
+
+import com.luofx.mvp.base.presenter.IBaseXPresenter;
 
 /**
  * 作者：罗发新
@@ -6,11 +9,6 @@ package com.luofx.mvp.base.view;
  * 邮件：424533553@qq.com
  * 说明：基类的实现层
  */
-
-import android.app.Activity;
-
-import com.luofx.mvp.base.presenter.IBaseXPresenter;
-
 public abstract class BaseXActivity<P extends IBaseXPresenter> extends Activity implements IBaseXView {
     /**
      * 控制器

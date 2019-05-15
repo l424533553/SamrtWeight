@@ -26,23 +26,22 @@ import java.text.DecimalFormat;
  */
 public class CircleProgressBar extends View {
 
-    private RectF mWheelRect = new RectF();
+    private final RectF mWheelRect = new RectF();
     private Paint mDefaultWheelPaint;
     private Paint mFinishWheelPaint;
     private Paint mCenterWheelPaint;
     private Paint mTitlePaint, mStepPaint, mTargetPaint;
-    private float mCircleStrokeWidth;
     private float mSweepAnglePer;
     private float mPercent;
     private int mStepNum, mCurrStepNum;
-    private float pressExtraStrokeWidth;
     private BarAnimation mAnim;
     private int mMaxStepNum;// 默认最大步数
-    private float mTitleY, mStepY, mTargetY;
-    private DecimalFormat mDecimalFormat = new DecimalFormat("#.0");// 格式为保留小数点后一位
+    private float mStepY;
+    private float mTargetY;
+    private final DecimalFormat mDecimalFormat = new DecimalFormat("#.0");// 格式为保留小数点后一位
     public static String GOAL_STEP;
     public static String PERCENT;
-    private Context context;
+    private final Context context;
 
     public CircleProgressBar(Context context) {
         super(context);
@@ -144,14 +143,14 @@ public class CircleProgressBar extends View {
         int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         int min = Math.min(width, height);// 获取View最短边的长度
         setMeasuredDimension(min, min);// 强制改View为以最短边为长度的正方形
-        mCircleStrokeWidth = getTextScale(15, min);// 圆弧的宽度
-        pressExtraStrokeWidth = getTextScale(10, min);// 圆弧离矩形的距离
+        float mCircleStrokeWidth = getTextScale(15, min);// 圆弧的宽度
+        float pressExtraStrokeWidth = getTextScale(10, min);// 圆弧离矩形的距离
         mWheelRect.set(mCircleStrokeWidth + pressExtraStrokeWidth, mCircleStrokeWidth + pressExtraStrokeWidth,
                 min - mCircleStrokeWidth - pressExtraStrokeWidth, min - mCircleStrokeWidth - pressExtraStrokeWidth);// 设置矩形
         mTitlePaint.setTextSize(getTextScale(60, min));
         mStepPaint.setTextSize(getTextScale(120, min));
         mTargetPaint.setTextSize(getTextScale(40, min));
-        mTitleY = getTextScale(170, min);
+        float mTitleY = getTextScale(170, min);
         mStepY = getTextScale(300, min);
         mTargetY = getTextScale(380, min);
         mFinishWheelPaint.setStrokeWidth(mCircleStrokeWidth);
@@ -182,7 +181,7 @@ public class CircleProgressBar extends View {
                 mPercent = 100.0f;
             }
             PERCENT = String.valueOf(mPercent);
-            mSweepAnglePer = mStepNum * 360 / mMaxStepNum;
+            mSweepAnglePer = (float)(mStepNum * 360 / mMaxStepNum);
             mCurrStepNum = mStepNum;
 //			}
 
@@ -199,7 +198,6 @@ public class CircleProgressBar extends View {
      *
      * @param n 宽高比例
      * @param m 长
-     * @return
      */
     public float getTextScale(float n, float m) {
         return n / 500 * m;

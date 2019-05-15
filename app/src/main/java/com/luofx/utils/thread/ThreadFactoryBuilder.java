@@ -13,8 +13,8 @@ import java.util.concurrent.ThreadFactory;
  */
 public class ThreadFactoryBuilder implements ThreadFactory {
 
-    private String name;
-    private int counter;
+    private final String name;
+    private final int counter;
 
     public ThreadFactoryBuilder(String name) {
         this.name = name;

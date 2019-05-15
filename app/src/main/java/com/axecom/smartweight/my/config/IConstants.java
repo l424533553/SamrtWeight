@@ -25,6 +25,7 @@ public interface IConstants {
     int NOTIFY_CLOSE_DIALOG = 9102;
 
     String BASE_IP_ST = "http://119.23.43.64";
+    String BASE_IP_WEB = "https://data.axebao.com/smartsz";
 
     /**
      * 香山秤  的称重模块消息通知
@@ -32,7 +33,7 @@ public interface IConstants {
     int WEIGHT_NOTIFY_XS15 = 2115;// 香山秤15.6屏的通知
     int WEIGHT_NOTIFY_XS8 = 2114;// 香山秤15.6屏的通知
 
-    int NOTIFY_AD_SECOND = 2033;//商通的称重通知
+
     int NOTIFY_AD_PICTURE_FORMAT = 2043;//商通的称重通知
 
     int PAYMENT_TIMEOUT = 180000;//等待支付超时时间
@@ -99,6 +100,8 @@ public interface IConstants {
     int VOLLEY_FLAG_FPMS_CHECK = 12;//计量院标定
     int VOLLEY_FLAG_AXE_TRACRE_NO = 13;//获取批次号
 
+    int VOLLEY_FLAG_AXE_BD = 14;//秤标定后传输数据给 安鑫宝
+
     String FPMS_LOGINTIME = "logintime";// 登陆时间
     String FPMS_EXPIRETIME = "expiretime";// 失效时间
     String FPMS_THIRDKEY = "thirdKey";   //第三方秘钥
@@ -107,11 +110,138 @@ public interface IConstants {
 
     String MAIN_KEY = "F7AD4703F4520AFDB0216339";
 
-    // 心跳休眠时间
-    int UPDATE_STATE_TIME = 120000;
-    String VALUE_K_WEIGHT = "ValueK";// 称重的K值
-    String VALUE_SB_AD= "sbAd";// 标定Ad
-    String VALUE_SB_ZERO_AD= "sbZeroAd";// 标定0位Ad
 
+    String VALUE_K_WEIGHT = "ValueK";// 称重的K值
+    String VALUE_SB_AD = "sbAd";// 标定Ad
+    String VALUE_SB_ZERO_AD = "sbZeroAd";// 标定0位Ad
+    String INTENT_COMMON_UPDATE = "commonUpdate";// true ;则商户没变只是一般更新  ，false:商户变换了
+
+    //是否自动更新   0:首次接入自动更新   1.更新按键进入，可以支持单项更新    2.普通更新必须选项
+    String INTENT_AUTO_UPDATE = "autoUpdate";
+
+    String MAX_LEV = "30kg";// 最大量程
+
+    Float MINIMUN_VOLUME = 1130f;// 香山电池
+
+    String SP_IS_FIRST_INIT = "isFirstInit";// 是否第一次更新
+
+    int CODE_JUMP2_DATAFLUSH = 6101;// 跳转进入数据更新界面
+    int CODE_JUMP2_SCALEBD = 7101;// 秤的标定
+
+    int FLAG_GET_USER_INFO = 8101;// 跳转进入数据更新界面
+    //请求更新产品类型表
+    int HANDLER_UPDATE_GOOD_TYPE = 8201;
+    int HANDLER_UPDATE_ALLGOOD = 8203;
+    // 获取小程序
+    int HANDLER_SMALL_ROUTINE = 8204;
+    int HANDLER_SECOND_IMAGE = 8206;
+    //更新完成
+    int HANDLER_UPDATE_FINISH = 8205;
+    int HANDLER_IMAGE_FINISH = 8207;
+
+
+    /*** 8寸按键常量  Start    ************************************************************************/
+    String MENU_1 = "menu0";
+    String MENU_2 = "menu1";
+    String MENU_3 = "menu2";
+    String MENU_4 = "menu3";
+    String MENU_5 = "menu4";
+    String MENU_6 = "menu5";
+    String MENU_7 = "menu6";
+    String MENU_8 = "menu7";
+    String MENU_9 = "menu8";
+    String MENU_10 = "menu9";
+
+    String MENU_11 = "menu10";
+    String MENU_12 = "menu11";
+    String MENU_13 = "menu12";
+    String MENU_14 = "menu13";
+    String MENU_15 = "menu14";
+    String MENU_16 = "menu15";
+    String MENU_17 = "menu16";
+    String MENU_18 = "menu17";
+    String MENU_19 = "menu18";
+    String MENU_20 = "menu19";
+    String MENU_21 = "menu20";
+    String MENU_22 = "menu21";
+    String MENU_23 = "menu22";
+    String MENU_24 = "menu23";
+    String MENU_25 = "menu24";
+    String MENU_26 = "menu25";
+    String MENU_27 = "menu26";
+    String MENU_28 = "menu27";
+    String MENU_29 = "menu28";
+    String MENU_30 = "menu29";
+    String MENU_31 = "menu30";
+    String MENU_32 = "menu31";
+    String MENU_33 = "menu32";
+    String MENU_34 = "menu33";
+
+    String NUM_1 = "num0";
+    String NUM_2 = "num1";
+    String NUM_3 = "num2";
+    String NUM_4 = "num3";
+    String NUM_5 = "num4";
+    String NUM_6 = "num5";
+    String NUM_7 = "num6";
+    String NUM_8 = "num7";
+    String NUM_9 = "num8";
+    String NUM_DELETE = "num9";
+    String NUM_0 = "num10";
+    String NUM_POT = "num11";
+    String MENU_SPACE_LEFT = "spaceLeft";
+    String MENU_SPACE_RIGHT = "spaceRight";
+
+    String FUNC_TARE = "funcTare";
+    String FUNC_ZERO = "funcZero";
+    String FUNC_SET = "funcSet";
+    String FUNC_BACK = "funcBack";
+
+    String FUNC_CARSH = "funcCarsh";
+    String FUNC_QR = "funcQR";
+    String FUNC_ADD = "funcAdd";
+    String FUNC_CLEAR = "funcClear";
+    // 删除按键
+    String FUNC_DELETE = "funcDelete";
+
+    /**
+     * 8寸按键常量  end
+     *************************************************************************/
+    String ACTIVITY_JUMP_TYPE = "jumpType";  // 跳转类型
+
+    /**
+     * 参数 配置区    心跳时间
+     **********************************************************************/
+    int UPDATE_STATE_TIME = 300*1000;
+    String SMALLROUTINE_URL = "SmallRoutineURL";
+
+    int POSITION_PATCH = 1;
+    int POSITION_REPORTS = 2;
+    int POSITION_SERVER = 3;
+    int POSITION_INVALID = 4;
+    int POSITION_ABNORMAL = 5;
+
+    int POSITION_COMMODITY = 6;
+    int POSITION_UPDATE = 7;
+    int POSITION_HOT = 15;
+    int POSITION_RE_CONNECTING = 8;
+    int POSITION_WIFI = 9;
+    int POSITION_LOCAL = 10;
+
+    int POSITION_WEIGHT = 11;
+    int POSITION_RE_BOOT = 12;
+    int POSITION_HELP = 17;
+    int POSITION_DATA_DELETE = 18;
+    int POSITION_BACK = 16;
+    int POSITION_BD = 13;
+    int POSITION_SYSTEM = 14;
+
+
+    /**
+     * 事件总线,普通类别的
+     */
+    String EVENT_BUS_COMMON = "eventBusCommon";
+    //消息类型  网路可用
+    String EVENT_NET_WORK_AVAILABLE = "eventNetWorkAble";
 }
 

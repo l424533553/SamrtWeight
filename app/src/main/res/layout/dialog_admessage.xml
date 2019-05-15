@@ -6,7 +6,8 @@
     android:layout_gravity="center"
     android:background="@drawable/shape_ad_dialog"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="HardcodedText">
 
     <TextView
         android:id="@+id/tvAdTitle"

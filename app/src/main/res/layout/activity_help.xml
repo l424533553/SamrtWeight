@@ -11,34 +11,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity"/>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="安鑫宝智慧秤使用说明简版"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="一、界面操作：\n
-1，主界面功能划分：采样选择区域、称重计量区域、菜价录入区域、称重累计明细区域及功能区。"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-
-    </ScrollView>
 </LinearLayout>

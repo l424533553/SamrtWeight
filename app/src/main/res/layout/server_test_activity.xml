@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:gravity="center"
     android:layout_height="match_parent">
@@ -15,16 +16,18 @@
         <TextView
             android:id="@+id/server_test_title_tv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:text="服务器测试"
             android:gravity="center"
             android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="40sp"/>
+            android:textSize="40sp"
+            tools:ignore="HardcodedText" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/black"/>
+            android:background="@color/black"
+            tools:ignore="ContentDescription" />
         <Button
             android:id="@+id/server_test_cancel_btn"
             android:layout_width="match_parent"

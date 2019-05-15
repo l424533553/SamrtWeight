@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.rzl.utils;
 
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,24 +48,6 @@ public class ApkUtils implements VolleyListener {
         }
         return null;
     }
-
-    /**
-     * 获取应用程序版本名称信息
-     *
-     * @param context
-     * @return 当前应用的版本名称
-     */
-//    public static String getVersionName(Context context) {
-//        try {
-//            PackageManager packageManager = context.getPackageManager();
-//            PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-//            return packageInfo.versionName;
-//
-//        } catch (NameNotFoundException e) {
-//
-//        }
-//        return null;
-//    }
 
     /**
      * 获取当前版本.
@@ -226,20 +209,19 @@ public class ApkUtils implements VolleyListener {
                 try {
                     JSONObject data = jsonObject.getJSONObject("data");
                     if (data != null) {
-                        JSONObject element = data;
-                        if (element.has("version")) {
-                            remoteVersion = element.getString("version");
+                        if (data.has("version")) {
+                            remoteVersion = data.getString("version");
                         }
                         Log.i("rzl", "remote version:" + remoteVersion);
-                        if (element.has("description")) {
-                            remoteDescription = element.getString("description");
+                        if (data.has("description")) {
+                            remoteDescription = data.getString("description");
                         }
                         Log.i("rzl", "remote description:" + remoteDescription);
-                        if (element.has("date")) {
-                            remoteDate = element.getString("date");
+                        if (data.has("date")) {
+                            remoteDate = data.getString("date");
                         }
-                        if (element.has("filepath")) {
-                            remoteApkPath = element.getString("filepath");
+                        if (data.has("filepath")) {
+                            remoteApkPath = data.getString("filepath");
                         }
                         Log.i("rzl", "remote date:" + remoteDate);
                         if (this.ctx != null) {
@@ -387,6 +369,7 @@ public class ApkUtils implements VolleyListener {
     private String remoteDate;//新版本发布日期
     private String remoteApkPath;//远程apk路径
     //单例，实现了网络通讯功能
+    @SuppressLint("StaticFieldLeak")
     private static com.axecom.smartweight.my.rzl.utils.ApkUtils myself;
 
     public static com.axecom.smartweight.my.rzl.utils.ApkUtils getInstance() {

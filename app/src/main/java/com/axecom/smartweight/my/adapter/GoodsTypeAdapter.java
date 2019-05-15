@@ -23,15 +23,15 @@ import java.util.List;
  * describe:
  */
 public class GoodsTypeAdapter extends RecyclerView.Adapter<GoodsTypeAdapter.ViewHolder> {
-    private List<GoodsType> goodsList;
-    private LayoutInflater mInflater;
+    private final List<GoodsType> goodsList;
+    private final LayoutInflater mInflater;
     private int selected;
 
     public void setSelected(int selected) {
         this.selected = selected;
     }
 
-    private Context context;
+    private final Context context;
 
     public GoodsTypeAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -97,10 +97,7 @@ public class GoodsTypeAdapter extends RecyclerView.Adapter<GoodsTypeAdapter.View
 
 
     public void showDeleteTv(boolean show) {
-        for (int i = 0; i < goodsList.size(); i++) {
-//            goodsList.get(i).setShow(show);
-        }
-//        isShowDelTv = show;
+
         notifyDataSetChanged();
     }
 
@@ -111,7 +108,7 @@ public class GoodsTypeAdapter extends RecyclerView.Adapter<GoodsTypeAdapter.View
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvGoodsName;
+        private final TextView tvGoodsName;
 //        private ImageView deleteTv;
 //        private ImageView selectedTv;
 

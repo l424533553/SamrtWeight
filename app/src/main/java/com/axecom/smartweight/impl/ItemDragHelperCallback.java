@@ -1,9 +1,11 @@
 package com.axecom.smartweight.impl;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+
 
 /**
  * ItemDragHelperCallback
@@ -12,7 +14,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
-    public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags;
         RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
         if (manager instanceof GridLayoutManager || manager instanceof StaggeredGridLayoutManager) {
@@ -26,7 +28,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         // 不同Type之间不可移动
         if (viewHolder.getItemViewType() != target.getItemViewType()) {
             return false;
@@ -40,7 +42,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
 
@@ -57,7 +59,7 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         if (viewHolder instanceof OnDragVHListener) {
             OnDragVHListener itemViewHolder = (OnDragVHListener) viewHolder;
             itemViewHolder.onItemFinish();

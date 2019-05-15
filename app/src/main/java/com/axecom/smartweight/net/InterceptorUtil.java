@@ -1,6 +1,8 @@
 package com.axecom.smartweight.net;
 
 
+import android.support.annotation.NonNull;
+
 import com.axecom.smartweight.utils.LogUtils;
 
 import java.io.IOException;
@@ -27,11 +29,10 @@ public class InterceptorUtil {
     public static Interceptor HeaderInterceptor(){
         return  new Interceptor() {
             @Override
-            public Response intercept(Chain chain) throws IOException {
+            public Response intercept(@NonNull Chain chain) throws IOException {
                 Request request = chain.request().newBuilder()
 //                        .addHeader("Token", Token)
                         .build();
-                Response mResponse = chain.proceed(request);
                 //假设返回的code为201时表示token失效
 //                if (mResponse.code()==201){
 //                    //重新获取新token
@@ -55,7 +56,7 @@ public class InterceptorUtil {
 //                            .build();
 //                    return chain.proceed(newRequest);
 //                }
-                return mResponse;
+                return chain.proceed(request);
             }
         };
     }

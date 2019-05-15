@@ -42,13 +42,12 @@ public class RetrofitFactory {
         requestInterface = retrofit.create(RequestInterface.class);
     }*/
 
-    public static RetrofitFactory getInstance() {
+    public static void getInstance() {
         if (mRetrofitFactory == null) {
             synchronized (RetrofitFactory.class) {
                 mRetrofitFactory = new RetrofitFactory();
             }
         }
-        return mRetrofitFactory;
     }
 
     public static void reSetServiceIp() {

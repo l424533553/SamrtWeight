@@ -10,7 +10,7 @@
 // */
 //
 //
-//public class Goods implements Serializable{
+//public class HotGood implements Serializable{
 //    public int id;
 //    public String name;
 //    public int cid;

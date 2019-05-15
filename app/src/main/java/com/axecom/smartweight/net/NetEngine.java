@@ -24,7 +24,7 @@ public class NetEngine {
 //        Call<AdyenUserInfoBean> call = request.getUserInfoByHttp(102802);
 //        call.enqueue(new Callback<AdyenUserInfoBean>() {
 //            @Override
-//            public void onResponse(Call<AdyenUserInfoBean> call, Response<AdyenUserInfoBean> response) {
+//            public void onStringResponse(Call<AdyenUserInfoBean> call, Response<AdyenUserInfoBean> response) {
 //                adyenUserInfo[0] = response.body();
 //            }
 //
@@ -41,7 +41,7 @@ public class NetEngine {
 //        Call<PayResultBaen> call = requestInterface.recurringPay(bean);
 //        call.enqueue(new Callback<PayResultBaen>() {
 //            @Override
-//            public void onResponse(Call<PayResultBaen> call, Response<PayResultBaen> response) {
+//            public void onStringResponse(Call<PayResultBaen> call, Response<PayResultBaen> response) {
 //                LogWriteUtils.d(response.body().authCode + "--------------------");
 //            }
 //

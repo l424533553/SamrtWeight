@@ -31,13 +31,13 @@
 //import com.axecom.smartweight.my.adapter.HotGoodsAdapter;
 //import com.axecom.smartweight.my.adapter.GoodsTypeAdapter;
 //import com.axecom.smartweight.my.entity.AllGoods;
-//import com.axecom.smartweight.my.entity.Goods;
+//import com.axecom.smartweight.my.entity.HotGood;
 //import com.axecom.smartweight.my.entity.GoodsType;
 //import com.axecom.smartweight.my.entity.dao.AllGoodsDao;
 //import com.axecom.smartweight.my.entity.dao.HotGoodsDao;
 //import com.axecom.smartweight.my.entity.dao.GoodsTypeDao;
 //import com.luofx.listener.MyOnItemClickListener2;
-//import com.xuanyuan.xinyu.MyToast;
+//import com.xuanyuan.library.MyToast;
 //import com.axecom.smartweight.my.config.IConstants;
 //
 //import org.greenrobot.eventbus.EventBus;
@@ -79,7 +79,7 @@
 //    /**
 //     * 销售商品列表
 //     */
-//    private List<Goods> hotGoodsList;
+//    private List<HotGood> hotGoodsList;
 //
 //
 //    @Override
@@ -157,13 +157,13 @@
 //                //拖拽元素交换
 //                int fromPosition=viewHolder.getAdapterPosition();
 //                int toPosition=target.getAdapterPosition();
-//                Goods from=hotGoodsList.get(fromPosition);
-//                Goods to=hotGoodsList.get(toPosition);
+//                HotGood from=hotGoodsList.get(fromPosition);
+//                HotGood to=hotGoodsList.get(toPosition);
 //                Log.i("rzl","from:" + from.getName() + ",to:" + to.getName() + "," + fromPosition + "<->" + toPosition);
 //                if (fromPosition < toPosition) {
 //                    for (int i = fromPosition; i < toPosition; i++) {
-//                        Goods from1=hotGoodsList.get(i);
-//                        Goods to1=hotGoodsList.get(i+1);
+//                        HotGood from1=hotGoodsList.get(i);
+//                        HotGood to1=hotGoodsList.get(i+1);
 //                        //内存排序
 //                        Collections.swap(hotGoodsList, i, i + 1);
 //                        //将新的排序写入数据库,交换id(这个id是排序用的,并非唯一标志)
@@ -177,8 +177,8 @@
 //                    }
 //                } else {
 //                    for (int i = fromPosition; i > toPosition; i--) {
-//                        Goods from1=hotGoodsList.get(i);
-//                        Goods to1=hotGoodsList.get(i-1);
+//                        HotGood from1=hotGoodsList.get(i);
+//                        HotGood to1=hotGoodsList.get(i-1);
 //                        //内存排序
 //                        Collections.swap(hotGoodsList, i, i - 1);
 //                        //数据库排序
@@ -226,7 +226,7 @@
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                AllGoods allGoods = classAdapter.getItem(position);
-//                Goods goods = new Goods();
+//                HotGood goods = new HotGood();
 //                goods.setCid(allGoods.getCid());
 //                goods.setPrice(allGoods.getPrice());
 //                goods.setBatchCode(allGoods.getBatchCode());
@@ -263,7 +263,7 @@
 //            case 1:
 //                try {
 //                    // 进行 删除操作
-//                    Goods goods = goodsAdapter.getItem(position);
+//                    HotGood goods = goodsAdapter.getItem(position);
 //                    goodsAdapter.removeList(position);
 //                    if (goods != null) {
 //                        goodsDao.delete(goods);

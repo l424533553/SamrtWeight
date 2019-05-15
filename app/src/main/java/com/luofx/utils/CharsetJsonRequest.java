@@ -9,7 +9,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 说明：Volley 解决Volley的乱码问题
@@ -30,10 +30,8 @@ public class CharsetJsonRequest extends JsonObjectRequest {
     @Override
     protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data, "UTF-8");
+            String jsonString = new String(response.data, StandardCharsets.UTF_8);
             return Response.success(new JSONObject(jsonString), HttpHeaderParser.parseCacheHeaders(response));
-        } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
         } catch (JSONException je) {
             return Response.error(new ParseError(je));
         }

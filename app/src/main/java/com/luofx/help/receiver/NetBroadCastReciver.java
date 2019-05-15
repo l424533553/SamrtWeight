@@ -1,5 +1,6 @@
 package com.luofx.help.receiver;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.util.Log;
 
 
@@ -70,9 +72,9 @@ public class NetBroadCastReciver extends BroadcastReceiver {
                 NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
 
                 if (networkInfo != null && networkInfo.length > 0) {
-                    for (int i = 0; i < networkInfo.length; i++) {
+                    for (NetworkInfo networkInfo1 : networkInfo) {
                         // 判断当前网络状态是否为连接状态
-                        if (networkInfo[i].getState() == NetworkInfo.State.CONNECTED) {
+                        if (networkInfo1.getState() == NetworkInfo.State.CONNECTED) {
                             return true;
                         }
                     }
@@ -89,7 +91,7 @@ public class NetBroadCastReciver extends BroadcastReceiver {
     private boolean netWorkJudge(Intent intent) {
         //如果是在开启wifi连接和有网络状态下
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
-            NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+            NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.  EXTRA_NETWORK_TYPE);
             if (NetworkInfo.State.CONNECTED == info.getState()) {
                 //连接状态
                 Log.e("pzf", "有网络连接");
@@ -128,19 +130,24 @@ public class NetBroadCastReciver extends BroadcastReceiver {
     // API 23及以上时调用此方法进行网络的检测
 // getAllNetworks() 在API 21后开始使用
 //步骤非常类似
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void checkState_23orNew(Context context) {
         //获得ConnectivityManager对象
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         //获取所有网络连接的信息
-        Network[] networks = connMgr.getAllNetworks();
+        Network[] networks = new Network[0];
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            networks = connMgr.getAllNetworks();
+        }
         //用于存放网络连接信息
         StringBuilder sb = new StringBuilder();
         //通过循环将网络信息逐个取出来
-        for (int i = 0; i < networks.length; i++) {
+        for (Network network : networks) {
             //获取ConnectivityManager对象对应的NetworkInfo对象
-            NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
-            sb.append(networkInfo.getTypeName() + " connect is " + networkInfo.isConnected());
+            NetworkInfo networkInfo = connMgr.getNetworkInfo(network);
+            sb.append(networkInfo.getTypeName()).append(" connect is ").append(networkInfo.isConnected());
         }
     }
 

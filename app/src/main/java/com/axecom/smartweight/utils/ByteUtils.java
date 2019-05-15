@@ -7,9 +7,9 @@ import java.util.Arrays;
  */
 public class ByteUtils {
 
-    public static final byte[] EMPTY_BYTES = new byte[]{};
+    private static final byte[] EMPTY_BYTES = new byte[]{};
 
-    public static final int BYTE_MAX = 0xff;
+    private static final int BYTE_MAX = 0xff;
 
     public static byte[] getNonEmptyByte(byte[] bytes) {
         return bytes != null ? bytes : EMPTY_BYTES;
@@ -19,8 +19,8 @@ public class ByteUtils {
         StringBuilder sb = new StringBuilder();
 
         if (!isEmpty(bytes)) {
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(String.format("%02X", bytes[i]));
+            for (byte aByte : bytes) {
+                sb.append(String.format("%02X", aByte));
             }
         }
 
@@ -97,7 +97,9 @@ public class ByteUtils {
 
             for (int i = len - 1, j = oldLen - 1; i >= 0; i--, j--) {
                 if (j >= 0) {
-                    result[i] = bytes[j];
+                    if (bytes != null) {
+                        result[i] = bytes[j];
+                    }
                 } else {
                     result[i] = fill;
                 }
@@ -154,14 +156,13 @@ public class ByteUtils {
 
         byte[] newBytes = new byte[end - start + 1];
 
-        for (int i = start; i <= end; i++) {
-            newBytes[i - start] = bytes[i];
-        }
+        if (end + 1 - start >= 0)
+            System.arraycopy(bytes, start, newBytes, 0, end + 1 - start);
 
         return newBytes;
     }
 
-    public static int ubyteToInt(byte b) {
+    private static int ubyteToInt(byte b) {
         return (int) b & 0xFF;
     }
 

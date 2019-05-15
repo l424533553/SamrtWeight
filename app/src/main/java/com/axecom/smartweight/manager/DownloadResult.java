@@ -1,5 +1,8 @@
 package com.axecom.smartweight.manager;
 
+import android.support.annotation.NonNull;
+
+
 /**
  * time: 15/7/15
  * description:
@@ -24,6 +27,7 @@ public class DownloadResult {
         this.message = msg;
     }
 
+    @NonNull
     public String toString() {
         return "DownloadResult{url=" + this.url + ", code=" + this.code + ", message=\'" + this.message + '\'' + '}';
     }

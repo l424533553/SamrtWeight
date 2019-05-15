@@ -16,7 +16,7 @@ import com.axecom.smartweight.base.BaseActivity;
  */
 public class ViewUtils {
 
-    private Activity myActivity;
+    private final Activity myActivity;
     private Toast toast = null;
 
     public ViewUtils(BaseActivity myActivity) {
@@ -31,11 +31,13 @@ public class ViewUtils {
     public void toast(String text) {
         if (null == toast) {
             toast = Toast.makeText(myActivity, text, Toast.LENGTH_SHORT);
+            toast.show();
         } else {
             toast.setText(text);
+            toast.show();
         }
-        toast.show();
-        log(text);
+
+
     }
 
 

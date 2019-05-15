@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class CashierInputFilter implements InputFilter {
 
-    Pattern mPattern;
+    private final Pattern mPattern;
 
     //输入的最大金额
     private static final int MAX_VALUE = 1000;
@@ -50,11 +50,8 @@ public class CashierInputFilter implements InputFilter {
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
 
-
         String sourceText = source.toString();
         String destText = dest.toString();
-
-
 
         //验证删除等按键
         if (TextUtils.isEmpty(sourceText)) {
@@ -80,7 +77,7 @@ public class CashierInputFilter implements InputFilter {
                 return sourceText.subSequence(0, sourceText.length()-1);
             }
         } else {
-            /**
+            /* *
              * 没有输入小数点的情况下，只能输入小数点和数字
              * 1. 首位不能输入小数点
              * 2. 如果首位输入0，则接下来只能输入小数点了

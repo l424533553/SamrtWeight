@@ -87,7 +87,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
 
     private MyBasePrinter myBasePrinter;
 
-    public void initView(View view) {
+    private void initView(View view) {
         calendar = Calendar.getInstance();
         time = calendar.getTime();
 //        int year = calendar.get(Calendar.YEAR);
@@ -170,6 +170,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
 //        // TODO 数据接口  使用功能
 //    }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -214,16 +215,14 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
             @SuppressLint("SetTextI18n")
             @Override
             public boolean handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 914:
-                        adapter.notifyDataSetChanged();
-                        for (int i = 0; i < adapter.getGroupCount(); i++) {
-                            lvSearch.expandGroup(i);
-                        }
-                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
-                        tvCarshMoney.setText(MyMatch.accurate2(carshMoney) + "元");
-                        tvEPayMoney.setText(MyMatch.accurate2(ePayMoney) + "元");
-                        break;
+                if (msg.what == 914) {
+                    adapter.notifyDataSetChanged();
+                    for (int i = 0; i < adapter.getGroupCount(); i++) {
+                        lvSearch.expandGroup(i);
+                    }
+                    tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
+                    tvCarshMoney.setText(MyMatch.accurate2(carshMoney) + "元");
+                    tvEPayMoney.setText(MyMatch.accurate2(ePayMoney) + "元");
                 }
                 return false;
             }
@@ -232,8 +231,8 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
 
 
     public class MonthAdapter extends BaseAdapter {
-        private Context context;
-        private List<ReportResultBean> list;
+        private final Context context;
+        private final List<ReportResultBean> list;
 
         public MonthAdapter(Context context, List<ReportResultBean> list) {
             this.context = context;
@@ -255,7 +254,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
             return position;
         }
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "InflateParams"})
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MonthAdapter.ViewHolder holder;

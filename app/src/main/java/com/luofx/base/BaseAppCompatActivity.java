@@ -17,7 +17,7 @@ import org.greenrobot.eventbus.Subscribe;
 public abstract class BaseAppCompatActivity extends AppCompatActivity implements IBaseConstants {
 
     //是否 需要注册事件总线
-    protected boolean isNeedRgEventBus;
+    private boolean isNeedRgEventBus;
 
     /**
      * true Or false 是否需要注册事件总线机制
@@ -61,7 +61,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity implements
     /**
      * 返回点击  退出时间
      */
-    protected long backTime;
+    private long backTime;
 
     /**
      * 是否可以点击

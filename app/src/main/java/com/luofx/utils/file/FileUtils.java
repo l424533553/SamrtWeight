@@ -25,6 +25,7 @@ import java.util.Properties;
 /**
  * Created by Longer on 2016/10/26.
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileUtils {
 
     private static final String ROOT_DIR = "Android/data/";
@@ -90,12 +91,10 @@ public class FileUtils {
      * 获取SD下的应用目录
      */
     private static String getExternalStoragePath(Context context) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(File.separator);
-        sb.append("Android/data/").append(context.getPackageName());
-        sb.append(File.separator);
-        return sb.toString();
+        return Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator +
+                "Android/data/" + context.getPackageName() +
+                File.separator;
     }
 
     /**
@@ -149,12 +148,10 @@ public class FileUtils {
      * 获取SD下的应用目录
      */
     public static String getExternalStoragePath() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-        sb.append(File.separator);
-        sb.append(ROOT_DIR);
-        sb.append(File.separator);
-        return sb.toString();
+        return Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator +
+                ROOT_DIR +
+                File.separator;
     }
 
     /**
@@ -192,7 +189,7 @@ public class FileUtils {
             in = new FileInputStream(srcFile);
             out = new FileOutputStream(destFile);
             byte[] buffer = new byte[1024];
-            int i = -1;
+            int i;
             while ((i = in.read(buffer)) > 0) {
                 out.write(buffer, 0, i);
                 out.flush();
@@ -282,9 +279,9 @@ public class FileUtils {
      * @param content 需要写入的字符串
      * @param path    文件路径名称
      * @param append  是否以添加的模式写入
-     * @return 是否写入成功
      */
-    private static boolean writeFile(byte[] content, String path, boolean append) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static void writeFile(byte[] content, String path, boolean append) {
         boolean res = false;
         File f = new File(path);
         RandomAccessFile raf = null;
@@ -301,14 +298,12 @@ public class FileUtils {
                 raf = new RandomAccessFile(f, "rw");
                 raf.seek(raf.length());
                 raf.write(content);
-                res = true;
             }
         } catch (Exception e) {
             LogUtils.e(e);
         } finally {
             IOUtils.close(raf);
         }
-        return res;
     }
 
     /**
@@ -317,10 +312,10 @@ public class FileUtils {
      * @param content 需要写入的字符串
      * @param path    文件路径名称
      * @param append  是否以添加的模式写入
-     * @return 是否写入成功
+
      */
-    public static boolean writeFile(String content, String path, boolean append) {
-        return writeFile(content.getBytes(), path, append);
+    public static void writeFile(String content, String path, boolean append) {
+        writeFile(content.getBytes(), path, append);
     }
 
     /**
@@ -458,7 +453,7 @@ public class FileUtils {
             in = new FileInputStream(file);
             out = new FileOutputStream(desFile);
             byte[] buffer = new byte[1024];
-            int count = -1;
+            int count;
             while ((count = in.read(buffer)) != -1) {
                 out.write(buffer, 0, count);
                 out.flush();

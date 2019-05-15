@@ -129,10 +129,8 @@ public class SummaryActivity extends FragmentActivity implements RadioGroup.OnCh
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnBack:
-                this.finish();
-                break;
+        if (v.getId() == R.id.btnBack) {
+            this.finish();
         }
     }
 }

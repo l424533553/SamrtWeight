@@ -31,7 +31,7 @@ public abstract class BasePermissionsActivity extends BaseAppCompatActivity {
      */
     private static final int MY_PERMISSION_SET_REQUEST_CODE = 10010;
 
-    protected Context context;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

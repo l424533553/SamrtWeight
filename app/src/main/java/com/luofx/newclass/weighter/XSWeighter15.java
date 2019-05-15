@@ -1,8 +1,8 @@
 package com.luofx.newclass.weighter;
 
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.axecom.smartweight.my.config.IEventBus;
 import com.axecom.smartweight.my.entity.BaseBusEvent;
 import com.xuanyuan.library.MyLog;
 
@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * 香山秤15.6 黑色屏
  */
-public class XSWeighter15 extends MyBaseWeighter {
+public class XSWeighter15 extends MyBaseWeighter  implements IEventBus {
     private static XSWeighter15 mInstance;
 
     public static XSWeighter15 getXSWeighter() {
@@ -25,14 +25,14 @@ public class XSWeighter15 extends MyBaseWeighter {
         mInstance = this;
     }
 
-    public static String TAG = "XSWeighter15";
+    public static final String TAG = "XSWeighter15";
     private ReadThread readThread;
 
     /**
      * 打开串口,数据功能
      */
     public boolean open() {
-        int baudrate = 9600;
+        int baudrate = 19200;
         String path = "/dev/ttyS4";
         if (!super.open(path, baudrate)) {
             return false;
@@ -57,7 +57,9 @@ public class XSWeighter15 extends MyBaseWeighter {
      * 设置重置按钮
      */
     public void resetBalance() {
-        String zer = "<ZER >";
+        //TODO
+//        String zer = "<ZER >";
+        String zer = "<TAR >";
         sendString(zer);
     }
 
@@ -66,6 +68,20 @@ public class XSWeighter15 extends MyBaseWeighter {
     public void getKValue() {
         String zer = "<QUE >";
         sendString(zer);
+    }
+
+    /**
+     * private String wei = "<WEI >";  称重指令
+     * private String zer = "<ZER >";  置零指令
+     * private String tar = "<TAR >";  去皮指令
+     * 发送串口指令
+     */
+    @Override
+    public void sendZer() {
+        String zer = "<ZER >";
+        byte[] sendData = zer.getBytes(); //string转byte[]
+        write(sendData);
+//        flush();
     }
 
     /**
@@ -84,18 +100,6 @@ public class XSWeighter15 extends MyBaseWeighter {
         }
     }
 
-    /**
-     * private String wei = "<WEI >";  称重指令
-     * private String zer = "<ZER >";  置零指令
-     * private String tar = "<TAR >";  去皮指令
-     * 发送串口指令
-     */
-    public void sendZer() {
-        String zer = "<ZER >";
-        byte[] sendData = zer.getBytes(); //string转byte[]
-        write(sendData);
-        flush();
-    }
 
     /**
      * 去除拆机标识位
@@ -119,6 +123,7 @@ public class XSWeighter15 extends MyBaseWeighter {
     /**
      * 发送 标定数据  ,10kg 和20kg的两种标定方法
      */
+    @Override
     public void sendCalibrationData(boolean isCalibration10kg) {
         byte[] sendData;
         if (isCalibration10kg) {
@@ -129,36 +134,6 @@ public class XSWeighter15 extends MyBaseWeighter {
         write(sendData);
         flush();
     }
-
-    /**
-     * 单开一线程，来读数据
-     * currentAd = array[0];
-     * zeroAd = array[1];
-     * currentWeight = array[2];
-     * tareWeight = array[3];
-     * <p>
-     * cheatSign = array[4];
-     * isNegative = array[5];
-     * isOver = array[6];
-     * isZero = array[7];
-     * isPeeled = array[8];
-     * isStable = array[9];
-     */
-    private int rc_state = 0;// 状态
-    private int rc_step = 0;
-    private int BatVol = 0;
-    private int BatChagerFlag = 0;
-    private int ErrorFlag = 0;
-    private int CurrentAD = 0;
-    private int zeroAd = 0;
-    private int currentWeight = 0;
-    private int tareWeight = 0;
-    private int dataFlag = 0;
-    private int KeyboardVal = 0;
-
-    private int CalibrationAD = 0;   //砝码AD
-    private int CalibrationZero = 0;    //标定零位
-    private double K_value = 0.0;
 
     private class ReadThread extends Thread {
         private boolean isRun; //是否一直循环
@@ -181,32 +156,39 @@ public class XSWeighter15 extends MyBaseWeighter {
         private void readyState(int byte_data) {
             switch (byte_data) {
                 case '<':
-                    rc_state = 1;   //返回的数据，包括电池，和命令返回状态
+                    /* *
+                     * 单开一线程，来读数据
+                     * currentAd = array[0];
+                     * zeroAd = array[1];
+                     * currentWeight = array[2];
+                     * tareWeight = array[3];
+                     * <p>
+                     * cheatSign = array[4];
+                     * isNegative = array[5];
+                     * isOver = array[6];
+                     * isZero = array[7];
+                     * isPeeled = array[8];
+                     * isStable = array[9];
+                     */
+                    // 状态
+                    int rc_state = 1;   //返回的数据，包括电池，和命令返回状态
                     break;
                 case '#':
-                    rc_state = 6;   //按钮值
+
                     break;
                 case 10:            //可能是称重数据
-                    rc_step = 1;
                     break;
                 case 13:            //称重数据
-                    if (rc_step == 1) {      //当前AD
-                        rc_state = 9;       //处理称重数据
-                        CurrentAD = 0;      //当前AD置零
-                    }
+                    //当前AD
                     break;
                 default:        //当做标定参数
-                    if (byte_data >= '0' && byte_data <= '9') {
-                        rc_step = 1;
-                        rc_state = 15;
-                        CalibrationAD = byte_data - '0';
-                    }
+                    //砝码AD
                     break;
             }
         }
 
 
-        private void testWeight(int size, byte[] buffer) {
+      /*  private void testWeight(int size, byte[] buffer) {
             for (int i = 0; i < size; i++) {
                 int byte_data = buffer[i];
                 switch (rc_state) {
@@ -320,7 +302,7 @@ public class XSWeighter15 extends MyBaseWeighter {
                         }
                         break;
                     case 10:            //重量数据接收完成
-                        /* 在这里添加称重数据接收后的处理 */
+                        *//* 在这里添加称重数据接收后的处理 *//*
                         //TODO  数据处理完成
                         MyLog.blue("称重数据:当前AD=" + CurrentAD
                                 + " 零位AD=" + zeroAd
@@ -329,7 +311,7 @@ public class XSWeighter15 extends MyBaseWeighter {
                                 + " 标识=" + dataFlag);
 
                         BaseBusEvent event = new BaseBusEvent();
-                        event.setEventType(BaseBusEvent.NOTIFY_WEIGHT_SX15);
+                        event.setEventType(BaseBusEvent.WEIGHT_SX15);
                         WeightBeanXS weightBeanXS = new WeightBeanXS();
                         weightBeanXS.setCurrentAD(CurrentAD);
                         weightBeanXS.setZeroAd(zeroAd);
@@ -424,9 +406,9 @@ public class XSWeighter15 extends MyBaseWeighter {
                         break;
                     case 8:
                         if (byte_data == '#') {
-                                /*
+                                *//*
                                 在这里添加按键值接收后的处理
-                                 */
+                                 *//*
                             MyLog.blue("按键状态：按键值=" + KeyboardVal);
                         }
                         rc_state = 0;
@@ -436,7 +418,7 @@ public class XSWeighter15 extends MyBaseWeighter {
                         break;
                 }
             }
-        }
+        }*/
 
         @Override
         public void run() {
@@ -445,92 +427,121 @@ public class XSWeighter15 extends MyBaseWeighter {
 //            byte[] buffer = new byte[60];
             try {
                 while (isRun) {
-                    byte[] buffer = new byte[60];
+                    byte[] buffer = new byte[50];
                     int size; //读取数据的大小
-//                    size = getSerialPort().getInputStream().read(buffer, 0, 60);
-                    size = read22(buffer, 0, 60);
-//                  testWeight( size,  buffer);
+                    size = getSerialPort().getInputStream().read(buffer, 0, buffer.length);
+                    if (size > 2) {
+                        String str11 = new String(buffer, 0, buffer.length).trim();
+                        MyLog.log("获取K值数据=======" + Arrays.toString(buffer));
+                        MyLog.log("获取K值数据=======" + str11);
 
-                    //TODO 说明
-                    if (size >= 46) {// 传输的是称重数据
-                        String str = new String(buffer, 0, buffer.length).trim();
+                        if (str11.endsWith("#")) {
+                            if (str11.startsWith("C1")) {
+                                sendReadMessage(str11, WEIGHT_SX15);
+                            } else if (str11.startsWith("C2")) {//C2 001 038# 按键值
+                                sendReadMessage(str11, WEIGHT_KEY_PRESS);
+                            } else if (str11.startsWith("C3") || str11.startsWith("3")) {//C3 1150 1 065#
+                                sendReadMessage(str11, WEIGHT_ELECTRIC);
+                                MyLog.log22("电量值=======" + str11);
+                            } else if (str11.startsWith("C4") || str11.startsWith("4")) {//C4 ERR0  标定
+                                sendReadMessage(str11, WEIGHT_CALIBRATION);
+                            } else if (str11.startsWith("C5") || str11.startsWith("5")) {// 判断是否包含ERR0  ERR1即可
+                                //去皮成功
+                            } else if (str11.startsWith("C6") || str11.startsWith("6")) {// 判断是否包含ERR0  ERR1即可
+                                sendReadMessage(str11, WEIGHT_KVALUE);
+                            } else if (str11.startsWith("C7") || str11.startsWith("7")) {//C7 ERR0 009#
+
+                            } else if (str11.startsWith("C8") || str11.startsWith("8")) {//C8 ERR0 009#
+                                //置零成功
+                                sendReadMessage(str11, WEIGHT_ZEROING);
+                            }
+                        }
+                    }
 
 
-//                        MyLog.logTest("待处理的称重数据" + str);
-                        //传输的数据是数据加 空数据间隔 传送
-                        if (!TextUtils.isEmpty(str)) {
-//                            String[] array = str.split(" ");
+////                    size = read22(buffer, 0, 60);
+////                  testWeight( size,  buffer);
+//                    for (int i = 0; i <buffer.length ; i++) {
+//                        if(buffer[i]<0){
+//                            buffer[i]=0;
+//                        }
+//                    }
 //
-//                            if (array.length >= 10 && array[0].length() == 7 && array[1].length() == 7 && array[2].length() == 7 && array[3].length() == 7) {
-//                                MyLog.logTest("Main  获取的称重数据" + array[2]);
-//                                CurrentAD = Integer.parseInt(array[0]);
-//                                zeroAd = Integer.parseInt(array[1]);
-//                                currentWeight = Integer.parseInt(array[2]);
-//                                tareWeight = Integer.parseInt(array[3]);
-//                                dataFlag = 0;
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[4]);
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[5]);
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[6]);
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[7]);
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[8]);
-//                                dataFlag = dataFlag << 1 + Integer.parseInt(array[9]);
+//                    //TODO 说明
+//                    if (size >= 46) {// 传输的是称重数据
+//                        String str = new String(buffer, 0, buffer.length).trim();
 //
-//                                BaseBusEvent event = new BaseBusEvent();
-//                                event.setEventType(BaseBusEvent.NOTIFY_WEIGHT_SX15);
-//                                WeightBeanXS weightBeanXS = new WeightBeanXS();
-//                                weightBeanXS.setCurrentAD(CurrentAD);
-//                                weightBeanXS.setZeroAd(zeroAd);
-//                                weightBeanXS.setCurrentWeight(currentWeight);
-//                                weightBeanXS.setTareWeight(tareWeight);
-//                                weightBeanXS.setDataFlag(dataFlag);
-//                                event.setOther(weightBeanXS);
-//                                EventBus.getDefault().post(event);
-//                            }
-
-                            BaseBusEvent event = new BaseBusEvent();
-                            event.setEventType(BaseBusEvent.NOTIFY_WEIGHT_SX15);
-                            event.setOther(str);
-
-                            EventBus.getDefault().post(event);
-
-
-//                            if (handler != null) {
-////                                Message msg = handler.obtainMessage(WEIGHT_NOTIFY_XS8, str);
-////                                handler.sendMessage(msg);
+////                        MyLog.logTest("待处理的称重数据" + str);
+//                        //传输的数据是数据加 空数据间隔 传送
+//                        if (!TextUtils.isEmpty(str)) {
+////                            String[] array = str.split(" ");
+////                            if (array.length >= 10 && array[0].length() == 7 && array[1].length() == 7 && array[2].length() == 7 && array[3].length() == 7) {
+////
+////                                CurrentAD = Integer.parseInt(array[0]);
+////                                zeroAd = Integer.parseInt(array[1]);
+////                                currentWeight = Integer.parseInt(array[2]);
+////                                tareWeight = Integer.parseInt(array[3]);
+////                                dataFlag = 0;
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[4]);
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[5]);
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[6]);
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[7]);
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[8]);
+////                                dataFlag = dataFlag << 1 + Integer.parseInt(array[9]);
+////
+////                                BaseBusEvent event = new BaseBusEvent();
+////                                event.setEventType(BaseBusEvent.WEIGHT_SX15);
+////                                WeightBeanXS weightBeanXS = new WeightBeanXS();
+////                                weightBeanXS.setCurrentAD(CurrentAD);
+////                                weightBeanXS.setZeroAd(zeroAd);
+////                                weightBeanXS.setCurrentWeight(currentWeight);
+////                                weightBeanXS.setTareWeight(tareWeight);
+////                                weightBeanXS.setDataFlag(dataFlag);
+////                                event.setOther(weightBeanXS);
+////                                EventBus.getDefault().post(event);
 ////                            }
-
-//                                BaseBusEvent event = new BaseBusEvent();
-//                                event.setEventType(WEIGHT_DATA_XS8);
-//                                event.setOther(str);
-//                                EventBus.getDefault().post(event);
-                        }
-                    } else if (size > 20 && size < 30) {
-                        String str = new String(buffer, 0, buffer.length).trim();
-                        MyLog.blue("K值数据"+str);
-                        BaseBusEvent event = new BaseBusEvent();
-                        event.setEventType(BaseBusEvent.NOTIFY_WEIGHT_KVALUE);
-                        event.setOther(str);
-                        EventBus.getDefault().post(event);
-                    }
-
-                    // 数据功能
-                    if (size > 4) {
-                        String str = new String(buffer, 0, size).trim();
-                        MyLog.logTest("data数据：" + Arrays.toString(buffer));
-                        MyLog.logTest("data数据String：" + str);
-                        //传输的数据是数据加 空数据间隔 传送
-                        if (!TextUtils.isEmpty(str)) {
-//                          MyLog.myInfo("收到的数据" + str);
-
-                      /*      if (handler != null) {
-//                                Message msg = handler.obtainMessage(WEIGHT_NOTIFY_XS15, str);
-//                                handler.sendMessage(msg);
-                            }*/
-
-
-                        }
-                    }
-
+//
+//                            BaseBusEvent event = new BaseBusEvent();
+//                            event.setEventType(BaseBusEvent.WEIGHT_SX15);
+//                            event.setOther(str);
+//                            EventBus.getDefault().post(event);
+//
+////                            if (handler != null) {
+//////                                Message msg = handler.obtainMessage(WEIGHT_NOTIFY_XS8, str);
+//////                                handler.sendMessage(msg);
+//////                            }
+//
+////                                BaseBusEvent event = new BaseBusEvent();
+////                                event.setEventType(WEIGHT_DATA_XS8);
+////                                event.setOther(str);
+////                                EventBus.getDefault().post(event);
+//                        }
+//                    } else if (size > 20 && size < 30) {
+//                        String str = new String(buffer, 0, buffer.length).trim();
+//                        MyLog.blue("K值数据"+str);
+//                        BaseBusEvent event = new BaseBusEvent();
+//                        event.setEventType(BaseBusEvent.WEIGHT_KVALUE);
+//                        event.setOther(str);
+//                        EventBus.getDefault().post(event);
+//                    }
+//
+//                    // 数据功能
+//                    if (size > 4) {
+//                        String str = new String(buffer, 0, size).trim();
+//                        MyLog.logTest("data数据：" + Arrays.toString(buffer));
+//                        MyLog.logTest("data数据String：" + str);
+//                        //传输的数据是数据加 空数据间隔 传送
+//                        if (!TextUtils.isEmpty(str)) {
+////                          MyLog.myInfo("收到的数据" + str);
+//
+//                      /*      if (handler != null) {
+////                                Message msg = handler.obtainMessage(WEIGHT_NOTIFY_XS15, str);
+////                                handler.sendMessage(msg);
+//                            }*/
+//
+//
+//                        }
+//                    }
 
                     Thread.sleep(150);
                 }
@@ -542,6 +553,13 @@ public class XSWeighter15 extends MyBaseWeighter {
         }
     }
 
+    private void sendReadMessage(String str, String eventType) {
+        BaseBusEvent event = new BaseBusEvent();
+        event.setEventType(eventType);
+        event.setOther(str);
+        EventBus.getDefault().post(event);
+    }
+
     /***
      * 称重的有效数据 一般是 57位
      *
@@ -550,57 +568,10 @@ public class XSWeighter15 extends MyBaseWeighter {
      * @param len  数组 b 的数据长度length
      * @return 返回InputStream 中的byte 数据长度
      * @throws IOException  抛出的异常
-     */
-    //TODO 待 移动到base类中
-    public synchronized int read(byte b[], int off, int len) throws IOException {
-        if (b == null) {
-            throw new NullPointerException();
-        } else if (off < 0 || len < 0 || len > b.length - off) {
-            throw new IndexOutOfBoundsException();
-        } else if (len == 0) {
-            return 0;
-        }
-
-        int c = getSerialPort().getInputStream().read();
-        if (c == -1) {
-            return -1;
-        }
-        b[off] = (byte) c;
-        int i = 1;
-        int size = 1;
-        //数据是否完了
-        boolean isOver = false;
-        try {
-            for (; i < len; i++) {
-                c = getSerialPort().getInputStream().read();
-                if (c == -1) {
-                    isOver = true;
-                }
-                if (isOver) {
-                    b[off + i] = 0;
-                } else {
-                    if (c >= 0) {
-                        b[off + i] = (byte) c;
-                        if (c != 0) {
-                            size++;
-                        }
-                    } else {
-                        b[off + i] = 0;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return size;
-    }
-
-
-    /**
      *
-     * @return  返回buffer 的 数据长度
+     * int 返回buffer 的 数据长度
      */
-    public int read22(byte b[], int off, int len) throws IOException {
+    public int read22(byte[] b, int off, int len) throws IOException {
         if (b == null) {
             return -1;
         } else if (off < 0 || len < 0 || len > b.length - off) {
@@ -621,14 +592,15 @@ public class XSWeighter15 extends MyBaseWeighter {
             if (c == -1) {
                 break;
             }
-            if (c < 0||c>127) {
-                c = 0;
+            if (c < 0 || c > 127) {
+                b[off + i] = 0;
+            } else {
+                b[off + i] = (byte) c;
             }
-            b[off + i] = (byte) c;
+
         }
         return i;
     }
-
 
     /**
      * 单开一线程，来发数据
@@ -662,5 +634,12 @@ public class XSWeighter15 extends MyBaseWeighter {
             }
         }
     }
+
 }
 
+
+//67, 49, 32, 50, 49, 49, 56, 56, 51, 48,
+//        32, 50, 49, 48, 54, 57, 48, 53, 32, 48,
+//        48, 48, 48, 52, 53, 53, 32, 48, 48, 48,
+//        48, 48, 48, 48, 32, 49, 48, 48, 48, 48,
+//        49, 35, 0, 0,

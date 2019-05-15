@@ -13,17 +13,15 @@ import android.os.Message;
 public class TimerThreadUtil extends Thread {
 
     private static final int CURRENTDATETIME = 1;
-    private OnGetCurrentDateTimeListener listener;
+    private final OnGetCurrentDateTimeListener listener;
 
-    private Handler mHandler = new Handler(new Handler.Callback() {
+    private final Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case CURRENTDATETIME:
-                    if (listener != null) {
-                        listener.onGetDateTime();
-                    }
-                    break;
+            if (msg.what == CURRENTDATETIME) {
+                if (listener != null) {
+                    listener.onGetDateTime();
+                }
             }
             return false;
         }

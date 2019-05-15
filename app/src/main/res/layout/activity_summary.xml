@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:ignore="HardcodedText"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context=".ui.activity.datasummary.SummaryActivity">
@@ -46,7 +47,7 @@
                 android:background="@drawable/selector_btn_radio_click22"
                 android:button="@null"
                 android:checked="true"
-                android:drawableTop="@drawable/day_form"
+                android:drawableTop="@mipmap/day_form"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="15dp"
                 android:text="日报表"
@@ -62,7 +63,7 @@
                 android:button="@null"
 
                 android:checked="false"
-                android:drawableTop="@drawable/week_form"
+                android:drawableTop="@mipmap/week_form"
                 android:gravity="center"
 
                 android:padding="15dp"
@@ -78,16 +79,14 @@
                 android:button="@null"
 
                 android:checked="false"
-                android:drawableTop="@drawable/inventory"
+                android:drawableTop="@mipmap/inventory"
                 android:gravity="center_horizontal|center_vertical"
                 android:padding="15dp"
 
                 android:text="商品明细"
                 android:textColor="@color/color_white"
                 android:textSize="30sp" />
-
         </RadioGroup>
-
 
         <ImageView
             android:id="@+id/btnBack"
@@ -97,11 +96,10 @@
             android:background="#2E323E"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/settings9"
+            android:src="@mipmap/settings9"
             android:text="返回"
             android:textSize="35sp"
-
-            />
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <TextView

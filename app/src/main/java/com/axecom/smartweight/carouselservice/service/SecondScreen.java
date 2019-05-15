@@ -1,5 +1,6 @@
 package com.axecom.smartweight.carouselservice.service;
 
+import android.annotation.SuppressLint;
 import android.app.Presentation;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.carouselservice.entity.AdImageInfo;
 import com.axecom.smartweight.carouselservice.entity.AdUserBean;
 import com.axecom.smartweight.carouselservice.entity.AdUserDao;
@@ -38,7 +38,7 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
     /**
      * 上下文内容
      */
-    private Context context;
+    private final Context context;
     private Banner mBanner;
     private ImageView ivPhoto;
 
@@ -56,14 +56,6 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         this.context = outerContext;
     }
 
-    /**
-     * 系统设置 application
-     */
-    private SysApplication myApplication;
-
-//    private TextView text;
-//    private TextView text1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,24 +63,12 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         imagePath = new ArrayList<>();
         imageTitle = new ArrayList<>();
         paths = new ArrayList<>();
-        myApplication = (SysApplication) context.getApplicationContext();
 
         initView();
         dir = FileUtils.getDownloadDir(context, FileUtils.DOWNLOAD_DIR);
         imageDao = new ImageDao(context);
         adUserDao = new AdUserDao(context);
-//
-//        text = findViewById(R.id.text);
-//        text1 = findViewById(R.id.text1);
-
         initData();
-
-
-//        initHandler();
-//      questImage();
-
-//      // 在代码里设置自己的动画
-//      marqueeView.startWithList(info, R.anim.anim_right_in, R.anim.anim_left_out);
     }
 
 
@@ -100,6 +80,7 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
     private AdUserDao adUserDao;
     private List<String> info;
 
+    @SuppressLint("CheckResult")
     public void initData() {
         imageTitle.clear();
         if (info == null) {
@@ -111,30 +92,24 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         List<AdImageInfo> photos = imageDao.queryPhoto();
         List<AdUserBean> userBeans = adUserDao.queryAll();
 
-
         if (photos != null && photos.size() > 0) {
-            String photo = photos.get(0).getLocalPath();
-
+            String photo = photos.get(0).getNetPath();
             RequestOptions requestOptions = new RequestOptions();
-            //忽略 警告 ，不使用内存
+            //忽略 警告 ，不使用内存 ,这样就失去了意义了
             requestOptions.skipMemoryCache(true) // 不使用内存缓存
                     .diskCacheStrategy(DiskCacheStrategy.NONE); // 不使用磁盘缓存
 
-//            requestOptions.centerCrop()
-//                    .placeholder(R.drawable.default_avatar)
-//                    .error(R.drawable.image_error)
-//                    .fallback(R.drawable.fallback_nodata);
-
-            Glide.with(context).load(photo).apply(requestOptions).into(ivPhoto);
+            Glide.with(context).load(photo).error(R.mipmap.head).into(ivPhoto);
+//            Glide.with(context).load(photo).apply(requestOptions).into(ivPhoto);
         } else {
-            ivPhoto.setImageResource(R.drawable.head);
+            ivPhoto.setImageResource(R.mipmap.head);
         }
 
         if (dir == null || list == null || list.size() == 0) {
             imagePath.clear();
-            imagePath.add(R.drawable.default1);
-            imagePath.add(R.drawable.default2);
-            imagePath.add(R.drawable.default3);
+            imagePath.add(R.mipmap.img1);
+            imagePath.add(R.mipmap.img2);
+            imagePath.add(R.mipmap.img3);
 
             imageTitle.add("市场图一");
             imageTitle.add("市场图二");
@@ -143,13 +118,13 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         } else {
             paths.clear();
             for (AdImageInfo image : list) {
-                paths.add(image.getLocalPath());
+                paths.add(image.getNetPath());
                 imageTitle.add(image.getTitle());
             }
             mBanner.setImages(paths);
         }
         mBanner.setBannerTitles(imageTitle);
-        mBanner.setDelayTime(3000);
+        mBanner.setDelayTime(5000);
         mBanner.start();
 
         if (userBeans != null && userBeans.size() > 0) {
@@ -158,7 +133,6 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
             introduce.setText(AdUserBean.getIntroduce());
             companyname.setText(AdUserBean.getCompanyname());
             linkphone.setText(AdUserBean.getLinkphone());
-//            companyid.setText(AdUserBean.getCompanyid());
             String text = AdUserBean.getAdcontent();
             info.add(text);
             info.add(text);
@@ -167,7 +141,6 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
     }
 
     private TextView companyno, introduce, companyname, linkphone;
-    //    , companyid;
     private MarqueeView marqueeView;
 
     private void initView() {
@@ -199,9 +172,9 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         //设置图片加载地址
 //        mBanner.setImages(imagePath);
 //        mBanner.setImages(imagePath);// 这是资源id集合
-        mBanner.setOnBannerListener(this)//轮播图的监听
-                //开始调用的方法，启动轮播图。
-                .start();
+
+        //开始调用的方法，启动轮播图。//轮播图的监听
+        mBanner.setOnBannerListener(this).start();
     }
 
     /**
@@ -214,7 +187,6 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         Toast.makeText(context, "你点了第" + (position + 1) + "张轮播图", Toast.LENGTH_SHORT).show();
     }
 
-
     /**
      * 图片加载类
      */
@@ -222,10 +194,20 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
         @Override
         public void displayImage(Context context, Object path, ImageView imageView) {
             Glide.with(context.getApplicationContext()).load(path).into(imageView);
-            //Glide 加载图片简单用法
-            Glide.with(context).load(path).into(imageView);
+//            //Glide 加载图片简单用法
+//            Glide.with(context).load(path).into(imageView);
+
+
         }
     }
 
-
 }
+
+
+
+
+
+
+
+
+

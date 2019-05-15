@@ -1,18 +1,15 @@
 package com.luofx.mvp.base.presenter;
+import android.support.annotation.NonNull;
 
+import com.luofx.mvp.base.view.IBaseXView;
+
+import java.lang.ref.WeakReference;
 /**
  * 作者：罗发新
  * 时间：2018/12/21 0021    10:58
  * 邮件：424533553@qq.com
  * 说明：
  */
-
-import android.support.annotation.NonNull;
-
-import com.luofx.mvp.base.view.IBaseXView;
-
-import java.lang.ref.WeakReference;
-
 public class BaseXPresenter<V extends IBaseXView> implements IBaseXPresenter {
     // 防止 Activity 不走 onDestory() 方法，所以采用弱引用来防止内存泄漏
     private WeakReference<V> mViewRef;

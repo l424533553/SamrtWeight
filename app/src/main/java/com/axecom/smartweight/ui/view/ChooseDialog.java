@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ChooseDialog extends Dialog {
-    public ChooseDialog(@NonNull Context context, int themeResId) {
+    private ChooseDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }
 
@@ -26,25 +27,26 @@ public class ChooseDialog extends Dialog {
     }
 
 
-    public interface OnSelectedListener {
+    interface OnSelectedListener {
         void onSelected(AdapterView<?> parent, View view, int position, long id);
     }
 
     public static class Builder implements AdapterView.OnItemClickListener {
-        private ChooseDialog chooseDialog;
+        private final ChooseDialog chooseDialog;
         private View view;
-        private Context context;
+        private final Context context;
         private ListView chooseListView;
         private OnSelectedListener onSelectedListener;
         private ChooseAdapter chooseAdapter;
 
 
+        @SuppressLint("InflateParams")
         public Builder(Context context) {
             this.context = context;
             chooseDialog = new ChooseDialog(context, R.style.dialog);
-            view = LayoutInflater.from(context).inflate(R.layout.choose_dialog_layout, null);
-            chooseDialog.addContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            chooseListView = view.findViewById(R.id.choose_dialog_listview);
+//            view = LayoutInflater.from(context).inflate(R.layout.choose_dialog_layout, null);
+//            chooseDialog.addContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            chooseListView = view.findViewById(R.id.choose_dialog_listview);
         }
 
         public ChooseDialog create(List<Map<String, String>> list, int checkedPos, OnSelectedListener onSelectedListener) {
@@ -68,7 +70,7 @@ public class ChooseDialog extends Dialog {
 
 
         class ChooseAdapter extends BaseAdapter {
-            private List<Map<String, String>> list;
+            private final List<Map<String, String>> list;
             private int pos;
 
             public ChooseAdapter(List<Map<String, String>> list) {
@@ -90,10 +92,11 @@ public class ChooseDialog extends Dialog {
                 return position;
             }
 
-            public void setCheckedAtPosition(int position) {
+            void setCheckedAtPosition(int position) {
                 this.pos = position;
             }
 
+            @SuppressLint("InflateParams")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 ViewHolder holder;
@@ -111,11 +114,8 @@ public class ChooseDialog extends Dialog {
                     String value = map.get(key);
                     holder.chooseCtv.setText(value);
                 }
-                if (pos == position) {
-//                    holder.chooseCtv.setChecked(true);
-                } else {
-//                    holder.chooseCtv.setChecked(false);
-                }
+                //                    holder.chooseCtv.setChecked(true);
+                //                    holder.chooseCtv.setChecked(false);
 
                 return convertView;
             }

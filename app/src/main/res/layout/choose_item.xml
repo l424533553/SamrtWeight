@@ -9,11 +9,11 @@
         android:layout_height="60dp"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
-        android:text="111111111111111111111"
+
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:drawableLeft="?android:listChoiceIndicatorSingle"/>
+        android:drawableStart="?android:listChoiceIndicatorSingle"/>
 
 </LinearLayout>

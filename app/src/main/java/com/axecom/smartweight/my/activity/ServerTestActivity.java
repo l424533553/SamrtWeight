@@ -56,10 +56,8 @@ public class ServerTestActivity extends Activity implements IConstants, View.OnC
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.server_test_cancel_btn:
-                finish();
-                break;
+        if (v.getId() == R.id.server_test_cancel_btn) {
+            finish();
         }
     }
 

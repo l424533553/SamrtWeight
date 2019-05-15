@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.unittest;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.List;
  * 说明：
  */
 public class ImageTestAdapter extends BaseAdapter {
-    private Context context;
+    private final Context context;
     private List<AdImageInfo> data;
 
     public void setData(List<AdImageInfo> data) {
@@ -52,9 +53,10 @@ public class ImageTestAdapter extends BaseAdapter {
     }
 
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_image_test, null);
             holder = new ViewHolder();

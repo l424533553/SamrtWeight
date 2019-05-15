@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -43,14 +44,16 @@ public class SoftKeyborad extends Dialog {
         private static final String[] DATA_DIGITAL = {"1","2","3","4","5","6","7","8","9","删除","0","."};
 
         private View contentView;
-        private SoftKeyborad softKeyborad;
-        private View view;
-        private TextView inputTv;
-        private GridView keyboardGV;
-        private KeyBoardAdapter keyAdapter;
-        private Button confirmBtn, cancelBtn;
+        private final SoftKeyborad softKeyborad;
+        private final View view;
+        private final TextView inputTv;
+        private final GridView keyboardGV;
+        private final KeyBoardAdapter keyAdapter;
+        private final Button confirmBtn;
+        private final Button cancelBtn;
         private OnConfirmedListener onConfrimedListener;
 
+        @SuppressLint("InflateParams")
         public Builder(Context context){
             softKeyborad = new SoftKeyborad(context, R.style.dialog);
             view = LayoutInflater.from(context).inflate(R.layout.soft_keyboard_layout, null);
@@ -74,6 +77,7 @@ public class SoftKeyborad extends Dialog {
             softKeyborad.setCanceledOnTouchOutside(false);        //用户不能通过点击对话框之外的地方取消对话框显示
 
             keyboardGV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if(position == 9){
@@ -103,8 +107,8 @@ public class SoftKeyborad extends Dialog {
         }
 
         class KeyBoardAdapter extends BaseAdapter{
-            private Context context;
-            private String[] digitals;
+            private final Context context;
+            private final String[] digitals;
 
             public KeyBoardAdapter(Context context, String[] digitals){
                 this.context = context;
@@ -126,9 +130,10 @@ public class SoftKeyborad extends Dialog {
                 return position;
             }
 
+            @SuppressLint("InflateParams")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                ViewHolder holder = null;
+                ViewHolder holder;
                 if(convertView == null){
                     convertView = LayoutInflater.from(context).inflate(R.layout.soft_keyborad_item, null);
                     holder = new ViewHolder();

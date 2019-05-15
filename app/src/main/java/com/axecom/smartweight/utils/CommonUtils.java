@@ -1,5 +1,6 @@
 package com.axecom.smartweight.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -13,6 +14,8 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,39 +26,22 @@ import java.util.regex.Pattern;
 public class CommonUtils {
     /**
      * return if str is empty
-     *
-     * @param str
-     * @return
      */
-    public static boolean isEmpty(String str) {
-        if (str == null || str.length() == 0 || str.equalsIgnoreCase("null") || str.isEmpty() || str.equals("")) {
-            return true;
-        } else {
-            return false;
-        }
+    private static boolean isEmpty(String str) {
+        return str == null || str.length() == 0 || str.equalsIgnoreCase("null");
     }
 
-    /**
-     * get format date
-     *
-     * @param timemillis
-     * @return
-     */
-    public static String getFormatDate(long timemillis) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(timemillis));
-    }
+
 
     public static String getFormatDate2(long timemillis) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         return simpleDateFormat.format(new Date(timemillis));
     }
 
     /**
      * decode Unicode string
-     *
-     * @param s
-     * @return
+
      */
     public static String decodeUnicodeStr(String s) {
         StringBuilder sb = new StringBuilder(s.length());
@@ -86,9 +72,7 @@ public class CommonUtils {
 
     /**
      * encode Unicode string
-     *
-     * @param s
-     * @return
+
      */
     public static String encodeUnicodeStr(String s) {
         StringBuilder sb = new StringBuilder(s.length() * 3);
@@ -108,10 +92,9 @@ public class CommonUtils {
 
     /**
      * convert time str
-     *
-     * @param time
-     * @return
+
      */
+    @SuppressLint("DefaultLocale")
     public static String convertTime(int time) {
 
         time /= 1000;
@@ -123,16 +106,14 @@ public class CommonUtils {
 
     /**
      * url is usable
-     *
-     * @param url
-     * @return
+
      */
     public static boolean isUrlUsable(String url) {
         if (CommonUtils.isEmpty(url)) {
             return false;
         }
 
-        URL urlTemp = null;
+        URL urlTemp;
         HttpURLConnection connt = null;
         try {
             urlTemp = new URL(url);
@@ -145,27 +126,25 @@ public class CommonUtils {
         } catch (Exception e) {
             return false;
         } finally {
-            connt.disconnect();
+            if (connt != null) {
+                connt.disconnect();
+            }
         }
         return false;
     }
 
     /**
      * is url
-     *
-     * @param url
-     * @return
+
      */
     public static boolean isUrl(String url) {
-        Pattern pattern = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
+        Pattern pattern = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~/])+$");
         return pattern.matcher(url).matches();
     }
 
     /**
      * get toolbar height
-     *
-     * @param context
-     * @return
+
      */
     public static int getToolbarHeight(Context context) {
         final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
@@ -177,9 +156,9 @@ public class CommonUtils {
     }
 
     public static boolean checkEmail(String email) {
-        boolean flag = false;
+        boolean flag;
         try {
-            String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            String check = "^([a-z0-9A-Z]+[-|_|.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
             Pattern regex = Pattern.compile(check);
             Matcher matcher = regex.matcher(email);
             flag = matcher.matches();
@@ -296,17 +275,17 @@ public class CommonUtils {
 
     //版本名
     public static String getVersionName(Context context) {
-        return getPackageInfo(context).versionName;
+        return Objects.requireNonNull(getPackageInfo(context)).versionName;
     }
 
     //版本号
     public static int getVersionCode(Context context) {
-        return getPackageInfo(context).versionCode;
+        return Objects.requireNonNull(getPackageInfo(context)).versionCode;
     }
 
 
     private static PackageInfo getPackageInfo(Context context) {
-        PackageInfo pi = null;
+        PackageInfo pi;
 
         try {
             PackageManager pm = context.getPackageManager();
@@ -317,8 +296,7 @@ public class CommonUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return pi;
+        return null;
     }
 
     //    判断微信是否安装

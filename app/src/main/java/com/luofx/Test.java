@@ -1,6 +1,7 @@
 package com.luofx;
 
 
+import java.util.Objects;
 
 /**
  * 作者：罗发新
@@ -48,7 +49,6 @@ public class Test {
     /**
      * 将一个字节转成3个字节
      * @param sum  校验和
-     * @return
      */
     private static byte[] test11(int sum){
         byte[] by={48,48,48};
@@ -83,19 +83,8 @@ public class Test {
         Student stu1 = new Student("你大爷", 14);
         Student stu2 = new Student("你大爷", 14);
 
-        System.out.println(stu == stu1);
+        System.out.println(Objects.equals(stu, stu1));
         // 测试功能结果
         System.out.println(stu1.equals(stu2));
     }
-
-    /**
-     * 测试使用 ，测试开发
-     */
-    private void test_te() {
-        System.out.print("使用功能");
-        testTest();
-
-
-    }
-
 }

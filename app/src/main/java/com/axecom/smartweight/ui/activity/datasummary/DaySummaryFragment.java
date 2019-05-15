@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,11 +32,6 @@ import java.util.Objects;
  * Created by Administrator on 2018/9/19.
  */
 public class DaySummaryFragment extends Fragment implements View.OnClickListener {
-
-    private Button prevPageBtn, nextPageBtn, prevMonthBtn, nextMonthBtn, prevDayBtn, nextDayBtn;
-    private Button salesDetailsPrevPageBtn, salesDetailsNextPageBtn, salesDetailsPrevDayBtn, salesDetailsNextDayBtn;
-
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -46,7 +40,6 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
 
     private Context context;
     private SysApplication sysApplication;
-    long TIME = 86400000;
 
     @Nullable
     @Override
@@ -62,23 +55,21 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
 
             initView(view);
             initHandler();
-            getData(true);
+            getData();
         }
         return view;
     }
 
-    Handler handler;
+    private Handler handler;
 
     private void initHandler() {
         handler = new Handler(new Handler.Callback() {
             @SuppressLint("SetTextI18n")
             @Override
             public boolean handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 912:
-                        dataAdapter.notifyDataSetChanged();
-                        tvTotalMoney.setText(MyMatch.accurate2(totalMoney)  + "元");
-                        break;
+                if (msg.what == 912) {
+                    dataAdapter.notifyDataSetChanged();
+                    tvTotalMoney.setText(MyMatch.accurate2(totalMoney) + "元");
                 }
 
                 return false;
@@ -87,7 +78,6 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
     }
 
 
-    private ListView lvDaySummary;
     private List<ReportResultBean> data;
     private long time;
     private TextView tvDate;
@@ -96,7 +86,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
     private DataAdapter dataAdapter;
     private float totalMoney;
 
-    public void initView(View view) {
+    private void initView(View view) {
         tvDate = view.findViewById(R.id.tvDate);
         tvTotalMoney = view.findViewById(R.id.tvTotalMoney);
         time = System.currentTimeMillis();
@@ -106,7 +96,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
         view.findViewById(R.id.btnBeforeDay).setOnClickListener(this);
         view.findViewById(R.id.btnNextDay).setOnClickListener(this);
 
-        lvDaySummary = view.findViewById(R.id.lvDaySummary);
+        ListView lvDaySummary = view.findViewById(R.id.lvDaySummary);
         data = new ArrayList<>();
         dataAdapter = new DataAdapter(context, data);
         lvDaySummary.setAdapter(dataAdapter);
@@ -128,7 +118,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void getData(final boolean isFirst) {
+    private void getData() {
         sysApplication.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
@@ -193,8 +183,10 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
+        long TIME = 86400000;
         switch (v.getId()) {
 
 
@@ -203,7 +195,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
                 date = DateUtils.getYYMMDD(time);
                 tvDate.setText(date);
                 tvTotalMoney.setText("0.00");
-                getData(false);
+                getData();
 //                getReportsList(currentDay, typeVal + "", --currentPage <= 1 ? (currentPage = 1) + "" : --currentPage + "", pageNum + "");
                 break;
             case R.id.btnNextDay:
@@ -211,24 +203,19 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
                 date = DateUtils.getYYMMDD(time);
                 tvDate.setText(date);
                 tvTotalMoney.setText("0.00");
-                getData(false);
+                getData();
 //                getReportsList(currentDay, typeVal + "", --currentPage <= 1 ? (currentPage = 1) + "" : --currentPage + "", pageNum + "");
                 break;
 
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
 
     public class DataAdapter extends BaseAdapter {
-        private Context context;
-        private List<ReportResultBean> list;
+        private final Context context;
+        private final List<ReportResultBean> list;
 
-        public DataAdapter(Context context, List<ReportResultBean> list) {
+        DataAdapter(Context context, List<ReportResultBean> list) {
             this.context = context;
             this.list = list;
         }
@@ -248,6 +235,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
             return position;
         }
 
+        @SuppressLint({"InflateParams", "SetTextI18n"})
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             DataAdapter.ViewHolder holder;

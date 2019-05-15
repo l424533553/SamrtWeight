@@ -41,7 +41,7 @@ public class BaseEntity<T> implements Serializable{
         this.ret = ret;
     }
 
-    public int getCode() {
+    private int getCode() {
         return code;
     }
 

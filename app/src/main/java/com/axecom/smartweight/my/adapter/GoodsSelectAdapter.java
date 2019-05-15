@@ -24,8 +24,8 @@ import java.util.List;
  * describe:
  */
 public class GoodsSelectAdapter extends RecyclerView.Adapter<GoodsSelectAdapter.DragViewHolder> {
-    private List<AllGoods> goodsList;
-    private LayoutInflater mInflater;
+    private final List<AllGoods> goodsList;
+    private final LayoutInflater mInflater;
 
 
     public GoodsSelectAdapter(Context context) {
@@ -94,14 +94,6 @@ public class GoodsSelectAdapter extends RecyclerView.Adapter<GoodsSelectAdapter.
     }
 
 
-    public void showDeleteTv(boolean show) {
-        for (int i = 0; i < goodsList.size(); i++) {
-//            goodsList.get(i).setShow(show);
-        }
-//        isShowDelTv = show;
-        notifyDataSetChanged();
-    }
-
     private void removeItemByPosition(int position) {
         goodsList.remove(position);
         notifyDataSetChanged();
@@ -109,9 +101,9 @@ public class GoodsSelectAdapter extends RecyclerView.Adapter<GoodsSelectAdapter.
 
 
     public class DragViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameTv;
-        private ImageView deleteTv;
-        private ImageView selectedTv;
+        private final TextView nameTv;
+        private final ImageView deleteTv;
+        private final ImageView selectedTv;
 
         private DragViewHolder(View itemView) {
             super(itemView);

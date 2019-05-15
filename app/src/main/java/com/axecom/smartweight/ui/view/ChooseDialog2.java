@@ -1,5 +1,6 @@
 package com.axecom.smartweight.ui.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -31,20 +32,21 @@ public class ChooseDialog2<T> extends Dialog {
     }
 
     public static class Builder implements AdapterView.OnItemClickListener {
-        private ChooseDialog2 chooseDialog;
+        private final ChooseDialog2 chooseDialog;
         private View view;
-        private Context context;
+        private final Context context;
         private ListView chooseListView;
         private OnSelectedListener onSelectedListener;
         private ChooseAdapter chooseAdapter;
 
 
+        @SuppressLint("InflateParams")
         public Builder(Context context) {
             this.context = context;
             chooseDialog = new ChooseDialog2(context, R.style.dialog);
-            view = LayoutInflater.from(context).inflate(R.layout.choose_dialog_layout, null);
-            chooseDialog.addContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            chooseListView = view.findViewById(R.id.choose_dialog_listview);
+//            view = LayoutInflater.from(context).inflate(R.layout.choose_dialog_layout, null);
+//            chooseDialog.addContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            chooseListView = view.findViewById(R.id.choose_dialog_listview);
         }
 
         public ChooseDialog2 create(List<ChooseBean> list, int checkedPos, OnSelectedListener onSelectedListener) {
@@ -68,7 +70,7 @@ public class ChooseDialog2<T> extends Dialog {
 
 
         class ChooseAdapter extends BaseAdapter {
-            private List<ChooseBean> list;
+            private final List<ChooseBean> list;
             private int pos;
 
             public ChooseAdapter(List<ChooseBean> list) {
@@ -94,6 +96,7 @@ public class ChooseDialog2<T> extends Dialog {
                 this.pos = position;
             }
 
+            @SuppressLint("InflateParams")
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 ViewHolder holder;

@@ -1,5 +1,8 @@
 package com.luofx.newclass.weighter;
 
+
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
@@ -83,6 +86,7 @@ public class WeightBeanXS implements Serializable {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "WeightBeanXS{" +

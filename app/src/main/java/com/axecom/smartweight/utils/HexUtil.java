@@ -85,9 +85,9 @@ public class HexUtil {
         }
 
         byte var1;
-        for(var1 = 0; var1 < 10; DIGITS[48 + var1] = var1++) {
-            ;
-        }
+//        for(var1 = 0; var1 < 10; DIGITS[48 + var1] = var1++) {
+//
+//        }
 
         for(var1 = 0; var1 < 6; ++var1) {
             DIGITS[65 + var1] = (byte)(10 + var1);

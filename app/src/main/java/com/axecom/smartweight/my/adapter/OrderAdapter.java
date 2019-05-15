@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import java.util.List;
  * describe:
  */
 public class OrderAdapter extends BaseAdapter {
-    private Context context;
+    private final Context context;
     private List<OrderBean> list;
     private boolean isSecondLayout;
 
@@ -57,11 +58,13 @@ public class OrderAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             if (isSecondLayout) {
+                //副屏显示
                 convertView = LayoutInflater.from(context).inflate(R.layout.commodity_second_item, null);
             } else {
                 convertView = LayoutInflater.from(context).inflate(R.layout.commodity_item, null);
@@ -82,7 +85,7 @@ public class OrderAdapter extends BaseAdapter {
 
         OrderBean orderBean = list.get(position);
         holder.nameTv.setText(orderBean.getName());
-        holder.tvIndex.setText(String.valueOf(position + 1));
+        holder.tvIndex.setText(String.valueOf(getCount() - position));
 
 //        if ((orderBean.getWeight()).indexOf('.') == -1 || orderBean.getWeight().length() - (orderBean.getWeight().indexOf(".") + 1) <= 1) {
 //            holder.weightTv.setText(Float.parseFloat(orderBean.getWeight()) / 1000 + "");
@@ -93,8 +96,6 @@ public class OrderAdapter extends BaseAdapter {
 //        }
 
         holder.weightTv.setText(orderBean.getWeight());
-
-
         holder.priceTv.setText(orderBean.getPrice());
         holder.subtotalTv.setText(orderBean.getMoney());
         return convertView;

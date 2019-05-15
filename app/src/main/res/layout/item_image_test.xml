@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -11,7 +12,8 @@
         android:layout_height="@dimen/x200"
         android:gravity="center"
         android:singleLine="true"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        tools:ignore="ContentDescription" />
 
 
     <LinearLayout
@@ -27,7 +29,8 @@
             android:gravity="center"
             android:singleLine="true"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="NestedWeights" />
 
         <TextView
             android:id="@+id/tvNetPath"

@@ -8,9 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- 尽量 让windowBackground  为null,以免进行了过度渲染 -->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
     <style name="btnClick">
         <item name="android:layout_width">@dimen/y124</item>
-        <item name="android:layout_height">@dimen/y70</item>
+        <item name="android:layout_height">@dimen/x75</item>
         <item name="android:clickable">false</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
@@ -22,7 +31,6 @@
     <style name="layout_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-
         <item name="android:background">@drawable/shape_bg</item>
     </style>
 
@@ -36,9 +44,10 @@
         <!--半透明-->
         <item name="android:windowNoTitle">true</item>
         <!--无标题-->
-        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowBackground">@color/gray_eee</item>
         <!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item>
+   <!--     <item name="android:windowBackground">@null</item>-->
         <!--模糊-->
     </style>
 
@@ -50,9 +59,6 @@
         <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
         <item name="android:backgroundDimEnabled">false</item><!--模糊-->
     </style>
-
-
-
 
     <style name="MyEditText" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/green_3CB371</item>
@@ -77,14 +83,14 @@
     </style>
 
     <!--<style name="Dialog123" parent="android:style/Theme.Dialog">-->
-        <!--<item name="android:background">@android:color/transparent</item>-->
-        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
-        <!--<item name="android:windowNoTitle">true</item>-->
+    <!--<item name="android:background">@android:color/transparent</item>-->
+    <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+    <!--<item name="android:windowNoTitle">true</item>-->
     <!--</style>-->
 
     <style name="SplashTheme" parent="AppTheme">
         <!-- 将splash图片设置在这，这样这张图片取代白屏 -->
-        <item name="android:windowBackground">@drawable/welcome</item>
+        <item name="android:windowBackground">@mipmap/welcome</item>
         <item name="android:windowFullscreen">false</item>
         <!-- 或者是将主题设置成透明，虽然点击图标会有点小小的卡顿，但是用户体验不影响 -->
         <!-- <item name="android:windowIsTranslucent">true</item> --> <!-- 透明背景不要了 -->

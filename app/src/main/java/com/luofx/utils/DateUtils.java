@@ -16,20 +16,22 @@ public class DateUtils {
     public final static String YY_MM = "yyyy-MM";//检测数据日期时间格式
     public final static String mm_ss = "mm:ss";//检测数据日期时间格式
     public final static String YY_TO_ss = "yyyy-MM-dd HH:mm:ss";//精确到秒的日期时间格式
-    private static SimpleDateFormat yyTossFormat = new SimpleDateFormat(YY_TO_ss, Locale.CHINA);
-    private static SimpleDateFormat HHFormat = new SimpleDateFormat("HH", Locale.CHINA);
-    private static SimpleDateFormat DDFormat = new SimpleDateFormat("dd", Locale.CHINA);
-    private static SimpleDateFormat mmssFormat = new SimpleDateFormat(mm_ss, Locale.CHINA);
-    private static SimpleDateFormat sampleNoFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.CHINA);
-    private static SimpleDateFormat yymmddFormat = new SimpleDateFormat(YY_MM_DD, Locale.CHINA);
-    private static SimpleDateFormat yymmFormat = new SimpleDateFormat(YY_MM, Locale.CHINA);
+    private static final SimpleDateFormat yyTossFormat = new SimpleDateFormat(YY_TO_ss, Locale.CHINA);
+    private static final SimpleDateFormat HHFormat = new SimpleDateFormat("HH", Locale.CHINA);
+    private static final SimpleDateFormat DDFormat = new SimpleDateFormat("dd", Locale.CHINA);
+    private static final SimpleDateFormat mmssFormat = new SimpleDateFormat(mm_ss, Locale.CHINA);
+    private static final SimpleDateFormat sampleNoFormat = new SimpleDateFormat("MMddyyyyHHmmss", Locale.CHINA);
+    private static final SimpleDateFormat yymmddFormat = new SimpleDateFormat(YY_MM_DD, Locale.CHINA);
+    private static final SimpleDateFormat yymmFormat = new SimpleDateFormat(YY_MM, Locale.CHINA);
 
     public static String getYY_TO_ss(Date date) {
         return yyTossFormat.format(date);
     }
+
     public static String getHH(Date date) {
         return HHFormat.format(date);
     }
+
     public static String getDD(Date date) {
         return DDFormat.format(date);
     }
@@ -62,6 +64,7 @@ public class DateUtils {
     public static String getYYMMDD(Date date) {
         return yymmddFormat.format(date);
     }
+
     public static String getYYMM(Date date) {
         return yymmFormat.format(date);
     }
@@ -75,25 +78,18 @@ public class DateUtils {
     }
 
 
-
     //判断闰年
-   private boolean isLeap(int year)
-    {
-        if (((year % 100 == 0) && year % 400 == 0) || ((year % 100 != 0) && year % 4 == 0))
-            return true;
-        else
-            return false;
+    private boolean isLeap(int year) {
+        return ((year % 100 == 0) && year % 400 == 0) || ((year % 100 != 0) && year % 4 == 0);
     }
 
     //返回当月天数
-   public int getDays(int year, int month)
-    {
+    public int getDays(int year, int month) {
         int days;
         int FebDay = 28;
         if (isLeap(year))
             FebDay = 29;
-        switch (month)
-        {
+        switch (month) {
             case 1:
             case 3:
             case 5:
@@ -119,4 +115,14 @@ public class DateUtils {
         return days;
     }
 
+    /**
+     * 生成12位的出厂编号
+     *
+     * @param tid 秤id
+     * @return 2019101 是编号前缀定死的
+     */
+    public static String getDeviceNo(int tid) {
+        String data = "00000" + tid;
+        return 2019101 + data.substring(data.length() - 5);
+    }
 }

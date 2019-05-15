@@ -1,5 +1,6 @@
 package com.axecom.smartweight.my.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,8 @@ import java.util.List;
  * describe:
  */
 public class BackgroundAdapter extends BaseAdapter {
-    private Context context;
-    private List<Integer> list;
+    private final Context context;
+    private final List<Integer> list;
 
 
     public BackgroundAdapter(Context context) {
@@ -51,6 +52,7 @@ public class BackgroundAdapter extends BaseAdapter {
 //        return list.get(position);
 //    }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;

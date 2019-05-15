@@ -1,9 +1,9 @@
 package com.axecom.smartweight.base;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.WindowManager;
@@ -13,23 +13,21 @@ import com.axecom.smartweight.my.entity.UserInfo;
 import com.luofx.base.MyBaseApplication;
 import com.luofx.newclass.printer.EPSPrint;
 import com.luofx.newclass.printer.MyBasePrinter;
-import com.luofx.newclass.printer.WHPrinter;
+import com.luofx.newclass.printer.WHPrinter15;
+import com.luofx.newclass.printer.WHPrinter8;
+import com.luofx.newclass.printer.WHPrinterAXE;
 import com.luofx.newclass.weighter.MyBaseWeighter;
 import com.luofx.newclass.weighter.STWeighter;
 import com.luofx.newclass.weighter.XSWeighter15;
 import com.luofx.newclass.weighter.XSWeighter8;
-import com.luofx.utils.MyPreferenceUtils;
-import com.xuanyuan.xinyu.MyToast;
+import com.luofx.newclass.weighter.XSWeighterAXE;
 import com.luofx.utils.security.DesBCBHelper;
 import com.luofx.utils.text.StringUtils;
+import com.xuanyuan.library.MyLog;
+import com.xuanyuan.library.MyPreferenceUtils;
+import com.xuanyuan.library.MyToast;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Response;
-
 
 /**
  * Created by Longer on 2016/10/26.
@@ -38,6 +36,7 @@ public class SysApplication extends MyBaseApplication {
     private final static String USER_ST = "android-build";
     private final static String USER_XS_15 = "liaokai";
     private final static String USER_XS_8 = "liuyegang";
+    private final static String USER_AXB = "root";
     private static Handler mHandler;
     //    private  static long mMainThreadId;
     private UserInfo userInfo;
@@ -82,25 +81,45 @@ public class SysApplication extends MyBaseApplication {
         return DesBCBHelper.getmInstants();
     }
 
+
+    public static Context getInstance() {
+        return sInstance;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private static SysApplication sInstance;
+
+
     @Override
     public void onCreate() {// 程序的入口方法
         super.onCreate();
         // 2.主线程的Handler
         mHandler = new Handler();
-
-//      Intent intentService = new Intent(getApplicationContext(), HeartBeatServcice.class);
-//      startService(intentService);
-
+        sInstance = this;
         // 非测试模式
-        if (TestMode > 0) {
+        if (!DEBUG_MODE) {
             tidType = decisionScaleType();
             modularUnit();
             startBanner();
         }
+        MyLog.e("ggk", "sysApplication   onCreate");
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        MyLog.e("ggk", "sysApplication   onLowMemory");
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        MyLog.e("ggk", "sysApplication   onTerminate");
     }
 
     /**
      * OK 判定秤的种类
+     *
      *
      * @return 秤的种类类型
      */
@@ -114,12 +133,13 @@ public class SysApplication extends MyBaseApplication {
             return TID_TYPE_XS15;
         } else if (USER_XS_8.equalsIgnoreCase(user)) {
             return TID_TYPE_XS8;
+        } else if (USER_AXB.equalsIgnoreCase(user)) {
+            return TID_TYPE_AXE;
         }
         return TID_TYPE_OTHER;
     }
 
     private SecondScreen banner;// 第二
-
     public SecondScreen getBanner() {
         if (banner == null) {
             startBanner();
@@ -143,11 +163,12 @@ public class SysApplication extends MyBaseApplication {
         }
     }
 
-    // 称的类型  0 为商通  ，1 为XS15 ,2 为8寸
+    // 称的类型  0为商通  ，1 为XS15 , 2 为8寸。
     private int tidType = 0;
     private final static int TID_TYPE_ST = 0;
     private final static int TID_TYPE_XS15 = 1;
     private final static int TID_TYPE_XS8 = 2;
+    private final static int TID_TYPE_AXE = 3;
     private final static int TID_TYPE_OTHER = -2;
     private final static int TID_TYPE_ERROR = -1;
 
@@ -155,10 +176,7 @@ public class SysApplication extends MyBaseApplication {
         return tidType;
     }
 
-
     private boolean isOpenPrinter;
-
-
 
     public boolean isOpenPrinter() {
         return isOpenPrinter;
@@ -184,17 +202,21 @@ public class SysApplication extends MyBaseApplication {
         if (tidType == 0) {
             print = new EPSPrint(EPSPrint.PATH_ST, EPSPrint.BAUDRATE_ST);
         } else if (tidType == 1) {
-            print = new WHPrinter(WHPrinter.PATH_XS15, WHPrinter.BAUDRATE_XS15);
-        } else {
-            print = new WHPrinter(WHPrinter.PATH_XS8, WHPrinter.BAUDRATE_XS8);
+            print = new WHPrinter15(WHPrinter15.PATH_XS15, WHPrinter15.BAUDRATE_XS15);
+        } else if (tidType == 2) {
+            print = new WHPrinter8(WHPrinter8.PATH_XS8, WHPrinter8.BAUDRATE_XS8);
+        }else if(tidType == 3){
+            print = new WHPrinterAXE(WHPrinter8.PATH_XS8, WHPrinter8.BAUDRATE_XS8);
         }
-        boolean isOpenPrinter = print.open();
-        if (!isOpenPrinter) {
-            MyToast.toastLong(getContext(), "打印机串口连接失败");
-        }else {
-            // 设置是否打印二维码
-            boolean isNoQR= MyPreferenceUtils.getBoolean(getContext(),IS_NO_PRINT_QR,false);
-            print.setNoQR(isNoQR);
+        if (print != null) {
+            boolean isOpenPrinter = print.open();
+            if (!isOpenPrinter) {
+                MyToast.toastLong(getContext(), "打印机串口连接失败");
+            } else {
+                // 设置是否打印二维码
+                boolean isNoQR = MyPreferenceUtils.getBoolean(getContext(), IS_NO_PRINT_QR, false);
+                print.setNoQR(isNoQR);
+            }
         }
 
         if (tidType == 0) {
@@ -206,11 +228,13 @@ public class SysApplication extends MyBaseApplication {
         } else if (tidType == 2) {
             myBaseWeighter = new XSWeighter8();
             isOpenWeight = myBaseWeighter.open();
+        }else if(tidType == 3){
+            myBaseWeighter = new XSWeighterAXE();
+            isOpenWeight = myBaseWeighter.open();
         }
         if (!isOpenWeight) {
             MyToast.toastShort(getContext(), "称重串口连接失败");
         }
-
     }
 
     /**
@@ -218,22 +242,8 @@ public class SysApplication extends MyBaseApplication {
      */
     public void onDestory() {
         if (print != null) {
-            try {
-                print.closeSerialPort();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            print.closeSerialPort();
         }
     }
-
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) {
-
-    }
-
 }
+

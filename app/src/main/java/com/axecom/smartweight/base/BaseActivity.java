@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,11 +28,12 @@ import com.luofx.newclass.ActivityController;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -42,18 +41,15 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by Longer on 2016/10/26.
  */
 public abstract class BaseActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    public ViewUtils mViewUtils = null;
-    public static final int FLAG_HOMEKEY_DISPATCHED = 0x80000000; //需要自己定义标志
-    DisplayMetrics dm;
-    public int mWidthPixels;
-    public int mHeightPixels;
+    private static final int FLAG_HOMEKEY_DISPATCHED = 0x80000000; //需要自己定义标志
+
     //    private SweetAlertDialog mSweetAlertDialog;
     private View mMenuRoot;
     private SweetAlertDialog mSweetAlertDialog;
 
+    protected BaseActivity() {
+    }
 
-    protected SysApplication sysApplication;
-    private Context context;
 
     // 测试功能
     @SuppressLint("InlinedApi")
@@ -62,15 +58,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         this.getWindow().setFlags(FLAG_HOMEKEY_DISPATCHED, FLAG_HOMEKEY_DISPATCHED);//关键代码
-        sysApplication = (SysApplication) getApplication();
-        context = this;
-
         EventBus.getDefault().register(this);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 //        Intent bannerIntent = new Intent(this, BannerService.class);
 //        startService(bannerIntent);
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 19) {
+        if (Build.VERSION.SDK_INT > 19) {
             getWindow().setStatusBarColor(getResources().getColor(R.color.black));
         }
         //
@@ -79,9 +72,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         //这里这一段会影响弹出的dialog型的Activity，故暂时注释掉
         //getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-        mViewUtils = new ViewUtils(this);
+        ViewUtils mViewUtils = new ViewUtils(this);
         //获取屏幕的宽高的像素
-        dm = new DisplayMetrics();
+        DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 //        SysApplication.mWidthPixels = dm.widthPixels;
 //        SysApplication.mHeightPixels = dm.heightPixels;
@@ -89,15 +82,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     }
 
-   public  abstract void initView();
-
-
-
+    public abstract void initView();
 
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == event.KEYCODE_HOME) {
+        if (keyCode == KeyEvent.KEYCODE_HOME) {
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -123,16 +113,12 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     /**
      * @param et 隐藏软键盘
-     * @nama yl
      */
     public void Hidekeyboard(EditText et) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         boolean isOpen = imm.isActive();// isOpen若返回true，则表示输入法打开
         if (isOpen) {
-            ((InputMethodManager) et.getContext().getSystemService(
-                    INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                    getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+            ((InputMethodManager) et.getContext().getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -152,7 +138,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     /**
      * @param et 显示软键盘
-     * @nama yl
      */
     public void Showkeyboard(EditText et) {
         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
@@ -163,19 +148,9 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     public abstract View setInitView();
 
+    private PopupWindow mPopupWindow;
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    protected View getAnchorView() {
-        return null;
-    }
-
-    PopupWindow mPopupWindow;
-
-    protected void switchMenu() {
+    private void switchMenu() {
         if (mPopupWindow == null) {
             mPopupWindow = new PopupWindow(this);
             //mPopupWindow.setOutsideTouchable(true);
@@ -194,7 +169,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         if (mPopupWindow.isShowing()) {
             mPopupWindow.dismiss();
         } else {
-            mPopupWindow.showAsDropDown(getAnchorView());
+            mPopupWindow.showAsDropDown(null);
         }
     }
 
@@ -219,7 +194,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSweetAlertDialog.show();
     }
 
-    public void showLoading(String titleText, String confirmText) {
+    private void showLoading(String titleText, String confirmText) {
         if (mSweetAlertDialog != null) {
             mSweetAlertDialog.dismiss();
         }
@@ -254,52 +229,14 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         mSweetAlertDialog.show();
     }
 
-    public void closeLoading() {
+    private void closeLoading() {
         if (mSweetAlertDialog != null && mSweetAlertDialog.isShowing()) {
             mSweetAlertDialog.dismissWithAnimation();
         }
     }
 
 
-
-    public void disableShowInput(final EditText editText) {
-        if (android.os.Build.VERSION.SDK_INT <= 10) {
-            editText.setInputType(InputType.TYPE_NULL);
-        } else {
-            Class<EditText> cls = EditText.class;
-            Method method;
-            try {
-                method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-                method.setAccessible(true);
-                method.invoke(editText, false);
-            } catch (Exception e) {//TODO: handle exception
-            }
-            try {
-                method = cls.getMethod("setSoftInputShownOnFocus", boolean.class);
-                method.setAccessible(true);
-                method.invoke(editText, false);
-            } catch (Exception e) {//TODO: handle exception
-            }
-        }
-
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                editText.setSelection(editText.length());
-            }
-        });
-    }
-
+    @SuppressLint("SetTextI18n")
     public void setEditText(EditText editText, int position, String text) {
         if (position == 9) {
             if (!TextUtils.isEmpty(editText.getText()))
@@ -309,6 +246,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void setEditText(EditText editText, int position, String text, int type) {
         if (position == 9) {
             if (!TextUtils.isEmpty(editText.getText()))
@@ -320,11 +258,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
 
     public String getMonthTime(String specifiedDay, String format, int type) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);// HH:mm:ss
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.CHINA);// HH:mm:ss
         Calendar c = Calendar.getInstance();
         Date date = null;
         try {
-            date = new SimpleDateFormat("yy-MM").parse(specifiedDay);
+            date = new SimpleDateFormat("yy-MM", Locale.CHINA).parse(specifiedDay);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -352,9 +290,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
 
-
-
-
-
-
+    public void setmMenuRoot(View mMenuRoot) {
+        this.mMenuRoot = mMenuRoot;
+    }
 }

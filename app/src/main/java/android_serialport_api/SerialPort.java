@@ -59,8 +59,6 @@ public class SerialPort {
     /**
      * 串口有五个重要的参数：串口设备名，波特率，检验位，数据位，停止位
      * 其中检验位一般默认位NONE,数据位一般默认为8，停止位默认为1
-     */
-    /**
      * @param path     串口设备的绝对路径
      * @param baudrate 波特率
      * @param flags    校验位

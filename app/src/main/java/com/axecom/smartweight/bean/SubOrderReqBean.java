@@ -28,7 +28,7 @@ public class SubOrderReqBean implements Serializable{
         return goods;
     }
 
-    public void setGoods(List goods) {
+    public void setGoods(List<Goods>  goods) {
         this.goods = goods;
     }
 

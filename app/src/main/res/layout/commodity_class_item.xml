@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/commodity_class_name_tv"
     android:layout_width="140dp"
     android:layout_height="90dp"
@@ -13,6 +14,7 @@
     android:paddingBottom="10dp"
     android:singleLine="true"
     android:text="白菜"
-    android:textSize="22sp">
+    android:textSize="22sp"
+    tools:ignore="HardcodedText">
 
 </TextView>

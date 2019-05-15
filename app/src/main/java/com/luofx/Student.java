@@ -1,5 +1,8 @@
 package com.luofx;
 
+
+import android.support.annotation.NonNull;
+
 import java.util.Objects;
 
 /**
@@ -49,6 +52,7 @@ public class Student {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "Student{" +

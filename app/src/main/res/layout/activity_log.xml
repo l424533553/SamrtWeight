@@ -9,13 +9,17 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="67dp"
         android:background="@color/green_008B00"
         android:gravity="center"
         android:padding="10dp"
         android:text="异常日志"
         android:textColor="@color/color_white"
-        android:textSize="35sp" />
+        android:textSize="35sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvLog"

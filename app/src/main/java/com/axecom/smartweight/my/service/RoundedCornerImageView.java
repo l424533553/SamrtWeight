@@ -25,7 +25,7 @@ public class RoundedCornerImageView extends android.support.v7.widget.AppCompatI
 //    ImageView
 
     private final float density = getContext().getResources().getDisplayMetrics().density;
-    private float roundness;
+    private final float roundness;
     private static final int DEFAULT_RECT_ROUND_RADIUS = 0;
 
     public RoundedCornerImageView(Context context) {

@@ -6,7 +6,7 @@
 //import com.axecom.smartweight.carouselservice.entity.AdImageInfo;
 //import com.axecom.smartweight.carouselservice.entity.AdUserBean;
 //import com.axecom.smartweight.my.entity.AllGoods;
-//import com.axecom.smartweight.my.entity.Goods;
+//import com.axecom.smartweight.my.entity.HotGood;
 //import com.axecom.smartweight.my.entity.GoodsType;
 //import com.axecom.smartweight.my.entity.OrderBean;
 //import com.axecom.smartweight.my.entity.OrderInfo;
@@ -82,13 +82,13 @@
 //    @Override // 创建数据库时调用的方法
 //    public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
 //        try {
-////            TableUtils.createTable(connectionSource, Goods.class);
+////            TableUtils.createTable(connectionSource, HotGood.class);
 //
 //            TableUtils.createTable(connectionSource, OrderInfo.class);
 //            TableUtils.createTable(connectionSource, OrderBean.class);
 ////            TableUtils.createTable(connectionSource, Teacher.class);
 //            TableUtils.createTable(connectionSource, UserInfo.class);
-//            TableUtils.createTable(connectionSource, Goods.class);
+//            TableUtils.createTable(connectionSource, HotGood.class);
 //            TableUtils.createTable(connectionSource, GoodsType.class);
 //            TableUtils.createTable(connectionSource, AllGoods.class);
 //            TableUtils.createTable(connectionSource, TraceNoBean.class);
@@ -143,11 +143,11 @@
 ////        }
 //
 //        // 数据库更新 删除表 ,在重建
-////            TableUtils.dropTable(connectionSource, Goods.class, true);
+////            TableUtils.dropTable(connectionSource, HotGood.class, true);
 ////            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
 ////            TableUtils.dropTable(connectionSource, OrderBean.class, true);
 ////            TableUtils.dropTable(connectionSource, AdUserInfo.class, true);
-////            TableUtils.dropTable(connectionSource, Goods.class, true);
+////            TableUtils.dropTable(connectionSource, HotGood.class, true);
 ////            TableUtils.dropTable(connectionSource, GoodsType.class, true);
 ////            TableUtils.dropTable(connectionSource, AllGoods.class, true);
 ////            onCreate(database, connectionSource);

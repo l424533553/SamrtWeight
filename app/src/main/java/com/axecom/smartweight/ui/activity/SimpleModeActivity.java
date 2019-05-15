@@ -10,7 +10,7 @@
 //import com.axecom.smartweight.base.BaseActivity;
 //import com.axecom.smartweight.my.activity.common.SettingsActivity;
 //import com.axecom.smartweight.my.adapter.DigitalAdapter;
-//import com.axecom.smartweight.ui.adapter.GoodMenuAdapter;
+//import com.axecom.smartweight.my.adapter.GoodMenuAdapter;
 //
 //import java.util.ArrayList;
 //import java.util.List;

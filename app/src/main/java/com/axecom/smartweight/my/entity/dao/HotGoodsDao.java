@@ -4,7 +4,7 @@ package com.axecom.smartweight.my.entity.dao;
 import android.content.Context;
 import android.util.Log;
 
-import com.axecom.smartweight.my.entity.Goods;
+import com.axecom.smartweight.my.entity.HotGood;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -20,12 +20,12 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public class HotGoodsDao {
     // ORMLite提供的DAO类对象，第一个泛型是要操作的数据表映射成的实体类；第二个泛型是这个实体类中ID的数据类型
-    private Dao<Goods, Integer> dao;
+    private Dao<HotGood, Integer> dao;
 
     public HotGoodsDao(Context context) {
         try {
             OrmliteBaseHelper ormliteBaseHelper = OrmliteBaseHelper.getInstance(context.getApplicationContext());
-            this.dao = ormliteBaseHelper.getDao(Goods.class);
+            this.dao = ormliteBaseHelper.getDao(HotGood.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -41,7 +41,7 @@ public class HotGoodsDao {
     }
 
     // 添加数据
-    public int insert(Goods data) {
+    public int insert(HotGood data) {
         try {
             //noinspection unchecked
             return dao.create(data);
@@ -52,7 +52,17 @@ public class HotGoodsDao {
     }
 
     // 添加数据
-    public int insert(List<Goods> datas) {
+    public long count() {
+        try {
+            return dao.countOf();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // 添加数据
+    public int insert(List<HotGood> datas) {
         try {
             //noinspection unchecked
             return dao.create(datas);
@@ -66,7 +76,7 @@ public class HotGoodsDao {
 
 
     // 删除数据
-    public void delete(Goods data) {
+    public void delete(HotGood data) {
         try {
             dao.delete(data);
         } catch (SQLException e) {
@@ -77,7 +87,7 @@ public class HotGoodsDao {
     // 删除数据
     public int deleteAll() {
         try {
-          return   dao.deleteBuilder().delete();
+            return dao.deleteBuilder().delete();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,7 +95,7 @@ public class HotGoodsDao {
     }
 
     // 删除数据
-    public void delete2(Goods data) {
+    public void delete2(HotGood data) {
         try {
 
 //            SELECT DATE_FORMAT(f.created_at,'%Y-%m-%d') days
@@ -99,7 +109,7 @@ public class HotGoodsDao {
     }
 
     // 修改数据
-    public int update(Goods data) {
+    public int update(HotGood data) {
         int rows = -1;
         try {
             rows = dao.update(data);
@@ -110,7 +120,7 @@ public class HotGoodsDao {
     }
 
     // 修改或者插入数据
-    public boolean updateOrInsert(Goods data) {
+    public boolean updateOrInsert(HotGood data) {
         try {
             Dao.CreateOrUpdateStatus createOrUpdateStatus = dao.createOrUpdate(data);
             return createOrUpdateStatus.isCreated() || createOrUpdateStatus.isUpdated();
@@ -131,7 +141,7 @@ public class HotGoodsDao {
     }
 
     //    // 通过条件查询文章集合（通过用户ID查找）
-    public List<Goods> queryByName(String name) {
+    public List<HotGood> queryByName(String name) {
         try {
             return dao.queryBuilder().where().eq("Status", 0).and().like("SpellCode", "%" + name + "%").query();
         } catch (SQLException e) {
@@ -141,7 +151,7 @@ public class HotGoodsDao {
     }
 
     //    // 通过条件查询文章集合（通过用户ID查找）
-    public List<Goods> queryByTypeId(int id) {
+    public List<HotGood> queryByTypeId(int id) {
         try {
             return dao.queryBuilder().where().eq("typeid", id).query();
         } catch (SQLException e) {
@@ -151,10 +161,10 @@ public class HotGoodsDao {
     }
 
     // 通过ID查询一条数据
-    public Goods queryById(int id) {
-        Goods article = null;
+    public HotGood queryById(int id) {
+        HotGood article = null;
         try {
-            article =  dao.queryForId(id);
+            article = dao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -162,7 +172,7 @@ public class HotGoodsDao {
     }
 
     // 通过条件查询文章集合（通过用户ID查找）
-    public List<Goods> queryByUserName(String COLUMNNAME_NAME, String userName) {
+    public List<HotGood> queryByUserName(String COLUMNNAME_NAME, String userName) {
         try {
             return dao.queryBuilder().where().eq(COLUMNNAME_NAME, userName).query();
         } catch (SQLException e) {
@@ -172,21 +182,21 @@ public class HotGoodsDao {
     }
 
     // 查找所有bean
-    public List<Goods> queryAll() {
+    public List<HotGood> queryAll() {
         try {
 //            return dao.queryBuilder().where().eq("Status", 0).query();
-            List<Goods> hotGoodsList= dao.queryForAll();
+            List<HotGood> hotHotGoodList = dao.queryForAll();
             //重新排序，排序规则可以在界面拖拽更新
-            Collections.sort(hotGoodsList, new Comparator<Goods>() {
+            Collections.sort(hotHotGoodList, new Comparator<HotGood>() {
                 @Override
-                public int compare(Goods goods, Goods t1) {
+                public int compare(HotGood hotGood, HotGood t1) {
                     //按id升序排序(这个id是排序用的,并非唯一标志)
-                    return goods.getId()-t1.getId();
+                    return hotGood.getId() - t1.getId();
                 }
             });
-            return hotGoodsList;
+            return hotHotGoodList;
         } catch (SQLException e) {
-            Log.e("rzl","query all goods error:" + e.getMessage());
+            Log.e("rzl", "query all goods error:" + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -194,7 +204,7 @@ public class HotGoodsDao {
 
 
     // 查找所有bean
-    public List<Goods> queryAllTest() {
+    public List<HotGood> queryAllTest() {
         try {
 //            return dao.queryBuilder().where().eq("Status", 0).query();
 

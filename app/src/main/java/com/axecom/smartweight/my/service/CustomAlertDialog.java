@@ -26,7 +26,7 @@ public class CustomAlertDialog extends Dialog implements View.OnClickListener {
     //    private int requestCode;
     //    private OnDialogButtonClickListener listener;
 
-    private AdResultBean.DataBean dataBean;
+    private final AdResultBean.DataBean dataBean;
 
     public CustomAlertDialog(Context context, AdResultBean.DataBean dataBean) {
 //                             OnDialogButtonClickListener listener) {
@@ -34,15 +34,6 @@ public class CustomAlertDialog extends Dialog implements View.OnClickListener {
 //        this.context = context;
         this.dataBean = dataBean;
     }
-
-//    private TextView tvTitle;
-//    private TextView tvMessage;
-
-    private TextView tvAdDate, tvAdMarketName, tvAdContent, tvAdTitle;
-
-
-//    private Button btnPositive;
-//    private Button btnNegative;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +43,10 @@ public class CustomAlertDialog extends Dialog implements View.OnClickListener {
 //        setCancelable(false);//设置点击对话框外部和按返回键都不可以取消
 //        setCanceledOnTouchOutside(false);//设置点击对话框外部是否可以取消，默认是不可以取消（但是点返回键可以取消）
 
-        tvAdDate = findViewById(R.id.tvAdDate);
-        tvAdMarketName = findViewById(R.id.tvAdMarketName);
-        tvAdContent = findViewById(R.id.tvAdContent);
-        tvAdTitle = findViewById(R.id.tvAdTitle);
+        TextView tvAdDate = findViewById(R.id.tvAdDate);
+        TextView tvAdMarketName = findViewById(R.id.tvAdMarketName);
+        TextView tvAdContent = findViewById(R.id.tvAdContent);
+        TextView tvAdTitle = findViewById(R.id.tvAdTitle);
         if (dataBean != null) {
             tvAdDate.setText(dataBean.getVdate());
             tvAdMarketName.setText(dataBean.getMarketname());
@@ -69,16 +60,9 @@ public class CustomAlertDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-//            case R.id.btnAdCancle:
-//                //确定按钮
-//                listener.onDialogButtonClick(0, true);
-//                break;
-            case R.id.btnAdSubmit:
-                //取消按钮
+
+        view.getId();//取消按钮
 //                listener.onDialogButtonClick(1, false);
-                break;
-        }
         dismiss();
     }
 

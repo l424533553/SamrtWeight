@@ -45,23 +45,22 @@ public abstract class MyBasePrinter {
 
     public abstract void printBitmapQR(String contents1, int width, int height, int maxPix);
 
-    public boolean open() {
-        return false;
-    }
+
+    public abstract boolean open();
 
     protected boolean open(String path, int baudrate) {
         try {
             this.path = path;
             this.baudrate = baudrate;
             serialPort = getSerialPortPrinter();
-            if (serialPort.getOutputStream() == null || serialPort.getInputStream() == null) {
-                return false;
+            if (serialPort.getOutputStream() != null && serialPort.getInputStream() != null) {
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -75,12 +74,16 @@ public abstract class MyBasePrinter {
     }
 
     //关闭
-    public void closeSerialPort() throws IOException {
-        if (serialPort != null) {
-            serialPort.getOutputStream().close();
-            serialPort.getInputStream().close();
-            serialPort.close();
-            serialPort = null;
+    public void closeSerialPort() {
+        try {
+            if (serialPort != null) {
+                serialPort.getOutputStream().close();
+                serialPort.getInputStream().close();
+                serialPort.close();
+                serialPort = null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -234,6 +237,21 @@ public abstract class MyBasePrinter {
             v += v + arry[i];
         }
         return v;
+    }
+
+
+    /**
+     * 对齐方式
+     *
+     * @param n 0 左对齐 ；  1 居中  ； 2 右对齐
+     */
+    protected void alignment(byte n) {
+        byte[] by = {27, 97, n};
+        try {
+            getSerialPortPrinter().getOutputStream().write(by);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -29,7 +29,6 @@ public class ViewUtils {
 
     /**
      * 关闭 导航栏 ，点击输入框时导航栏会 显示出来
-     * @param activity
      */
     private void close2(Activity activity) {
         Window window = activity.getWindow();
@@ -41,16 +40,12 @@ public class ViewUtils {
 
     /**
      * 暂时隐藏 底部导航栏
-     *
-     * @param activity
-     * @param
      */
     public static void setNavigationBar(Activity activity, int visible) {
         View decorView = activity.getWindow().getDecorView();
         //显示NavigationBar
         if (View.GONE == visible) {
-            int option = SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-            decorView.setSystemUiVisibility(option);
+            decorView.setSystemUiVisibility(SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
 

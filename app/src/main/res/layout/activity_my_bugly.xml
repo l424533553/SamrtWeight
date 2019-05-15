@@ -17,7 +17,8 @@
             android:text="1111111当前版本:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvCurrentVersion"/>
+            android:id="@+id/tvCurrentVersion"
+        tools:ignore="HardcodedText" />
 
     <Button
             android:id="@+id/btnShowToast"
@@ -60,7 +61,8 @@
             android:id="@+id/btnKillSelf"
             android:text="退出程序"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+        tools:ignore="HardcodedText" />
 
 <!--    <TextView
         android:text="测试"

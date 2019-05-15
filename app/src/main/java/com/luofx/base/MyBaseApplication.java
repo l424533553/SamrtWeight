@@ -7,27 +7,23 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.android.volley.toolbox.Volley;
 import com.axecom.smartweight.my.config.IConstants;
+import com.jeremyliao.liveeventbus.LiveEventBus;
 import com.luofx.entity.Deviceinfo;
 import com.luofx.entity.dao.DeviceInfoDao;
-import com.luofx.listener.OkHttpListener;
-import com.luofx.utils.MyPreferenceUtils;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xuanyuan.library.MyPreferenceUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * 说明：
@@ -36,7 +32,7 @@ import okhttp3.Response;
  * 需要导入Volley.jar 或者  远程依赖
  */
 @SuppressLint("Registered")
-public class MyBaseApplication extends BaseVolleyApplication implements OkHttpListener, IConstants {
+public class MyBaseApplication extends BaseVolleyApplication implements IConstants {
     private Context context;
     //  线程池  记得要关闭
     protected ExecutorService threadPool;
@@ -75,24 +71,24 @@ public class MyBaseApplication extends BaseVolleyApplication implements OkHttpLi
         threadPool = Executors.newFixedThreadPool(5);
         singleThread = Executors.newSingleThreadExecutor();
         readyDevice();
+        initLiveEventBus();
 
-        //TODO
+        //TODO 上传给平台需要解禁
 //        // 异常处理，不需要处理时注释掉这两句即可！
 //        CrashHandler crashHandler = CrashHandler.getInstance();
 //        // 注册crashHandler
 //        crashHandler.init(getApplicationContext());
 
-//        initBugly();
+    }
 
-//        Beta.enableNotification = true;
-//        Beta.autoDownloadOnWifi = true;
-//        Beta.autoInit = true;
-////        Beta.autoCheckUpgrade = true;
-//        Bugly.init(getApplicationContext(), "c907c1f71b", true);
-
-
-
-
+    /**
+     * 初始化  LiveEventBus
+     */
+    private void initLiveEventBus() {
+        LiveEventBus.get()
+                .config()
+                .supportBroadcast(this)
+                .lifecycleObserverAlwaysActive(true);
     }
 
     /**
@@ -111,7 +107,7 @@ public class MyBaseApplication extends BaseVolleyApplication implements OkHttpLi
         // 设置是否为上报进程
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this.getContext());
         strategy.setAppPackageName(getApplicationContext().getPackageName());
-        PackageInfo packageInfo = null;
+        PackageInfo packageInfo;
         try {
             packageInfo = this.getApplicationContext()
                     .getPackageManager()
@@ -219,26 +215,8 @@ public class MyBaseApplication extends BaseVolleyApplication implements OkHttpLi
         super.onTerminate();
         //关闭线程池
         threadPool.shutdown();
+        singleThread.shutdown();
     }
-
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        //上传日志失败
-
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) {
-        //上传日志成功
-
-    }
-
-    private void testJava(){
-//        使用功能开发
-
-    }
-
-    // 使用功能测试
 
 
 }

@@ -39,7 +39,6 @@ public class MyApkUtils {
     /**
      * 获取应用程序版本名称信息
      *
-     * @param context
      * @return 当前应用的版本名称
      */
     public static String getVersionName(Context context) {
@@ -49,7 +48,7 @@ public class MyApkUtils {
             return packageInfo.versionName;
 
         } catch (NameNotFoundException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
@@ -105,9 +104,6 @@ public class MyApkUtils {
 
     /**
      * 安装 程序
-     *
-     * @param context
-     * @param filePath
      */
     public static void installUseAS(Context context, String filePath) {
         File apkFile = new File(filePath);

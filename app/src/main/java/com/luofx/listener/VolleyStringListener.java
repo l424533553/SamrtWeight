@@ -8,12 +8,12 @@ public interface VolleyStringListener {
     /**
      * @param volleyError 错误信息
      */
-    void onResponseError(VolleyError volleyError, int flag);
+    void onStringResponse(VolleyError volleyError, int flag);
 
     /**
      * 登陸請求成功
      *
      * @param response json  String对象
      */
-    void onResponse(String response, int flag);
+    void onStringResponse(String response, int flag);
 }
