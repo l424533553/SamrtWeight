@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context="com.axecom.smartweight.my.activity.common.MainActivity8">
+    tools:context=".activity.main.view.MainActivity8">
 
 
     <LinearLayout
@@ -183,7 +183,7 @@
                     android:gravity="center"
                     android:text="@string/default_weight"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/sp44"
+                    android:textSize="@dimen/sp40"
                     android:textStyle="bold" />
 
                 <TextView

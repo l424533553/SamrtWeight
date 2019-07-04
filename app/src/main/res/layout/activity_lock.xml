@@ -3,11 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/lockbg"
     android:alpha="1"
-    tools:context=".my.activity.common.LockActivity">
+    android:background="@mipmap/lockbg"
+    tools:context=".activity.common.LockActivity">
+
+    <ImageView
+        android:id="@+id/ivLoginSys"
+        android:layout_width="@dimen/y40"
+        android:layout_height="@dimen/y40"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/y40"
+        android:layout_marginEnd="@dimen/y10"
+        android:background="@mipmap/settings8"
+        android:contentDescription="@string/btnSysSet"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/y15"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp20" />
 
     <TextView
+        android:id="@+id/tvLockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -16,6 +33,19 @@
         android:text="软件锁定中，请联系管理员解锁"
         android:textColor="@color/color_red"
         android:textSize="50sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tvNoteTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLockTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/x20"
+        android:text="秤可能被拆卸过，请检查！"
+        android:textColor="@color/color_red"
+        android:textSize="30sp"
         android:textStyle="bold"
         tools:ignore="HardcodedText" />
 

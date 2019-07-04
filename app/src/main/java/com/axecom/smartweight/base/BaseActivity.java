@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -15,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -22,9 +22,8 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.ui.uiutils.UIUtils;
-import com.axecom.smartweight.ui.uiutils.ViewUtils;
-import com.luofx.newclass.ActivityController;
+
+import com.xuanyuan.library.help.ActivityController;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,14 +39,15 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 /**
  * Created by Longer on 2016/10/26.
  */
-public abstract class BaseActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
-    private static final int FLAG_HOMEKEY_DISPATCHED = 0x80000000; //需要自己定义标志
+@SuppressLint("Registered")
+public class BaseActivity extends Activity {
 
     //    private SweetAlertDialog mSweetAlertDialog;
     private View mMenuRoot;
     private SweetAlertDialog mSweetAlertDialog;
 
     protected BaseActivity() {
+
     }
 
 
@@ -57,32 +57,21 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
+        //需要自己定义标志
+        int FLAG_HOMEKEY_DISPATCHED = 0x80000000;
         this.getWindow().setFlags(FLAG_HOMEKEY_DISPATCHED, FLAG_HOMEKEY_DISPATCHED);//关键代码
-        EventBus.getDefault().register(this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-//        Intent bannerIntent = new Intent(this, BannerService.class);
-//        startService(bannerIntent);
-        if (Build.VERSION.SDK_INT > 19) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.black));
-        }
-        //
-        View view = setInitView();
-        setContentView(view);
-        //这里这一段会影响弹出的dialog型的Activity，故暂时注释掉
-        //getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.black));
 
-        ViewUtils mViewUtils = new ViewUtils(this);
-        //获取屏幕的宽高的像素
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        SysApplication.mWidthPixels = dm.widthPixels;
-//        SysApplication.mHeightPixels = dm.heightPixels;
+
+        //这里这一段会影响弹出的dialog型的Activity，故暂时注释掉
+//        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
         ActivityController.addActivity(this);
 
     }
-
-    public abstract void initView();
 
 
     @Override
@@ -93,22 +82,11 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    }
-
 
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+
     }
 
     /**
@@ -145,8 +123,6 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
 
     }
 
-
-    public abstract View setInitView();
 
     private PopupWindow mPopupWindow;
 
@@ -208,16 +184,16 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
 
-    public void showLoading(String titleText, String confirmText, long times) {
-
-        showLoading(titleText, confirmText);
-        UIUtils.getMainThreadHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                closeLoading();
-            }
-        }, times);
-    }
+//    public void showLoading(String titleText, String confirmText, long times) {
+//
+//        showLoading(titleText, confirmText);
+//        ScreenPixelUtils.getMainThreadHandler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                closeLoading();
+//            }
+//        }, times);
+//    }
 
     public void showLoading(String titleText) {
         SweetAlertDialog mSweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);

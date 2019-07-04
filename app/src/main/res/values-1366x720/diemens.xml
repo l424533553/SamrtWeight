@@ -17,7 +17,7 @@
     <dimen name="sp25">34sp</dimen>
     <dimen name="sp30">40sp</dimen>
     <dimen name="sp40">48sp</dimen>
-
     <dimen name="sp44">52sp</dimen>
+    <dimen name="digitalHeight">75.0px</dimen>
     <!--    <dimen name="btnHeight">70dp</dimen>-->
 </resources>

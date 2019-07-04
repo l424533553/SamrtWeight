@@ -19,11 +19,21 @@
 
     <style name="btnClick">
         <item name="android:layout_width">@dimen/y124</item>
-        <item name="android:layout_height">@dimen/x75</item>
+        <item name="android:layout_height">@dimen/digitalHeight</item>
         <item name="android:clickable">false</item>
         <item name="android:gravity">center</item>
         <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
+    <style name="btnDigitalClick">
+        <item name="android:layout_width">@dimen/y124</item>
+        <item name="android:layout_height">@dimen/digitalHeight</item>
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>

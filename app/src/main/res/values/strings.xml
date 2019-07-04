@@ -66,11 +66,13 @@
     <string name="userDownload">手动下载补丁包</string>
     <string name="checkUpgrade">检查更新</string>
     <string name="userPatch">手动合成补丁</string>
+
+
     <string name="default_weight">0.000</string>
+    <string name="default_price">0.00</string>
     <string name="product_name">品名：</string>
     <string name="Net_weight">净重：</string>
     <string name="price">单价：</string>
-    <string name="default_price">0.00</string>
     <string name="rmb">元</string>
     <string name="subtotal">小计：</string>
     <string name="item_price">单价</string>

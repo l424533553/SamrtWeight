@@ -3,7 +3,7 @@ package com.axecom.smartweight.base;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.axecom.smartweight.ui.uiutils.UIUtils;
+import com.axecom.smartweight.base.SysApplication;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -57,15 +57,15 @@ public class BaseDialog {
     }
 
 
-    public void showLoading(String titleText, String confirmText, long times) {
-        showLoading(titleText, confirmText);
-        UIUtils.getMainThreadHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                closeLoading();
-            }
-        }, times);
-    }
+//    public void showLoading(String titleText, String confirmText, long times) {
+//        showLoading(titleText, confirmText);
+//        ScreenPixelUtils.getMainThreadHandler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                closeLoading();
+//            }
+//        }, times);
+//    }
 
     public void showLoading(String titleText) {
         SweetAlertDialog mSweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);

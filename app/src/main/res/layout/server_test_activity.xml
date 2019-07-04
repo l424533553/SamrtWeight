@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:gravity="center"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="onClickListener"
+            type="android.view.View.OnClickListener" />
+    </data>
 
     <LinearLayout
-        style="@style/layout_style"
-        android:layout_width="400dp"
-        android:layout_height="300dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-        <TextView
-            android:id="@+id/server_test_title_tv"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="服务器测试"
+        <LinearLayout
+            style="@style/layout_style"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
             android:gravity="center"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:textSize="40sp"
-            tools:ignore="HardcodedText" />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            tools:ignore="ContentDescription" />
-        <Button
-            android:id="@+id/server_test_cancel_btn"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="@string/string_cancel_txt"
-            android:background="@drawable/shape_white_btn_bg"
-            android:textSize="20sp"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/server_test_title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="服务器测试"
+                android:textColor="@color/black"
+                android:textSize="40sp"
+                tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"
+                tools:ignore="ContentDescription" />
+
+            <Button
+                android:id="@+id/server_test_cancel_btn"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/shape_white_btn_bg"
+                android:onClick="@{onClickListener}"
+                android:text="@string/string_cancel_txt"
+                android:textSize="20sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</layout>

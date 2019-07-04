@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".ui.activity.setting.ErrorLogActivity">
+    tools:context=".activity.setting.ErrorLogActivity">
 
     <TextView
         android:id="@+id/textError"

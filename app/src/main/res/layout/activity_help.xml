@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.setting.HelpActivity">
+    tools:context=".activity.setting.HelpActivity">
 
-
+    <!--  使用情况  -->
     <WebView
         android:id = "@+id/office"
         android:layout_width="match_parent"

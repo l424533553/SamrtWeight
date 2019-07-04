@@ -13,7 +13,6 @@
         android:layout_weight="1"
         android:background="@color/color_white"
         android:orientation="vertical"
-
         >
 
         <LinearLayout
@@ -21,7 +20,6 @@
             android:layout_height="50dp"
             android:background="#4594F1"
             android:orientation="horizontal"
-
             >
 
             <TextView

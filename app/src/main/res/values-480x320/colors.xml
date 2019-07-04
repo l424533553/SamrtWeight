@@ -61,6 +61,7 @@
     <color name="color_settings13" tools:keep="@color/color_settings13">#F31440</color>
     <color name="color_settings14" tools:keep="@color/color_settings14">#DBDE74</color>
     <color name="color_settings17">#99F4E9</color>
+    <color name="color_settings19">#C40527</color>
     <color name="jglsjglg">#C0D5F4</color>
     <color name="color_zero_pressed">#9B4FDB</color>
     <color name="color_carsh_pressed">#019865</color>

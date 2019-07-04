@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
     <dimen name="yy320">32dp</dimen>
     <dimen name="xx560">56dp</dimen>
     <dimen name="sp12">12sp</dimen>
@@ -17,5 +15,7 @@
     <dimen name="sp25">25sp</dimen>
     <dimen name="sp30">30sp</dimen>
     <dimen name="sp40">40sp</dimen>
+    <dimen name="sp44">52sp</dimen>
+    <dimen name="digitalHeight">70dp</dimen>
     <!--    <dimen name="btnHeight">70dp</dimen>-->
 </resources>

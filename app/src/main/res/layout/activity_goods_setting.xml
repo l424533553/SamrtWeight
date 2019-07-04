@@ -56,6 +56,14 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
+                <!--android:src="@drawable/ic_back_blue"-->
+                <ImageView
+                    android:layout_width="@dimen/y80"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_back_blue"
+                    android:onClick="doBack"
+                    android:layout_marginEnd="@dimen/y30"
+                    />
 
                 <EditText
                     android:id="@+id/etGoodName"

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:padding="20dp"
-    tools:context=".my.activity.common.DataFlushActivity">
+    tools:context=".activity.common.DataFlushActivity">
 
     <TextView
         android:layout_width="wrap_content"

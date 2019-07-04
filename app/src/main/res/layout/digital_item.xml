@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants"
     android:gravity="center">
 
     <Button
         android:id="@+id/main_digitial_btn"
         android:background="@drawable/selector_btn_click"
         android:textSize="@dimen/sp30"
-        style="@style/btnClick"
+        style="@style/btnDigitalClick"
         />
 
 </LinearLayout>

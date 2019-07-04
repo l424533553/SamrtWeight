@@ -8,6 +8,11 @@ project(':CommonLibrary').projectDir = new File('../CommonLibrary/')
 include ':CommonLibrary:library'
 
 
+////include ':CommonLibrary'
+//include ':CommonLibrary:library'
+//project(':CommonLibrary:library').projectDir = new File('../CommonLibrary/library')
+////include ':CommonLibrary:library'
+
 //include ':CommonLibrary:myapp'
 
 
