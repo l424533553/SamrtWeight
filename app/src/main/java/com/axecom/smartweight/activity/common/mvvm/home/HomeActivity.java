@@ -1,10 +1,17 @@
 package com.axecom.smartweight.activity.common.mvvm.home;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -12,13 +19,12 @@ import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.common.DataFlushActivity;
 import com.axecom.smartweight.activity.common.ScaleBDACActivity;
-import com.axecom.smartweight.activity.main.view.MainActivitySX;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.mvvm.view.IAllView;
-import com.xuanyuan.library.activity.LogActivity;
 import com.axecom.smartweight.activity.main.view.MainActivity;
 import com.axecom.smartweight.activity.main.view.MainActivity8;
 import com.axecom.smartweight.activity.main.view.MainActivityAXE;
+import com.axecom.smartweight.activity.main.view.MainActivitySX;
+import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.mvvm.view.IAllView;
 import com.axecom.smartweight.config.IConstants;
 import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.project.UserInfo;
@@ -27,6 +33,7 @@ import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
 import com.axecom.smartweight.mvvm.entity.RetrofitCallback;
 import com.axecom.smartweight.mvvm.retrofit.HttpRtHelper;
+import com.xuanyuan.library.help.ActivityController;
 import com.xuanyuan.library.utils.system.SystemInfoUtils;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
@@ -103,12 +110,14 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
         }
     }
 
+    private Button btnLogin;
     /**
      * 初始化控件
      */
     public void setInitView() {
         findViewById(R.id.ivLog).setOnClickListener(this);
-        findViewById(R.id.btnLogin).setOnClickListener(this);
+        btnLogin=findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this);
         TextView loginTv = findViewById(R.id.home_login_tv);
         loginTv.setOnClickListener(this);
     }
@@ -211,6 +220,7 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
      * 根据秤的不同进入 MainActivity
      */
     private void goMainActivity() {
+        //TODO
         if (isUserInfoAble && !isFirstInit && isBDDataAble) {
             if (sysApplication.getTidType() == 2) {
                 jumpActivity(MainActivity8.class, true);
@@ -222,6 +232,7 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
                 jumpActivity(MainActivity.class, true);
             }
         }
+
     }
 
     @Override
@@ -288,11 +299,9 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
                             MyPreferenceUtils.getSp(context).edit().putBoolean(SP_IS_FIRST_INIT, true).apply();
                         }
                     }
-
                     sysApplication.setUserInfo(userInfo);//保存信息
                     isUserInfoAble = true;
                     startLogin();
-
                 }
             } else {
                 MyToast.toastLong(context, "未获取到秤的配置信息");
@@ -313,7 +322,6 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
     public void onComplete(int flag) {
 
     }
-
 
     /**
      * @param jsonObject json对象
@@ -354,6 +362,46 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
             e.printStackTrace();
         }
     }
+
+    //按键监听：
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("RRR", "按键==" + keyCode);
+        switch (keyCode) {
+            case 22://向右
+            case 20://向下
+            case 19://向上
+            case 21://向左
+                btnLogin.setFocusable(true);
+                btnLogin.requestFocus();
+                btnLogin.setFocusableInTouchMode(true);
+                btnLogin.requestFocusFromTouch();
+                btnLogin.setHovered(true);
+                btnLogin.setPressed(true);
+//                btnLogin.setFocusableInTouchMode();
+                break;
+            case 131://退出键
+                onBackPressed();
+
+                break;
+            default:
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!finishAll()) {
+            MyToast.toastShort(this, "再次点击退出！");
+        }
+    }
+
+
+
+
 
 
 }

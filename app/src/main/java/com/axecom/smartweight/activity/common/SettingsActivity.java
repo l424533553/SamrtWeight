@@ -249,13 +249,12 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                     startDDMActivity(HelpActivity.class, false);
                     break;
                 case POSITION_WIFI:// wifi 管理
-//                    startDDMActivity(WifiSettingsActivity.class, false);
-                     intent = new Intent();
+//                  startDDMActivity(WifiSettingsActivity.class, false);
+                    intent = new Intent();
                     intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
                     startActivity(intent);
                     break;
                 case POSITION_COMMODITY:// 商品设置
-
                     startDDMActivity(GoodsSettingActivity.class, false);
                     break;
                 case POSITION_LOCAL://本机操作 ，当地操作
@@ -317,18 +316,20 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                     if (MyNetWorkUtils.isNetworkAvailable(getApplicationContext())) {
                         baseDialog.showLoading("数据更新", "用户信息更新");
                         HttpRtHelper.getmInstants().getUserInfoExByRetrofit(SystemInfoUtils.getMac(context), SettingsActivity.this, FLAG_GET_USER_INFO);
-
-//                        HttpHelper.getmInstants(sysApplication).getUserInfoEx(SettingsActivity.this, FLAG_GET_USER_INFO);
+//                      HttpHelper.getmInstants(sysApplication).getUserInfoEx(SettingsActivity.this, FLAG_GET_USER_INFO);
                     } else {
                         MyToast.showError(context, "网络异常，请检查网络设置");
                     }
-
                     break;
             }
         }
     };
 
 
+    /**
+     *
+     * @param SSID   查看 wifi 的 SSID的地址，验证网络可用
+     */
     public WifiConfiguration IsExsits(String SSID) {
         List<WifiConfiguration> existingConfigs = wifiManager
                 .getConfiguredNetworks();
@@ -342,7 +343,7 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
 
     /**
      * 跳转Activity的方法,传入我们需要的参数即可
-     * 是否需要 开启动画
+     * 是否需要 开启动画      
      */
     public <T> void startDDMActivity(Class<T> activity, boolean isAinmain) {
         Intent intent = new Intent(SettingsActivity.this, activity);
@@ -387,6 +388,5 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
 
     @Override
     public void onComplete(int flag) {
-
     }
 }

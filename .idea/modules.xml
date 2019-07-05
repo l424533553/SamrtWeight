@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../CommonLibrary/CommonLibrary.iml" filepath="$PROJECT_DIR$/../CommonLibrary/CommonLibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SmartWeightTest.iml" filepath="$PROJECT_DIR$/SmartWeightTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartWeightSX.iml" filepath="$PROJECT_DIR$/SmartWeightSX.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../CommonLibrary/library/library.iml" filepath="$PROJECT_DIR$/../CommonLibrary/library/library.iml" />
     </modules>

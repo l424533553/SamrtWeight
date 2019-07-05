@@ -1,6 +1,7 @@
 package com.axecom.smartweight.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 
 import com.axecom.smartweight.activity.SecondScreen;
 import com.axecom.smartweight.entity.project.UserInfo;
+import com.axecom.smartweight.helper.TidUtils;
 import com.axecom.smartweight.helper.weighter.SXWeighter;
 import com.xuanyuan.library.base2.BuglyUPHelper;
 import com.xuanyuan.library.base2.MyBaseApplication;
@@ -28,6 +30,7 @@ import com.axecom.smartweight.helper.weighter.STWeighter;
 import com.axecom.smartweight.helper.weighter.XSWeighter15;
 import com.axecom.smartweight.helper.weighter.XSWeighter8;
 import com.axecom.smartweight.utils.security.DesBCBHelper;
+import com.xuanyuan.library.service.KeyDownService;
 import com.xuanyuan.library.utils.text.StringUtils;
 import com.xuanyuan.library.MyLog;
 import com.xuanyuan.library.MyPreferenceUtils;
@@ -43,11 +46,7 @@ import static com.axecom.smartweight.config.IConstants.PRINTER_TYPE;
  * Created by Longer on 2016/10/26.
  */
 public class SysApplication extends MyBaseApplication {
-    private final static String USER_ST = "android-build";
-    private final static String USER_XS_15 = "liaokai";
-    private final static String USER_XS_8 = "liuyegang";
-    private final static String USER_AXB = "root";
-    private final static String USER_SX_442 = "liubin";
+
     private static Handler mHandler;
     //    private  static long mMainThreadId;
     private UserInfo userInfo;
@@ -92,6 +91,8 @@ public class SysApplication extends MyBaseApplication {
         return DesBCBHelper.getmInstants();
     }
 
+    private Intent keyDownService;
+
     @Override
     public void onCreate() {// 程序的入口方法
         super.onCreate();
@@ -104,71 +105,14 @@ public class SysApplication extends MyBaseApplication {
 
         // 非测试模式
         if (!DEBUG_MODE) {
-            tidType = decisionScaleType();
+            tidType = TidUtils.decisionScaleType();
             modularUnit();
             startBanner();
         }
         MyLog.e("ggk", "sysApplication   onCreate");
-//        initBugly(this);
     }
 
-//    /**
-//     * 进行Bugly设置，开启更新之旅。
-//     */
-//    private void initBugly() {
-//        if (!DEBUG_MODE) {
-//            BuglyUPHelper buglyUPHelper = new BuglyUPHelper(this.getApplicationContext());
-//            BuglyStrategy strategy = new BuglyStrategy();
-//            // 设置app渠道号，设定了渠道号
-//            strategy.setAppChannel(BuglyUPHelper.APP_CHANNEL);
-//
-//
-////            buglyUPHelper.setContext(getApplicationContext());
-//            //需要发在初始化的后面
-////            buglyUPHelper.setUpgradeListener();
-//            buglyUPHelper.setUILifecycleListener();
-////            buglyUPHelper.setUpgradeStateListener();
-//
-//            buglyUPHelper.initUpdateConfig();
-//            buglyUPHelper.initBugly(strategy);
-//        }
-//    }
 
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        MyLog.e("ggk", "sysApplication   onLowMemory");
-    }
-
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        MyLog.e("ggk", "sysApplication   onTerminate");
-    }
-
-    /**
-     * OK 判定秤的种类
-     *
-     * @return 秤的种类类型
-     */
-    private int decisionScaleType() {
-        String user = android.os.Build.USER;
-        String name = android.os.Build.DEVICE;
-        if (TextUtils.isEmpty(user)) {
-            return TID_TYPE_ERROR;
-        } else if (USER_ST.equalsIgnoreCase(user)) {
-            return TID_TYPE_ST;
-        } else if (USER_XS_15.equalsIgnoreCase(user)) {
-            return TID_TYPE_XS15;
-        } else if (USER_XS_8.equalsIgnoreCase(user)) {
-            return TID_TYPE_XS8;
-        } else if (USER_AXB.equalsIgnoreCase(user)) {
-            return TID_TYPE_AXE;
-        } else if (USER_SX_442.equalsIgnoreCase(user)) {
-            return TID_TYPE_SX442;
-        }
-        return TID_TYPE_OTHER;
-    }
 
     private SecondScreen banner;// 第二
 
@@ -197,13 +141,6 @@ public class SysApplication extends MyBaseApplication {
 
     // 称的类型  0为商通  ，1 为XS15 , 2 为8寸。  3 axe自研秤   4 深信秤
     private int tidType = 0;
-    private final static int TID_TYPE_ST = 0;
-    private final static int TID_TYPE_XS15 = 1;
-    private final static int TID_TYPE_XS8 = 2;
-    private final static int TID_TYPE_AXE = 3;
-    private final static int TID_TYPE_SX442 = 4;
-    private final static int TID_TYPE_OTHER = -2;
-    private final static int TID_TYPE_ERROR = -1;
 
     public int getTidType() {
         return tidType;
@@ -240,6 +177,8 @@ public class SysApplication extends MyBaseApplication {
         } else if (tidType == 3) {
             //TODO  自研秤打印机好了之后 ，请恢复下面的代码
 //            print = new WHPrinterAXE(WHPrinterAXE.PATH_AXE, WHPrinterAXE.BAUDRATE_AXE);
+        }else  if(tidType == 4){
+            //TODO  深信秤
         }
         if (print != null) {
             isOpenPrinter = print.open();
@@ -267,6 +206,9 @@ public class SysApplication extends MyBaseApplication {
         } else if (tidType == 4) {
             myBaseWeighter = new SXWeighter();
             isOpenWeight = myBaseWeighter.open();
+            //开启辅助服务
+            keyDownService =new Intent(this,KeyDownService.class);
+            startService(keyDownService);
         }
         if (!isOpenWeight) {
             MyToast.toastShort(getContext(), "称重串口连接失败");
@@ -284,10 +226,15 @@ public class SysApplication extends MyBaseApplication {
         }
         if (print != null) {
             if (isOpenPrinter) {
-                //测试中
 //                print.closeSerialPort();
             }
         }
+
+        if(keyDownService!=null){
+            stopService(keyDownService);
+        }
     }
+
+
 }
 
