@@ -3,8 +3,6 @@ package com.axecom.smartweight.activity.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,33 +13,35 @@ import android.widget.TextView;
 
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.common.mvvm.home.HomeActivity;
-import com.axecom.smartweight.base.BaseDialog;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.activity.setting.ServerTestActivity;
-import com.axecom.smartweight.adapter.SettingsAdapter;
-import com.axecom.smartweight.config.IConstants;
-import com.axecom.smartweight.entity.project.OrderInfo;
-import com.axecom.smartweight.entity.system.SettingsBean;
-import com.axecom.smartweight.entity.project.UserInfo;
-import com.axecom.smartweight.entity.dao.OrderInfoDao;
-import com.axecom.smartweight.entity.dao.UserInfoDao;
-import com.axecom.smartweight.helper.HttpHelper;
-import com.axecom.smartweight.rzl.utils.ApkUtils;
 import com.axecom.smartweight.activity.datasummary.SummaryActivity;
 import com.axecom.smartweight.activity.setting.GoodsSettingActivity;
 import com.axecom.smartweight.activity.setting.HelpActivity;
 import com.axecom.smartweight.activity.setting.LocalSettingActivity;
-import com.bumptech.glide.Glide;
+import com.axecom.smartweight.activity.setting.ServerTestActivity;
+import com.axecom.smartweight.activity.setting.VideoActivity;
+import com.axecom.smartweight.adapter.SettingsAdapter;
+import com.axecom.smartweight.base.BaseDialog;
+import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.config.IConstants;
+import com.axecom.smartweight.entity.dao.OrderInfoDao;
+import com.axecom.smartweight.entity.dao.UserInfoDao;
+import com.axecom.smartweight.entity.project.OrderInfo;
+import com.axecom.smartweight.entity.project.UserInfo;
+import com.axecom.smartweight.entity.system.SettingsBean;
+import com.axecom.smartweight.helper.HttpHelper;
+import com.axecom.smartweight.helper.printer.MyBasePrinter;
 import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
-import com.axecom.smartweight.mvvm.entity.RetrofitCallback;
+import com.axecom.smartweight.mvvm.retrofit.RetrofitCallback;
 import com.axecom.smartweight.mvvm.retrofit.HttpRtHelper;
-import com.xuanyuan.library.base2.BuglyUPHelper;
-import com.xuanyuan.library.help.ActivityController;
-import com.xuanyuan.library.utils.system.SystemInfoUtils;
+import com.axecom.smartweight.rzl.utils.ApkUtils;
+import com.bumptech.glide.Glide;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.base2.BuglyUPHelper;
+import com.xuanyuan.library.help.ActivityController;
 import com.xuanyuan.library.utils.LiveBus;
 import com.xuanyuan.library.utils.net.MyNetWorkUtils;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +49,7 @@ import java.util.List;
 import static com.axecom.smartweight.config.IEventBus.NOTIFY_SMALLL_ROUTINE;
 import static com.axecom.smartweight.config.IEventBus.NOTIFY_USERINFO;
 import static com.xuanyuan.library.config.IConfig.EVENT_BUS_COMMON;
+import static com.xuanyuan.library.config.IConfig.PATCH_TIME;
 
 
 /**
@@ -56,10 +57,7 @@ import static com.xuanyuan.library.config.IConfig.EVENT_BUS_COMMON;
  */
 public class SettingsActivity extends AppCompatActivity implements IConstants, RetrofitCallback {
     public final String IS_RE_BOOT = "is_re_boot";
-
-
     private GridView settingsGV;
-    private WifiManager wifiManager;
     private Context context;
     private SysApplication sysApplication;
     private UserInfoDao userInfoDao;
@@ -79,7 +77,6 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
         sysApplication = (SysApplication) getApplication();
         context = this;
         type = getIntent().getIntExtra(STRING_TYPE, 0);
-
         userInfoDao = new UserInfoDao();
         baseDialog = new BaseDialog(context);
 
@@ -102,7 +99,6 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
 //        }
 //    }
 
-
     /**
      * 更新小程序图片
      */
@@ -116,17 +112,18 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
         }
     }
 
-
+    // 数据功能
     @SuppressLint("SetTextI18n")
     public void setInitView() {
         settingsGV = findViewById(R.id.settings_grid_view);
         //当前版本
         TextView tvSystemVersion = findViewById(R.id.tvDataUpdate_SystemVersion);
-        tvSystemVersion.setText(ApkUtils.getVersionName(this) + "." + BuglyUPHelper.APP_CHANNEL);
+        tvSystemVersion.setText(ApkUtils.getVersionName(this) + "." + BuglyUPHelper.APP_CHANNEL + PATCH_TIME);
         ivSmallRoutine = findViewById(R.id.ivImageView123);
         updateSmallRoutine();
     }
 
+    //设置菜单中的适配器
     private SettingsAdapter settingsAdapter;
 
     public void initView() {
@@ -173,8 +170,12 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
 
         SettingsBean settingsBean12 = new SettingsBean(R.mipmap.settings10, "重启", POSITION_RE_BOOT, R.color.color_settings10);
         settngsList.add(settingsBean12);
+
         SettingsBean settingsBean17 = new SettingsBean(R.mipmap.settings17, "帮助", POSITION_HELP, R.color.color_settings17);
         settngsList.add(settingsBean17);
+        SettingsBean settingsBean20 = new SettingsBean(R.mipmap.settings20, "操作视频", POSITION_VIDEO, R.color.color_settings20);
+        settngsList.add(settingsBean20);
+
         SettingsBean settingsBean14 = new SettingsBean(R.mipmap.settings9, "返回", POSITION_BACK, R.color.color_settings9);
         settngsList.add(settingsBean14);
         SettingsBean settingsBean19 = new SettingsBean(R.mipmap.settings19, "关闭软件", POSITION_RE_EXIT, R.color.color_settings19);
@@ -220,18 +221,17 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
             Intent intent;
             switch (flag) {
                 case POSITION_PATCH://补打上一笔
-                    OrderInfoDao orderInfoDao = new OrderInfoDao(context);
+                    OrderInfoDao orderInfoDao = new OrderInfoDao();
                     List<OrderInfo> infoList = orderInfoDao.queryByDay(false, 1);
                     if (infoList.size() == 0) {
                         MyToast.toastShort(context, "暂无交易数据");
                     } else {
                         OrderInfo orderInfo = infoList.get(0);
 //                        MyPrinter myPrinter = new MyPrinter(sysApplication.getPrint());
-                        if (sysApplication.getPrint() != null) {
-                            if (sysApplication.isOpenPrinter()) {
+                        MyBasePrinter printer=sysApplication.getPrint();
+                        if (printer!= null&&printer.isOpen()) {
                                 sysApplication.getPrint().printOrder(sysApplication.getSingleThread(), orderInfo);
                                 return;
-                            }
                         }
                         MyToast.showError(context, "打印机异常或者接线异常");
                     }
@@ -248,19 +248,19 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                 case POSITION_HELP:
                     startDDMActivity(HelpActivity.class, false);
                     break;
+                case POSITION_VIDEO:
+                    startDDMActivity(VideoActivity.class, false);
+                    break;
                 case POSITION_WIFI:// wifi 管理
-//                    startDDMActivity(WifiSettingsActivity.class, false);
-                     intent = new Intent();
+//                  startDDMActivity(WifiSettingsActivity.class, false);
+                    intent = new Intent();
                     intent.setAction("android.net.wifi.PICK_WIFI_NETWORK");
                     startActivity(intent);
                     break;
                 case POSITION_COMMODITY:// 商品设置
-
                     startDDMActivity(GoodsSettingActivity.class, false);
                     break;
                 case POSITION_LOCAL://本机操作 ，当地操作
-                    //TODO 可能要恢复
-//                    isLocalChange = true;
                     Intent intent2 = new Intent(SettingsActivity.this, LocalSettingActivity.class);
                     startActivity(intent2);
                     break;
@@ -268,17 +268,16 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                     startDDMActivity(SystemSettingsActivity.class, true);
                     break;
                 case POSITION_RE_BOOT://重启
-                     intent = new Intent();
+                    intent = new Intent();
                     intent.setClass(SettingsActivity.this.getApplicationContext(), HomeActivity.class);
                     intent.putExtra(IS_RE_BOOT, true);
-                    ActivityController.finishAll();
+                    ActivityController.finishAll(false);
                     startActivity(intent);
                     break;
                 case POSITION_RE_EXIT:// 标定管理
-                    ActivityController.finishAll();
+                    ActivityController.finishAll(true);
                     break;
                 case POSITION_WEIGHT:// 标定管理
-
                     break;
 //                case POSITION_HOT:
 //                    baseDialog.showLoading();
@@ -317,28 +316,14 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                     if (MyNetWorkUtils.isNetworkAvailable(getApplicationContext())) {
                         baseDialog.showLoading("数据更新", "用户信息更新");
                         HttpRtHelper.getmInstants().getUserInfoExByRetrofit(SystemInfoUtils.getMac(context), SettingsActivity.this, FLAG_GET_USER_INFO);
-
-//                        HttpHelper.getmInstants(sysApplication).getUserInfoEx(SettingsActivity.this, FLAG_GET_USER_INFO);
+//                      HttpHelper.getmInstants(sysApplication).getUserInfoEx(SettingsActivity.this, FLAG_GET_USER_INFO);
                     } else {
                         MyToast.showError(context, "网络异常，请检查网络设置");
                     }
-
                     break;
             }
         }
     };
-
-
-    public WifiConfiguration IsExsits(String SSID) {
-        List<WifiConfiguration> existingConfigs = wifiManager
-                .getConfiguredNetworks();
-        for (WifiConfiguration existingConfig : existingConfigs) {
-            if (existingConfig.SSID.equals("\"" + SSID + "\"")) {
-                return existingConfig;
-            }
-        }
-        return null;
-    }
 
     /**
      * 跳转Activity的方法,传入我们需要的参数即可
@@ -363,7 +348,7 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
                 if (userInfo != null && HttpHelper.getmInstants(sysApplication).validateUserInfo(userInfo, sysApplication.getTidType())) {
                     //数据更新成功了
                     userInfo.setId(1);
-                    boolean isOk = userInfoDao.updateOrInsert(userInfo);
+                    userInfoDao.updateOrInsert(userInfo);
                     gotoDataFlush(userInfo);
                     // 必须放在下面
                     sysApplication.setUserInfo(userInfo);
@@ -385,6 +370,9 @@ public class SettingsActivity extends AppCompatActivity implements IConstants, R
         }
     }
 
+    /**
+     * @param flag 旗标参数，设定数据。
+     */
     @Override
     public void onComplete(int flag) {
 

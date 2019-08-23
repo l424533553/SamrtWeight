@@ -6,7 +6,16 @@ def bakPath = file("${buildDir}/bakApk/")
  * 此处填写每次构建生成的基准包目录
  * 需要随时验证
  */
-def baseApkDir = "app-0703-09-49-37"
+//def baseApkDir = "app-0709-15-00-24"
+//def baseApkDir = "app-0716-11-58-00"
+
+//def baseApkDir = "app-0725-16-43-55"
+//def baseApkDir = "app-0820-16-37-17"
+def baseApkDir = "app-0820-09-33-55"
+
+//def baseApkDir = "app-0718-13-43-04"
+
+//def baseApkDir = "app-0725-15-16-55"
 
 /**
  * 对于插件各参数的详细解析请参考
@@ -14,7 +23,6 @@ def baseApkDir = "app-0703-09-49-37"
 tinkerSupport {
     // 开启tinker-support插件，默认值true
     enable = true
-
     // 自动生成tinkerId, 你无须关注tinkerId，默认为false
     autoGenerateTinkerId = true
 
@@ -38,9 +46,10 @@ tinkerSupport {
 
     // 构建基准包和补丁包都要指定不同的tinkerId，并且必须保证唯一性
     // 打补丁包时 记得放开，随意定一个唯一的id名
-//    tinkerId = "patch-20190703.4.001.10"
-    tinkerId = "base-20190704.4.002.11"
-//    tinkerId = "patch-3.65"
+//    tinkerId = "base-201907016.4.006.15"
+//    tinkerId = "patch-20190719.4.004.13"
+      tinkerId = "patch_20190824.4.010.19.SX15A"
+//    tinkerId = "patch-20190719.4.005.14"
 
     // 构建多渠道补丁时使用
     // buildAllFlavorsDir = "${bakPath}/${baseApkDir}"

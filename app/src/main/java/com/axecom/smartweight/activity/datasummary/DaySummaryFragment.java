@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.base.SysApplication;
+import com.axecom.smartweight.entity.dao.OrderInfoDao;
 import com.axecom.smartweight.entity.netresult.ReportResultBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
-import com.axecom.smartweight.entity.dao.OrderInfoDao;
 import com.xuanyuan.library.utils.MyDateUtils;
 import com.xuanyuan.library.utils.text.StringFormatUtils;
 
@@ -123,7 +123,7 @@ public class DaySummaryFragment extends Fragment implements View.OnClickListener
             @Override
             public void run() {
                 setData();
-                OrderInfoDao orderInfoDao = new OrderInfoDao(context);
+                OrderInfoDao orderInfoDao = new OrderInfoDao();
                 List<OrderInfo> list = orderInfoDao.queryByDay(date);
                 totalMoney = 0.00f;
                 for (OrderInfo orderInfo : list) {

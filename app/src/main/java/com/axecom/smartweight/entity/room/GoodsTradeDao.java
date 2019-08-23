@@ -42,7 +42,6 @@ public interface GoodsTradeDao {
     GoodsTradeBean findById(int id);
 
     //----------------------- insert ----------------------
-
     // OnConflictStrategy.REPLACE表示如果已经有数据，那么就覆盖掉
     // 数据的判断通过主键进行匹配，也就是uid，非整个user对象
     // 返回Long数据表示，插入条目的主键值（uid）
@@ -81,6 +80,4 @@ public interface GoodsTradeDao {
 
     @Delete
     int deleteAll(GoodsTradeBean... users);
-
-
 }

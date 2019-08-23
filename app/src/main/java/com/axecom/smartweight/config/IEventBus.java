@@ -11,7 +11,7 @@ public interface IEventBus {
 
     String MARKET_NOTICE = "market_notice";//市场通知
     String TYPE_GET_K_VALUE = "getKValue";//获取K值
-    String ACTION_UNLOCK_SOFT = "unlock_soft";// 如果锁定状态，则解锁软件，可以正常使用
+//    String ACTION_UNLOCK_SOFT = "unlock_soft";// 如果锁定状态，则解锁软件，可以正常使用
     String BACKGROUND_CHANGE = "background_change";// 如果锁定状态，则解锁软件，可以正常使用
     String SHOPPING_BAG_PRICE_CHANGE = "ShoppingBagPrice_change";//购物袋 价格变化
 
@@ -19,6 +19,7 @@ public interface IEventBus {
     String WEIGHT_AXE = "weight_axe";//自研秤的称重数据
     String WEIGHT_SX = "weight_sx";//深信的称重数据
     String WEIGHT_SX8 = "weight_xs8";//香山8寸屏 称重通知
+
     String WEIGHT_KEY_PRESS = "weight_key_press";//按键
     String WEIGHT_ST = "weight_st";//商通秤的 称重数据变化 通知
     String WEIGHT_KVALUE = "weight_k_value";//秤的K值

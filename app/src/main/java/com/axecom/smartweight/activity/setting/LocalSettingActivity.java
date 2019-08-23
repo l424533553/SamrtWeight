@@ -6,11 +6,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.axecom.smartweight.R;
@@ -18,13 +16,10 @@ import com.axecom.smartweight.activity.main.MainObservableBean;
 import com.axecom.smartweight.adapter.BackgroundAdapter;
 import com.axecom.smartweight.config.IConstants;
 import com.axecom.smartweight.databinding.ActivityLocalSettingBinding;
-import com.axecom.smartweight.entity.system.BaseBusEvent;
+import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.help.CashierInputFilter;
-import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.utils.LiveBus;
-
-import org.greenrobot.eventbus.EventBus;
 
 import static com.axecom.smartweight.config.IEventBus.BACKGROUND_CHANGE;
 import static com.axecom.smartweight.config.IEventBus.SHOPPING_BAG_PRICE_CHANGE;

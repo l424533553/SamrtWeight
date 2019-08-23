@@ -8,22 +8,25 @@ import android.content.ServiceConnection;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.activity.common.LockActivity;
 import com.axecom.smartweight.config.IConstants;
+import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.project.AdResultBean;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.rzl.utils.ApkUtils;
 import com.axecom.smartweight.utils.security.AESUtils;
 import com.xuanyuan.library.MyLog;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.listener.VolleyListener;
+import com.xuanyuan.library.utils.LiveBus;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import static com.axecom.smartweight.config.IEventBus.MARKET_NOTICE;
+import static com.xuanyuan.library.config.IConfig.EVENT_BUS_COMMON;
+import static com.xuanyuan.library.config.IConfig.PATCH_TIME;
 
 /**
  * author: luofaxin
@@ -62,17 +65,14 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
         int flag;
         while (isLooper) {
             try {
-//              MyLog.mylog(" 执行 心跳 命令");
-                String note = ApkUtils.getVersionName(context);
+                String note = ApkUtils.getVersionName(context) + "." + PATCH_TIME;
+
                 boolean isCheatSign = MyPreferenceUtils.getSp(context).getBoolean(INTENT_CHEATFLAG, false);
-
-//                if (isCheatSign) {
-//                    flag = 1;
-//                } else {
-//                    flag = 0;
-//                }
-
-                flag = 0;
+                if (isCheatSign) {
+                    flag = 1;
+                } else {
+                    flag = 0;
+                }
 
                 HttpHelper.getmInstants(application).upStateEx(marketid, HeartBeatServcice.this, terid, note, flag, 1);  // scale
                 Thread.sleep(UPDATE_STATE_TIME);//2分钟
@@ -103,7 +103,7 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
                 "&deviceModel=" + application.getUserInfo().getModel() +
                 "&factoryName=" + application.getUserInfo().getProducer() +
                 "&productionDate=" + application.getUserInfo().getOuttime() +
-                "&macAddr=" + HttpHelper.getmInstants(application).getMac() +
+                "&macAddr=" + SystemInfoUtils.getMac(application) +
                 "&stallCode=" + application.getUserInfo().getCompanyno() +
                 "&businessEntity=" +
                 "&creditCode=" +
@@ -126,7 +126,7 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
                 "&authenCode=" + authenCode +
                 "&appCode=FPMSWS" +
                 "&deviceNo=123456789012" +
-                "&macAddr=" + HttpHelper.getmInstants(application).getMac() +
+                "&macAddr=" + SystemInfoUtils.getMac(application) +
                 "&weight=" + 15 +//校准点的重量（kg）,整数
                 "&initAd=" + 2341289 +//校准后的原始零位值
                 "&initAd=" + 2641289;
@@ -180,30 +180,43 @@ public class HeartBeatServcice extends IntentService implements VolleyListener, 
     @Override
     public void onResponse(final JSONObject jsonObject, final int flag) {
 
+        //
         application.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
                 switch (flag) {
                     case 1:
-                        MyLog.myInfo("成功" + jsonObject.toString());
+//                        MyLog.myInfo("成功" + jsonObject.toString());
                         ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
                         if (resultInfo.getStatus() == 0) {
-                            if ("1".equals(resultInfo.getData())) {//禁用
-                                if (!isDisable) {
-                                    Intent intent = new Intent(context, LockActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                            //禁用，禁止使用
+                            if ("1".equals(resultInfo.getData())) {
+                                boolean lockState = MyPreferenceUtils.getSp(context).getBoolean(LOCK_STATE, false);
+//                                if(lockState&&!isDisable){
+//                                    MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, true).apply();
+//                                    LiveBus.post(EVENT_BUS_COMMON, String.class, LOCK_STATE);
+//                                    isDisable = true;
+//                                }else if(!isDisable){
+//                                    MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, true).apply();
+//                                    LiveBus.post(EVENT_BUS_COMMON, String.class, LOCK_STATE);
+//                                    isDisable = true;
+//                                }
+
+                                if (!lockState) {
+                                    MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, true).apply();
+                                    LiveBus.post(EVENT_BUS_COMMON, String.class, LOCK_STATE);
+                                    isDisable = true;
                                 }
-                                isDisable = true;
                             } else {
                                 // 用事件总线的方式取代BroadCast
                                 BaseBusEvent event = new BaseBusEvent();
                                 event.setEventType(ACTION_UNLOCK_SOFT);
                                 EventBus.getDefault().post(event);
+                                MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, false).apply();
                                 isDisable = false;
                             }
                             //获取通告信息
-                            MyLog.mylog(" 执行 通告 命令");
+                            // MyLog.mylog(" 执行 通告 命令");
                             HttpHelper.getmInstants(application).upAdMessageEx(marketid, HeartBeatServcice.this, 2);  //通知 scalesId 秤的编号
                         }
                         break;

@@ -18,14 +18,17 @@ import android_serialport_api.SerialPort;
  * 打印机将支持  炜煌 和爱普生
  */
 public abstract class MyBasePrinter {
+    public boolean isNoPrinterQR;
 
-    /**
-     * 是否不打印二维码
-     */
-    protected boolean isNoQR;
+    private boolean isOpen;
 
-    public void setNoQR(boolean noQR) {
-        isNoQR = noQR;
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    //设置是否可以打印QR二维码
+    public void setNoPrinterQR(boolean noPrinterQR) {
+        isNoPrinterQR = noPrinterQR;
     }
 
     private SerialPort serialPort = null;
@@ -48,6 +51,7 @@ public abstract class MyBasePrinter {
             this.baudrate = baudrate;
             serialPort = getSerialPortPrinter();
             if (serialPort.getOutputStream() != null && serialPort.getInputStream() != null) {
+                isOpen = true;
                 return true;
             }
         } catch (Exception e) {
@@ -71,7 +75,6 @@ public abstract class MyBasePrinter {
     public void closeSerialPort() {
         try {
             if (serialPort != null) {
-                serialPort.close();
                 serialPort.getOutputStream().close();
                 serialPort.getInputStream().close();
                 serialPort = null;

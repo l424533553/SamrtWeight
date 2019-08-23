@@ -10,16 +10,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.axecom.smartweight.R;
+import com.axecom.smartweight.config.IConstants;
 import com.axecom.smartweight.entity.secondpresent.AdImageInfo;
 import com.axecom.smartweight.entity.secondpresent.AdUserBean;
 import com.axecom.smartweight.entity.secondpresent.AdUserDao;
 import com.axecom.smartweight.entity.secondpresent.ImageDao;
-import com.axecom.smartweight.config.IConstants;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.xuanyuan.library.utils.FileUtils;
 import com.sunfusheng.marqueeview.MarqueeView;
+import com.xuanyuan.library.utils.FileUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;

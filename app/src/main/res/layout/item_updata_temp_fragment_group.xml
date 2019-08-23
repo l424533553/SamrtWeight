@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/jglsjglg"
+    android:paddingStart="5dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:id="@+id/tvTitleOrderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="订单号:"
+        android:textSize="@dimen/sp16" />
+
+    <TextView
+        android:id="@+id/tvOrderNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/y10"
+        android:paddingStart="@dimen/y3"
+        android:layout_alignTop="@+id/tvTitleOrderTitle"
+        android:layout_alignBottom="@+id/tvTitleOrderTitle"
+        android:layout_toEndOf="@+id/tvTitleOrderTitle"
+        android:text="HT345656646546654"
+        android:textSize="@dimen/sp18" />
+
+    <ImageView
+        android:id="@+id/ivUploadStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvTitleOrderTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:src="@mipmap/no_upload" />
+</RelativeLayout>

@@ -47,8 +47,6 @@ public class AdUserBean {
     private String baseurl;
     public String status;
 
-
-
     public AdUserBean() {
     }
 

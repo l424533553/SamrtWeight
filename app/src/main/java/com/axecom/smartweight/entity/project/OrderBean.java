@@ -14,7 +14,6 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "orderbean")
 public class OrderBean implements Cloneable {
-
     //部门编号
     @JSONField(serialize = false)
     @DatabaseField(generatedId = true)
@@ -65,9 +64,12 @@ public class OrderBean implements Cloneable {
     public void setTraceno(String traceno) {
         this.traceno = traceno;
     }
-
+    @JSONField(serialize = false)
     private long time1;
+    @JSONField(serialize = false)
     private long time2;
+    @JSONField(serialize = false)
+    private int isStable;
 
     @JSONField(serialize = false)
     @DatabaseField(canBeNull = false, foreign = true)
@@ -92,6 +94,14 @@ public class OrderBean implements Cloneable {
     }
 
     public OrderBean() {
+    }
+
+    public int getIsStable() {
+        return isStable;
+    }
+
+    public void setIsStable(int isStable) {
+        this.isStable = isStable;
     }
 
     public String getWeight0() {
@@ -229,4 +239,14 @@ public class OrderBean implements Cloneable {
         this.weight = weight;
     }
 
+    @Override
+    public String toString() {
+        return "OrderBean{" +
+                "itemno='" + itemno + '\'' +
+                ", money='" + money + '\'' +
+                ", name='" + name + '\'' +
+                ", price='" + price + '\'' +
+                ", weight='" + weight + '\'' +
+                '}';
+    }
 }

@@ -19,14 +19,15 @@ import com.axecom.smartweight.config.IEventBus;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
 import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.utils.security.AESUtils;
-import com.xuanyuan.library.help.ActivityController;
-import com.xuanyuan.library.utils.MyDateUtils;
 import com.xuanyuan.library.MyLog;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.help.ActivityController;
 import com.xuanyuan.library.listener.VolleyListener;
 import com.xuanyuan.library.listener.VolleyStringListener;
 import com.xuanyuan.library.mvp.view.MyBaseCommonACActivity;
+import com.xuanyuan.library.utils.MyDateUtils;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -151,7 +152,7 @@ public class ScaleBDACActivity extends MyBaseCommonACActivity implements IEventB
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnZeroSetting://置零准备
-                if(sysApplication.getTidType()==4){
+                if (sysApplication.getTidType() == 4) {
                     zeroWeight = (float) currentWeight / 1000;
                     MyPreferenceUtils.getSp(context).edit().putFloat(ZERO_WEIGHT, zeroWeight).apply();
                 }
@@ -281,56 +282,52 @@ public class ScaleBDACActivity extends MyBaseCommonACActivity implements IEventB
                 dealWeight(currentWeight, 0);
                 break;
             case WEIGHT_SX15:
-                array = event.getOther().toString().split(" ");
-                if (array.length >= 6 && array[1].length() == 7
-                        && array[2].length() == 7 && array[3].length() == 7
-                        && array[4].length() == 7 && array[5].length() == 7) {
-                    MyLog.logTest("Main  获取的称重数据" + array[2]);
+                array = (String[]) event.getOther();
 
-                    currentAd = Integer.parseInt(array[1]);
-                    zeroAd = Integer.parseInt(array[2]);
-                    currentWeight = Integer.parseInt(array[3]);
-                    tareWeight = Integer.parseInt(array[4]);
+                currentAd = Integer.parseInt(array[1]);
+                zeroAd = Integer.parseInt(array[2]);
+                currentWeight = Integer.parseInt(array[3]);
+                tareWeight = Integer.parseInt(array[4]);
 
-                    cheatSign = array[5].charAt(0) - 48;
-                    isNegative = array[5].charAt(1) - 48;
-                    isOver = array[5].charAt(2) - 48;
-                    isZero = array[5].charAt(3) - 48;
-                    isPeeled = array[5].charAt(4) - 48;
-                    isStable = array[5].charAt(5) - 48;
+                cheatSign = array[5].charAt(0) - 48;
+                isNegative = array[5].charAt(1) - 48;
+                isOver = array[5].charAt(2) - 48;
+                isZero = array[5].charAt(3) - 48;
+                isPeeled = array[5].charAt(4) - 48;
+                isStable = array[5].charAt(5) - 48;
 
-                    // 数据 设计
-                    tvsbAd2.setText(currentAd + "");
-                    tvsbZeroAd2.setText(zeroAd + "");
-                    if(currentWeight!=0){
-                        k = (currentAd - zeroAd) / currentWeight;
-                    }
-
-
-                    tvkValue2.setText(k + "");
-
-                    if (isStartBd) {
-                        if ((isCalibration10kg && currentWeight == 10000) || (!isCalibration10kg && currentWeight == 20000)) {
-                            MyPreferenceUtils.getSp(context).edit().putString(VALUE_SB_AD, String.valueOf(currentAd)).apply();
-                            MyPreferenceUtils.getSp(context).edit().putString(VALUE_SB_ZERO_AD, String.valueOf(zeroAd)).apply();
-
-                            if (kValue != null) {//上传数据
-                                if (!isSendDataFpsm) {
-                                    int value = (currentAd - zeroAd) * 1000 / currentWeight;
-                                    MyToast.toastShort(context, "标定成功");
-                                    btnCalibration.setText("标定成功");
-                                    sendCalibrationInfo(isCalibration10kg, String.valueOf(zeroAd), String.valueOf(currentAd), value);
-                                    isSendDataFpsm = true;
-                                    isStartBd = false;
-
-                                    handler.sendEmptyMessageDelayed(1011, 600);
-                                }
-                            }
-                            kValue = null;
-                        }
-                    }
-                    dealWeight(currentWeight, isNegative);
+                // 数据 设计
+                tvsbAd2.setText(currentAd + "");
+                tvsbZeroAd2.setText(zeroAd + "");
+                if (currentWeight != 0) {
+                    k = (currentAd - zeroAd) / currentWeight;
                 }
+
+
+                tvkValue2.setText(k + "");
+
+                if (isStartBd) {
+                    if ((isCalibration10kg && currentWeight == 10000) || (!isCalibration10kg && currentWeight == 20000)) {
+                        MyPreferenceUtils.getSp(context).edit().putString(VALUE_SB_AD, String.valueOf(currentAd)).apply();
+                        MyPreferenceUtils.getSp(context).edit().putString(VALUE_SB_ZERO_AD, String.valueOf(zeroAd)).apply();
+
+                        if (kValue != null) {//上传数据
+                            if (!isSendDataFpsm) {
+                                int value = (currentAd - zeroAd) * 1000 / currentWeight;
+                                MyToast.toastShort(context, "标定成功");
+                                btnCalibration.setText("标定成功");
+                                sendCalibrationInfo(isCalibration10kg, String.valueOf(zeroAd), String.valueOf(currentAd), value);
+                                isSendDataFpsm = true;
+                                isStartBd = false;
+
+                                handler.sendEmptyMessageDelayed(1011, 600);
+                            }
+                        }
+                        kValue = null;
+                    }
+                }
+                dealWeight(currentWeight, isNegative);
+
                 break;
             case WEIGHT_SX:// 获取到标定完成
 
@@ -460,7 +457,6 @@ public class ScaleBDACActivity extends MyBaseCommonACActivity implements IEventB
             CalibrationWeight = 20;
         }
 
-
         String authenCode = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_AUTHENCODE, null);
         String dataKey = MyPreferenceUtils.getSp(getApplicationContext()).getString(FPMS_DATAKEY, null);
         if (authenCode == null || dataKey == null) {
@@ -473,8 +469,7 @@ public class ScaleBDACActivity extends MyBaseCommonACActivity implements IEventB
         String sb = "service=deviceService&cmd=" + cmdECB + "&authenCode=" + authenCode +
                 "&appCode=FPMSWS" +
                 "&deviceNo=" + sysApplication.getUserInfo().getSno() +
-                "&macAddr=" +
-                HttpHelper.getmInstants(sysApplication).getMac() +
+                "&macAddr=" + SystemInfoUtils.getMac(sysApplication) +
                 "&weight=" + CalibrationWeight + //重量，必须20kg
                 "&initAd=" + initAd0 +   //标准点0位Ad
                 "&initAd=" + initAd;//标准点Ad

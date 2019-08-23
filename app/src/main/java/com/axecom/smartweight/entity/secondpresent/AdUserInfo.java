@@ -4,11 +4,9 @@ package com.axecom.smartweight.entity.secondpresent;
  * author: luofaxin
  * date： 2018/11/12 0012.
  * email:424533553@qq.com
- * describe:
+ * describe: 广告信息的服务 ，使用测试。
  */
 public class AdUserInfo {
-
-
     /**
      * status : 0
      * msg : ok
@@ -23,8 +21,6 @@ public class AdUserInfo {
      * "companyid":"1126",
      * "baseurl":"https://data.axebao.com/smartsz/"}
      */
-
-
     private int status;
     private String msg;
     private AdUserBean data;

@@ -1,27 +1,24 @@
 package com.axecom.smartweight.helper;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
+
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.android.volley.VolleyError;
+import com.axecom.smartweight.activity.main.model.IMainModel;
+import com.axecom.smartweight.activity.main.model.MainModel;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.config.IConstants;
+import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
-import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.project.UserInfo;
-import com.axecom.smartweight.entity.dao.OrderInfoDao;
-import com.xuanyuan.library.MyLog;
-import com.xuanyuan.library.listener.OkHttpListener;
 import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.listener.OkHttpListener;
 import com.xuanyuan.library.listener.VolleyListener;
 import com.xuanyuan.library.listener.VolleyStringListener;
 import com.xuanyuan.library.utils.net.MyNetWorkUtils;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -130,7 +127,7 @@ public class HttpHelper implements IConstants {
      */
     //通过
     public void commitDDEx(OrderInfo orderInfo, OkHttpListener okHttpListener) {
-        if (MyNetWorkUtils.isNetworkAvailable(application.getContext())) {
+        if (MyNetWorkUtils.isNetworkAvailable(SysApplication.getInstance())) {
             String StringOld = JSON.toJSONString(orderInfo);
             String stringNew = StringOld.replace("orderItem", "items");
             String desdata = application.getDesBCBHelper().encode(stringNew);
@@ -141,7 +138,7 @@ public class HttpHelper implements IConstants {
     }
 
     public void commitDDExVolley(OrderInfo orderInfo, VolleyStringListener listener) {
-        if (MyNetWorkUtils.isNetworkAvailable(application.getContext())) {
+        if (MyNetWorkUtils.isNetworkAvailable(SysApplication.getInstance())) {
             String StringOld = JSON.toJSONString(orderInfo);
             String stringNew = StringOld.replace("orderItem", "items");
             String desdata = application.getDesBCBHelper().encode(stringNew);
@@ -237,7 +234,7 @@ public class HttpHelper implements IConstants {
      * @param flag           请求标识
      */
     public void getUserInfoEx(VolleyListener volleyListener, int flag) {
-        String data = "{\"mac\":\"" + getMac() + "\"}";
+        String data = "{\"mac\":\"" + SystemInfoUtils.getMac(application.getApplicationContext()) + "\"}";
 //        JSON.toJSONString()
         String desdata = application.getDesBCBHelper().encode(data);
         String url = BASE_IP_ST + "/api/smart/getinfobymac?desdata=" + desdata;
@@ -304,9 +301,13 @@ public class HttpHelper implements IConstants {
             }
         });
     }*/
-    public void updateDataEx(final OrderInfoDao orderInfoDao) {
+    public void updateDataEx() {
+        if (MyNetWorkUtils.isNetworkAvailable(application.getApplicationContext())) {// 0 用流量  ，1  wifi
+            return;
+        }
         application.getThreadPool().execute(() -> {
-            final List<OrderInfo> orderInfos1 = orderInfoDao.queryByState();
+            IMainModel mainModel = new MainModel();
+            final List<OrderInfo> orderInfos1 = mainModel.queryByState();
             if (orderInfos1 != null && orderInfos1.size() > 0) {
                 String StringOld = JSON.toJSONString(orderInfos1);
                 String stringNew = StringOld.replace("orderBeans", "items");
@@ -347,7 +348,7 @@ public class HttpHelper implements IConstants {
                                         for (int j = 0; j < orderInfos1.size(); j++) {
                                             if (data.get(i).equals(orderInfos1.get(j).getBillcode())) {//TODO 测试
                                                 orderInfos1.get(j).setState(1);
-                                                orderInfoDao.updateOrInsert(orderInfos1.get(j));
+                                                mainModel.updateOrInsert(orderInfos1.get(j));
                                             }
                                         }
                                     }
@@ -387,19 +388,6 @@ public class HttpHelper implements IConstants {
         String desdata = application.getDesBCBHelper().encode(data);
         String url = BASE_IP_ST + "/api/smartsz/getadinfo?desdata=" + desdata;
         application.volleyGet(url, listener, flag);
-    }
-
-    @SuppressLint("HardwareIds")
-    public String getMac() {
-        WifiManager wm = (WifiManager) application.getSystemService(Context.WIFI_SERVICE);
-        String mac = "";
-        if (wm != null) {
-            WifiInfo wifiInfo = wm.getConnectionInfo();
-            if (wifiInfo != null) {
-                mac = wifiInfo.getMacAddress();
-            }
-        }
-        return mac;
     }
 
     /**

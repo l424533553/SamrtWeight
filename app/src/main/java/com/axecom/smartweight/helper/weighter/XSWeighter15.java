@@ -9,7 +9,6 @@ import com.xuanyuan.library.MyLog;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * 香山秤15.6 黑色屏
@@ -17,12 +16,8 @@ import java.util.Arrays;
 public class XSWeighter15 extends MyBaseWeighter implements IEventBus {
     private static XSWeighter15 mInstance;
 
-    public static XSWeighter15 getXSWeighter() {
-        return mInstance;
-    }
-
     public XSWeighter15() {
-        mInstance = this;
+
     }
 
     public static final String TAG = "XSWeighter15";
@@ -160,6 +155,10 @@ public class XSWeighter15 extends MyBaseWeighter implements IEventBus {
             //判断进程是否在运行，更安全的结束进程
 //            byte[] buffer = new byte[60];
             try {
+
+                if (getSerialPort() == null) {
+                    return;
+                }
                 while (isRun) {
                     byte[] buffer = new byte[50];
                     int size; //读取数据的大小
@@ -172,17 +171,26 @@ public class XSWeighter15 extends MyBaseWeighter implements IEventBus {
                         if (str11.endsWith("#")) {
                             if (str11.startsWith("C1")) {
                                 MyLog.log("获取重量数据=======" + str11);
-                                sendReadMessage(str11, WEIGHT_SX15);
+                                String[] array = str11.split(" ");
+                                if (array.length >= 6 && array[1].length() == 7
+                                        && array[2].length() == 7 && array[3].length() == 7
+                                        && array[4].length() == 7 && array[5].length() == 7) {
+                                    sendReadMessage(array, WEIGHT_SX15);
+                                }
                             } else if (str11.startsWith("C2")) {//C2 001 038# 按键值
                                 sendReadMessage(str11, WEIGHT_KEY_PRESS);
-                            } else if (str11.startsWith("C3") || str11.startsWith("3")) {//C3 1150 1 065#
-                                sendReadMessage(str11, WEIGHT_ELECTRIC);
+                            } else if (str11.startsWith("C3") || str11.startsWith("3")) {//C3 1150 1 065#  电池内容
+                                String[] array = str11.split(" ");
+                                if (array.length >= 3 && array[1].length() == 4 && array[2].length() == 2) {
+                                    sendReadMessage(array, WEIGHT_ELECTRIC);
+                                }
                                 MyLog.log22("电量值=======" + str11);
                             } else if (str11.startsWith("C4") || str11.startsWith("4")) {//C4 ERR0  标定
                                 sendReadMessage(str11, WEIGHT_CALIBRATION);
                             } else if (str11.startsWith("C5") || str11.startsWith("5")) {// 判断是否包含ERR0  ERR1即可
                                 //去皮成功
                             } else if (str11.startsWith("C6") || str11.startsWith("6")) {// 判断是否包含ERR0  ERR1即可
+                                MyLog.log22("获取K标定值=======" + str11);
                                 sendReadMessage(str11, WEIGHT_KVALUE);
                             } else if (str11.startsWith("C7") || str11.startsWith("7")) {//C7 ERR0 009#
                                 sendReadMessage(str11, WEIGHT_CLEAN_CHEAT);
@@ -203,7 +211,7 @@ public class XSWeighter15 extends MyBaseWeighter implements IEventBus {
         }
     }
 
-    private void sendReadMessage(String str, String eventType) {
+    private void sendReadMessage(Object str, String eventType) {
         BaseBusEvent event = new BaseBusEvent();
         event.setEventType(eventType);
         event.setOther(str);
@@ -229,7 +237,9 @@ public class XSWeighter15 extends MyBaseWeighter implements IEventBus {
         } else if (len == 0) {
             return 0;
         }
-
+        if (getSerialPort() == null) {
+            return -1;
+        }
         int c = getSerialPort().getInputStream().read();
         if (c == -1) {
             return -1;

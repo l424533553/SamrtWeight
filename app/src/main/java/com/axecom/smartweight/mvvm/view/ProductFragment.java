@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.axecom.smartweight.R;
+import com.axecom.smartweight.adapter.GoodsTradeAdapter;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.databinding.FragmentProductSummaryBinding;
-import com.axecom.smartweight.adapter.GoodsTradeAdapter;
 import com.axecom.smartweight.entity.room.DynamicChangeCallback;
 import com.axecom.smartweight.helper.DateTimeDialogOnlyYMD;
 import com.axecom.smartweight.mvvm.model.GoodsTradeBean;

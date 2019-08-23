@@ -15,14 +15,10 @@ import java.io.IOException;
  * 香山秤15.6 黑色屏
  */
 public class XSWeighter8 extends MyBaseWeighter implements IEventBus {
-    private static XSWeighter8 mInstance;
 
-    public static XSWeighter8 getXSWeighter() {
-        return mInstance;
-    }
 
     public XSWeighter8() {
-        mInstance = this;
+
     }
 
     public static final String TAG = "XSWeighter15";

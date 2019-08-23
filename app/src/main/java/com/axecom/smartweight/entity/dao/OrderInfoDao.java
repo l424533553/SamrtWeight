@@ -1,8 +1,8 @@
 package com.axecom.smartweight.entity.dao;
 
 
-import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import com.axecom.smartweight.entity.project.OrderInfo;
 import com.j256.ormlite.dao.Dao;
@@ -22,7 +22,7 @@ public class OrderInfoDao {
     private Dao<OrderInfo, Integer> dao;
     OrmliteBaseHelper ormliteBaseHelper;
 
-    public OrderInfoDao(Context context) {
+    public OrderInfoDao( ) {
         try {
             ormliteBaseHelper = OrmliteBaseHelper.getInstance();
             this.dao = ormliteBaseHelper.getDao(OrderInfo.class);
@@ -52,9 +52,9 @@ public class OrderInfoDao {
 
     private static OrderInfoDao baseDao;
 
-    public static OrderInfoDao getInstance(Context context) {
+    public static OrderInfoDao getInstance( ) {
         if (baseDao == null) {
-            baseDao = new OrderInfoDao(context);
+            baseDao = new OrderInfoDao();
         }
         return baseDao;
     }
@@ -101,8 +101,11 @@ public class OrderInfoDao {
         return rows;
     }
 
-    // 修改数据
+    // 修改数据, 将状态由 0—>1 : 即待上传 —> 已上传
     public int update(String billcode) {
+        if (TextUtils.isEmpty(billcode)) {
+            return -1;
+        }
         int rows = -1;
         try {
             UpdateBuilder updateBuilder = dao.updateBuilder();
@@ -135,7 +138,7 @@ public class OrderInfoDao {
         }
     }
 
-    //    // 通过条件查询文章集合（通过用户ID查找）
+     // 通过条件查询文章集合（通过用户ID查找） ，查找的 0为未上传 ，1 为已上传
     public List<OrderInfo> queryByState() {
         try {
 //            return dao.queryBuilder().where().eq("Status", 0).and().like("SpellCode", "%" + name + "%").query();

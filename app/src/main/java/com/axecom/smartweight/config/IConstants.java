@@ -19,12 +19,9 @@ public interface IConstants {
     int NOTIFY_SUCCESS = 9555;
     int NOTIFY_EPAY_SUCCESS = 9666; //电子支付成功
 
-    int NOTIFY_TRACENO = 9999;
-    int NOTIFY_JUMP = 9888;
-    int NOTIFY_TRACE_STATE = 9101;
-    int NOTIFY_CLOSE_DIALOG = 9102;
 
-    String BASE_IP_ST = "http://119.23.43.64";
+    String BASE_IP_ST = "https://data.axebao.com";
+//    String BASE_IP_ST = "http://119.23.43.64";
     String BASE_IP_WEB = "https://data.axebao.com/smartsz";
 
     /**
@@ -58,11 +55,6 @@ public interface IConstants {
     /**
      * 秤编号id
      */
-    String TID = "tid";
-
-    String SELLER = "seller";
-    String SELLER_ID = "sellerid";
-    String STALL_NO = "stallNo";//摊位号
 
     String KEY = "key";
     String MCHID = "mchid";
@@ -90,10 +82,6 @@ public interface IConstants {
 
     String IS_HAS_DEVICE = "isHaveDevice"; // 是否已经有了硬件信息
 
-
-    String RADIO_VERSION_ST = "";// 固件版本  商通称
-    String RADIO_VERSION_SX_7 = "";// 固件版本  香山 7寸屏
-    String RADIO_VERSION_SX_15 = "";// 固件版本  香山  15.6寸屏
 
     int VOLLEY_FLAG_FPMSLOGIN_RESET = 8;//计量院登陆接口 ，失效后重新获得的
     int VOLLEY_FLAG_FPMSLOGIN = 9;//计量院登陆接口
@@ -143,6 +131,9 @@ public interface IConstants {
     int HANDLER_IMAGE_FINISH = 8207;
 
 
+
+    // 跳转从锁定页面进入
+    String JUMP_FROM_LOCK="jumpFromLock";
     /*** 8寸按键常量  Start    ************************************************************************/
     String MENU_1 = "menu0";
     String MENU_2 = "menu1";
@@ -215,7 +206,7 @@ public interface IConstants {
     /**
      * 参数 配置区    心跳时间
      **********************************************************************/
-    int UPDATE_STATE_TIME = 300 * 1000;
+    int UPDATE_STATE_TIME = 150 * 1000;
     String SMALLROUTINE_URL = "SmallRoutineURL";
 
     int POSITION_PATCH = 1;
@@ -235,11 +226,11 @@ public interface IConstants {
     int POSITION_RE_BOOT = 12;
     int POSITION_HELP = 17;
     int POSITION_DATA_DELETE = 18;
-    int POSITION_RE_EXIT= 19;//关闭软件
+    int POSITION_RE_EXIT = 19;//关闭软件
+    int POSITION_VIDEO = 20;//关闭软件
     int POSITION_BACK = 16;
     int POSITION_BD = 13;
     int POSITION_SYSTEM = 14;
-
 
     //消息类型  网路可用
     String EVENT_NET_WORK_AVAILABLE = "eventNetWorkAble";
@@ -269,4 +260,3 @@ public interface IConstants {
     String AXE_COUNT_OK = "axe_count_OK";
     String AXE_COUNT_ERR = "axe_count_ERR";
 }
-

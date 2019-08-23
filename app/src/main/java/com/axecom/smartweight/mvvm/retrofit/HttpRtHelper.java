@@ -1,11 +1,10 @@
 package com.axecom.smartweight.mvvm.retrofit;
 
 import com.alibaba.fastjson.JSONObject;
-import com.axecom.smartweight.listener.DataCallBack;
 import com.axecom.smartweight.config.IConstants;
 import com.axecom.smartweight.entity.project.UserInfo;
+import com.axecom.smartweight.listener.DataCallBack;
 import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
-import com.axecom.smartweight.mvvm.entity.RetrofitCallback;
 import com.axecom.smartweight.utils.security.DesBCBHelper;
 import com.xuanyuan.library.MyLog;
 

@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.setting.SystemLoginActivity;
@@ -23,47 +25,34 @@ import static com.axecom.smartweight.config.IEventBus.WEIGHT_CLEAN_CHEAT;
 
 public class LockActivity extends AppCompatActivity implements IConstants {
     private Context context;
-    private boolean cheatFlag;
+    //    private boolean cheatFlag;
+    private TextView tvNoteTitle;
+    private long time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lock);
+        time = System.currentTimeMillis();
+        Log.i("123456", "onCreate=" + time);
         context = this;
-        MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, true).apply();
-        cheatFlag = getIntent().getBooleanExtra(INTENT_CHEATFLAG, false);
-        if (cheatFlag) {
-            findViewById(R.id.tvNoteTitle).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.tvNoteTitle).setVisibility(View.GONE);
-        }
+        tvNoteTitle = findViewById(R.id.tvNoteTitle);
 
         findViewById(R.id.ivLoginSys).setOnClickListener(v -> {
             Intent intent2 = new Intent(context, SystemLoginActivity.class);
-            startActivityForResult(intent2, RC_SYS_SET);
-
+            intent2.putExtra(JUMP_FROM_LOCK, true);
+            startActivity(intent2);
         });
 
         close(this);
         EventBus.getDefault().register(this);//解除事件总线问题
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == RC_SYS_SET) {
-                Intent intent = new Intent(this, SystemSettingsActivity.class);
-                startActivity(intent);
-            }
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);//解除事件总线问题
+        Log.i("123456", "onDestroy=" + time);
     }
 
     //定义处理接收的方法
@@ -71,18 +60,41 @@ public class LockActivity extends AppCompatActivity implements IConstants {
     public void eventBus(BaseBusEvent event) {
         // 解锁软件
         if (ACTION_UNLOCK_SOFT.equals(event.getEventType())) {
-            if (!cheatFlag) {
-                MyPreferenceUtils.getSp(context).edit().putBoolean(LOCK_STATE, false).apply();
+            ;
+            if (!MyPreferenceUtils.getSp(context).getBoolean(INTENT_CHEATFLAG, false)) {
                 LockActivity.this.finish();
             }
         } else if (WEIGHT_CLEAN_CHEAT.equals(event.getEventType())) {
-            String data= (String) event.getOther();
-            if(data.contains("R0")){
+            String data = (String) event.getOther();
+            if (data.contains("R0")) {
                 //去除标志成功
                 MyPreferenceUtils.getSp(context).edit().putBoolean(INTENT_CHEATFLAG, false).apply();
-                LockActivity.this.finish();
+                tvNoteTitle.setVisibility(View.GONE);
+                if (!MyPreferenceUtils.getSp(context).getBoolean(LOCK_STATE, false)) {
+                    LockActivity.this.finish();
+                }
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("123456", "onStart=" + time);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean isCheat = MyPreferenceUtils.getSp(context).getBoolean(INTENT_CHEATFLAG, false);
+        if (isCheat) {
+            tvNoteTitle.setVisibility(View.VISIBLE);
+        } else {
+            tvNoteTitle.setVisibility(View.GONE);
+        }
+
+        Log.i("123456", "onResume=" + time);
     }
 
     /**
@@ -95,39 +107,6 @@ public class LockActivity extends AppCompatActivity implements IConstants {
         WindowManager.LayoutParams params = window.getAttributes();
         params.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
         window.setAttributes(params);
-    }
-
-//    private class NetBroadcastReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            //如果相等的话就说明网络状态发生了变化
-//            if (ACTION_UNLOCK_SOFT.equals(intent.getAction())) {
-//                sp.edit().putBoolean(LOCK_STATE, false).apply();
-//                LockActivity.this.finish();
-//            }
-//        }
-//    }
-
-//    private NetBroadcastReceiver recevier;
-//    private IntentFilter intentFilter;
-//    private void initNetReceiver() {
-//        recevier = new NetBroadcastReceiver();
-//        intentFilter = new IntentFilter();
-//        intentFilter.addAction(ACTION_UNLOCK_SOFT);
-//    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        if (recevier != null) {
-//            unregisterReceiver(recevier);
-//        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
 }

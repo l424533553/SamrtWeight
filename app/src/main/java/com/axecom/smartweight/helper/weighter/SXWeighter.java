@@ -16,15 +16,9 @@ import java.util.Arrays;
  * 香山秤15.6 黑色屏
  */
 public class SXWeighter extends MyBaseWeighter implements IEventBus {
-    private static SXWeighter mInstance;
-
-
-    public static SXWeighter getXSWeighter() {
-        return mInstance;
-    }
 
     public SXWeighter() {
-        mInstance = this;
+
     }
 
     public static final String TAG = "SXWeighter";

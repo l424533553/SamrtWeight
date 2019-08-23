@@ -11,8 +11,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 10
-        versionName "4.001"
+        versionCode 20
+        versionName "4.011"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -99,6 +99,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     implementation 'com.squareup.okio:okio:2.2.2'
+
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     /** Rxjava + Retrofit 系列框架    end ***************/
 
     // 可以清理的框架    蓝牙框架
@@ -117,15 +119,14 @@ dependencies {
 //    implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
-
     //ormlite  框架引用包
     implementation 'com.j256.ormlite:ormlite-android:5.1'
     implementation 'com.j256.ormlite:ormlite-core:5.1'
     implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
 
-    implementation 'com.alibaba:fastjson:1.2.47'
+    implementation 'com.alibaba:fastjson:1.2.49'
 
-//    implementation 'com.bigkoo:convenientbanner:2.0.5'
+//  implementation 'com.bigkoo:convenientbanner:2.0.5'
     implementation 'com.allenliu.versionchecklib:library:2.0.8'
     implementation 'com.youth.banner:banner:1.4.10'
     /*  走马灯 框架*/
@@ -136,9 +137,7 @@ dependencies {
      */
 //    implementation files('libs/poi-3.9-20121203.jar')
 //    implementation files('libs/poi-scratchpad-3.9-20121203.jar')
-
-    implementation project(':CommonLibrary:library')
-
+//    implementation project(':CommonLibrary:library')
 
     /** 数据框架 *******************************************/
     // add for room  使用room框架
@@ -146,7 +145,7 @@ dependencies {
     // room 配合 RxJava
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
-
+    implementation project(path: ':library')
 }
 apply from: 'tinker-support.gradle'
 repositories {

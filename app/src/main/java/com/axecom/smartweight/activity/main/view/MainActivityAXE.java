@@ -23,10 +23,10 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.SecondScreen;
-import com.axecom.smartweight.activity.common.mvvm.home.HomeActivity;
 import com.axecom.smartweight.activity.common.LockActivity;
 import com.axecom.smartweight.activity.common.SecondPresentation;
 import com.axecom.smartweight.activity.common.SettingsActivity;
+import com.axecom.smartweight.activity.common.mvvm.home.HomeActivity;
 import com.axecom.smartweight.activity.main.MainObservableBean;
 import com.axecom.smartweight.activity.main.viewmodel.MainVM;
 import com.axecom.smartweight.activity.setting.SystemLoginActivity;
@@ -281,7 +281,8 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
     /**
      * OK 设置软件  背景色
      */
-    private void setBackground() {
+    @Override
+    protected void setBackground() {
         int index = MyPreferenceUtils.getSp(context).getInt("BACKGROUND_INDEX", 0);
         binding.llKey.setBackgroundResource(BackgroundData.getData().get(index));
         binding.llorder.setBackgroundResource(BackgroundData.getData().get(index));
@@ -338,15 +339,6 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
 
     }
 
-    /**
-     * VM
-     * 初始化 塑料袋 价格问题
-     */
-    private void initBaseData() {
-        mainBean.getPriceLarge().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_LARGE, 0.3f));
-        mainBean.getPriceMiddle().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_MIDDLE, 0.2f));
-        mainBean.getPriceSmall().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_SMALL, 0.1f));
-    }
 
     /**
      * 初始化控件
@@ -390,22 +382,11 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
 
             initSecondScreen();
             askOrderState();
-            orderInfoDao = new OrderInfoDao(context);
+            orderInfoDao = new OrderInfoDao();
             orderBeanDao = new OrderBeanDao();
             judegIsLock();
             isInit = true;
             presenter.send2FpmsSignIn(false);
-        }
-    }
-
-    /**
-     * 是否锁定
-     */
-    private void judegIsLock() {
-        boolean isLock = MyPreferenceUtils.getSp(context).getBoolean(LOCK_STATE, false);
-        if (isLock) {
-            Intent intent = new Intent(this, LockActivity.class);
-            startActivity(intent);
         }
     }
 
@@ -420,7 +401,7 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
         new Thread(() -> {
             while (isAskOrdering) {
                 try {
-                    if (sysApplication.isConfigureEpayParams()) {//有配置才进行询问请求
+                    if (sysApplication.getUserInfo().isConfigureEpayParams()) {//有配置才进行询问请求
                         if (askInfos.size() > 0) {
                             handler.sendEmptyMessage(NOTIFY_MARQUEE);
                             for (int i = askInfos.size() - 1; i >= 0; i--) {
@@ -535,9 +516,8 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
         });
     }
 
-    private void dealWeight(float weightFloat, int isNegativeFlag) {
-        boolean isNegative;
-        isNegative = isNegativeFlag != 0;
+    private void dealWeight(float weightFloat) {
+        boolean isNegative = weightBean.isNegative();
         try {
             if (weightFloat == 0.000f) {
                 binding.tvWeightTop.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
@@ -604,7 +584,7 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
 
         //价格按键被点击过，即价格变换了
         long currentTime = System.currentTimeMillis();
-        orderBeanTemp.setTime1(currentTime);
+
         if (isEdSelect) {
             binding.etPrice.getText().clear();
             isEdSelect = false;
@@ -644,9 +624,6 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
         mainBean.getPrice().set("");
         mainBean.getHintPrice().set(selectedHotGood.getPrice());
 
-        //切换了商品，计算重量从0开始
-        orderBeanTemp.setWeight(null);
-        orderBeanTemp.setName(selectedHotGood.getName());
         BigDecimal bigPrice = new BigDecimal(selectedHotGood.getPrice());
         BigDecimal bigWeight = new BigDecimal(mainBean.getNetWeight().get());
         bigPrice = bigPrice.multiply(bigWeight).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -673,7 +650,7 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
      * 设置 价格
      */
     @SuppressLint("DefaultLocale")
-    public void setGrandTotalTxt() {
+    public void dealGrandMoney() {
         if ("0".equalsIgnoreCase(mainBean.getHintPrice().get()) && "0".equalsIgnoreCase(mainBean.getPrice().get())) {
             return;
         }
@@ -689,52 +666,6 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
 
     }
 
-    private void autoSendOrder(long currentTime) {
-        if (!isSendOrder) {
-            if (orderBeanTemp.getTime2() - orderBeanTemp.getTime1() >= 1000) {
-                if (Float.valueOf(orderBeanTemp.getWeight()) <= 0) {
-                    return;
-                }
-                //上传非正常订单
-                if (TextUtils.isEmpty(mainBean.getGoodName().get())) {
-                    return;
-                }
-                String price = TextUtils.isEmpty(binding.etPrice.getText().toString()) ? binding.etPrice.getHint().toString() : binding.etPrice.getText().toString();
-                if (TextUtils.isEmpty(price)) {
-                    return;
-                }
-                float priceF = Float.valueOf(price);
-                if (priceF < 0.20) {//金额太小,将不自动上传数据
-                    return;
-                }
-                sbZeroAd = MyPreferenceUtils.getString(context, VALUE_SB_ZERO_AD, null);
-                sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
-                kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
-
-                orderBeanTemp.setPrice(price);
-
-                orderBeanTemp.setWeight(orderBeanTemp.getWeight());
-                orderBeanTemp.setX0(zeroAd + "");
-                orderBeanTemp.setX1(sbZeroAd + "");
-                orderBeanTemp.setX2(tareWeight + "");
-                orderBeanTemp.setWeight0(sbAd + "");
-                orderBeanTemp.setXcur(currentAd + "");
-                orderBeanTemp.setK(kValue + "");
-
-                orderBeanTemp.setMoney(mainBean.getGrandMoney().get());
-                orderBeanTemp.setTraceno(selectedHotGood.getBatchCode());
-                orderBeanTemp.setItemno(String.valueOf(selectedHotGood.getCid()));
-                orderBeanTemp.setName(mainBean.getGoodName().get());
-                OrderBean orderBean = orderBeanTemp.clone();
-                isSendOrder = true;//锁定不让上传订单
-
-                orderBeanTemp.setTime1(currentTime);
-                sendOrder2AxeWeb(orderBean);
-
-            }
-        }
-    }
-
 
     /**
      * 进行LiveDataBus事件处理
@@ -744,13 +675,9 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
     @Override
     protected void onLiveEvent(String type) {
         if (EVENT_NET_WORK_AVAILABLE.equals(type)) {
-            if (MyNetWorkUtils.isNetworkAvailable(context)) {// 0 用流量  ，1  wifi
-                MyLog.i("44447777", "网络变好了可以使用");
-                if (orderInfoDao == null) {
-                    orderInfoDao = new OrderInfoDao(context.getApplicationContext());
-                }
-                HttpHelper.getmInstants(sysApplication).updateDataEx(orderInfoDao);
-            }
+
+            HttpHelper.getmInstants(sysApplication).updateDataEx();
+
         } else if (EVENT_TOKEN_REGET.equals(type)) {
             //TODO   重新获取 key
         } else if (NOTIFY_USERINFO.equals(type)) {
@@ -764,6 +691,10 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
             initBaseData();
         }
     }
+
+    /**
+     *
+     */
 
     /**
      * @param event 事件
@@ -792,8 +723,8 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
             case WEIGHT_AXE://称重数据变化
                 byte[] weightArr = (byte[]) event.getOther();
                 analyticWeightDataAXE(weightArr);
-                if (cheatSign == 1) {
-                    //TODO 作弊了
+                oldFloat = weightBean.getCurrentWeight();
+                if (weightBean.getCheatSign() == 1) {
                     boolean isCheatSign = MyPreferenceUtils.getSp(context).getBoolean(INTENT_CHEATFLAG, false);
                     if (!isCheatSign) {
                         MyPreferenceUtils.getSp(context).edit().putBoolean(INTENT_CHEATFLAG, true).apply();
@@ -802,25 +733,14 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
                         startActivity(intent);
                     }
                 } else {
-                    weightFloat = (float) currentWeight / 1000;
-                    dealWeight(weightFloat, isNegative);
-                    if (0.005 > weightFloat) {
+                    dealWeight(weightBean.getCurrentWeight());
+                    if (0.005 > weightBean.getCurrentWeight()) {
                         isSendOrder = false;
                     }
 
-                    currentTime = System.currentTimeMillis();
-                    oldFloat = Float.parseFloat(orderBeanTemp.getWeight());
-                    //稳定的
-                    if (Math.abs(weightFloat - oldFloat) < 0.005) {
-                        orderBeanTemp.setTime2(currentTime);
-                    } else {
-                        orderBeanTemp.setTime1(currentTime);
-                    }
-
-                    orderBeanTemp.setWeight(mainBean.getNetWeight().get());
-                    setGrandTotalTxt();
-                    if (currentWeight > 50) {
-                        autoSendOrder(currentTime);
+                    dealGrandMoney();
+                    if (weightBean.getCurrentWeight() > 0.1) {
+                        autoSendOrder();
                     }
                 }
                 break;
@@ -877,7 +797,7 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
             banner = null;
         }
         super.onDestroy();
-        ActivityController.finishAll();
+        ActivityController.finishAll(true);
     }
 
     /**
@@ -911,7 +831,8 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
 
     /**
      * 点击
-     * @param v  控件
+     *
+     * @param v 控件
      */
     @Override
     public void onClick(View v) {
@@ -997,11 +918,12 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
         mainBean.getTotalWeight().set(mainBean.getNetWeight().get());
         orderBean2.setWeight(mainBean.getNetWeight().get());
 
-        orderBean2.setX0(zeroAd + "");
+
+        orderBean2.setX0(String.valueOf(weightBean.getZeroAd()));
         orderBean2.setX1(sbZeroAd + "");
-        orderBean2.setX2(tareWeight + "");
+        orderBean2.setX2(String.valueOf(weightBean.getTareWeight()));
         orderBean2.setWeight0(sbAd + "");
-        orderBean2.setXcur(currentAd + "");
+        orderBean2.setXcur(String.valueOf(weightBean.getCurrentAd()));
         orderBean2.setK(kValue + "");
 
         mainBean.getTotalPrice().set(mainBean.getGrandMoney().get());
@@ -1065,11 +987,12 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
         sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
         kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
 
-        orderBean.setX0(zeroAd + "");
+
+        orderBean.setX0(String.valueOf(weightBean.getZeroAd()));
         orderBean.setX1(sbZeroAd + "");
-        orderBean.setX2(tareWeight + "");
+        orderBean.setX2(String.valueOf(weightBean.getTareWeight()));
         orderBean.setWeight0(sbAd + "");
-        orderBean.setXcur(currentAd + "");
+        orderBean.setXcur(String.valueOf(weightBean.getCurrentAd()));
         orderBean.setK(kValue + "");
 
         orderBean.setItemno(String.valueOf(selectedHotGood.getCid()));
@@ -1129,12 +1052,13 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
             sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
             kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
 
-            orderBean.setX0(zeroAd + "");
+            orderBean.setX0(String.valueOf(weightBean.getZeroAd()));
             orderBean.setX1(sbZeroAd + "");
-            orderBean.setX2(tareWeight + "");
+            orderBean.setX2(String.valueOf(weightBean.getTareWeight()));
             orderBean.setWeight0(sbAd + "");
-            orderBean.setXcur(currentAd + "");
+            orderBean.setXcur(String.valueOf(weightBean.getCurrentAd()));
             orderBean.setK(kValue + "");
+
 
             orderBean.setItemno(DEFAULT_BAG_ITEM_NO);
             orderBean.setName(bagName);
@@ -1417,7 +1341,7 @@ public class MainActivityAXE extends MainBaseACActivity implements IAllView, IEv
      */
     @Override
     public void onBackPressed() {
-        if (!mainVM.finishAll()) {
+        if (mainVM.finishAll()) {
             MyToast.toastShort(this, "再次点击退出！");
         }
     }

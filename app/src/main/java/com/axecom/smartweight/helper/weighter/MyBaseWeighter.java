@@ -38,9 +38,10 @@ public abstract class MyBaseWeighter {
     /**
      * 获得打印机的串口 控制
      *
-     * @return 打印机串口
+     * @return 打印机串口 ，
+     *
      */
-    public SerialPort getSerialPort() {
+    protected SerialPort getSerialPort(){
         try {
             if (serialPort == null) {
                 serialPort = new SerialPort(new File(path), baudrate, 0);
@@ -48,8 +49,8 @@ public abstract class MyBaseWeighter {
             return serialPort;
         } catch (IOException e) {
             e.printStackTrace();
+            throw new NullPointerException();
         }
-        return null;
     }
 
     //关闭
@@ -92,6 +93,7 @@ public abstract class MyBaseWeighter {
      * 置零
      */
     public abstract void sendZer();
+
     public abstract void readyBD();
 
     /**

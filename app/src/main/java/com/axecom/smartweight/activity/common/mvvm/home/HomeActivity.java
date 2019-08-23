@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -12,27 +15,26 @@ import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.common.DataFlushActivity;
 import com.axecom.smartweight.activity.common.ScaleBDACActivity;
-import com.axecom.smartweight.activity.main.view.MainActivitySX;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.mvvm.view.IAllView;
-import com.xuanyuan.library.activity.LogActivity;
 import com.axecom.smartweight.activity.main.view.MainActivity;
 import com.axecom.smartweight.activity.main.view.MainActivity8;
 import com.axecom.smartweight.activity.main.view.MainActivityAXE;
+import com.axecom.smartweight.activity.main.view.MainActivitySX;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.config.IConstants;
+import com.axecom.smartweight.entity.dao.UserInfoDao;
 import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.project.UserInfo;
-import com.axecom.smartweight.entity.dao.UserInfoDao;
 import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
-import com.axecom.smartweight.mvvm.entity.RetrofitCallback;
+import com.axecom.smartweight.mvvm.retrofit.RetrofitCallback;
 import com.axecom.smartweight.mvvm.retrofit.HttpRtHelper;
-import com.xuanyuan.library.utils.system.SystemInfoUtils;
+import com.axecom.smartweight.mvvm.view.IAllView;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.listener.VolleyListener;
 import com.xuanyuan.library.mvp.view.MyBaseCommonACActivity;
 import com.xuanyuan.library.utils.net.MyNetWorkUtils;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import org.json.JSONObject;
 
@@ -94,21 +96,23 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
 
             //1. 判定数据是否更新     // 2.是否有标定数据
             userInfoDao = new UserInfoDao();
-//            initHandler();
-            setInitView();
             isUserInfoAble = isCanLogin();
             startLogin();
         } else {
             MyToast.showError(context, "该秤类型无法识别，请联系管理员");
         }
+        setInitView();
     }
+
+    private Button btnLogin;
 
     /**
      * 初始化控件
      */
     public void setInitView() {
         findViewById(R.id.ivLog).setOnClickListener(this);
-        findViewById(R.id.btnLogin).setOnClickListener(this);
+        btnLogin = findViewById(R.id.btnLogin);
+        btnLogin.setOnClickListener(this);
         TextView loginTv = findViewById(R.id.home_login_tv);
         loginTv.setOnClickListener(this);
     }
@@ -135,8 +139,6 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
             } else {
                 viewModel.getUserInfo();
             }
-
-
         } else { // 无网
             if (userInfoClickAble) {
                 return true;
@@ -181,7 +183,7 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
     }
 
     /**
-     * 开始 登陆
+     * 开始 登陆.。
      */
     private void startLogin() {
         if (isUserInfoAble) {
@@ -192,7 +194,6 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
                     intent.putExtra(INTENT_AUTO_UPDATE, 0);
                     startActivityForResult(intent, CODE_JUMP2_DATAFLUSH);
                 } else {
-//                    intent.putExtra(INTENT_AUTO_UPDATE, 2);
                     isBDDataAble = isBDData();
                     goMainActivity();
                 }
@@ -218,12 +219,15 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
                 jumpActivity(MainActivityAXE.class, true);
             } else if (sysApplication.getTidType() == 4) {
                 jumpActivity(MainActivitySX.class, true);
-            } else {
+            } else if (sysApplication.getTidType() == 0) {//商通和XS15都是进入MainActivity
+                jumpActivity(MainActivity.class, true);
+            } else if (sysApplication.getTidType() == 1) {//商通和XS15都是进入MainActivity
                 jumpActivity(MainActivity.class, true);
             }
         }
     }
 
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (CODE_JUMP2_DATAFLUSH == requestCode) {
@@ -288,11 +292,9 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
                             MyPreferenceUtils.getSp(context).edit().putBoolean(SP_IS_FIRST_INIT, true).apply();
                         }
                     }
-
                     sysApplication.setUserInfo(userInfo);//保存信息
                     isUserInfoAble = true;
                     startLogin();
-
                 }
             } else {
                 MyToast.toastLong(context, "未获取到秤的配置信息");
@@ -309,11 +311,15 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
         }
     }
 
+    /**
+     * 使用功能
+     *
+     * @param flag 标志
+     */
     @Override
     public void onComplete(int flag) {
 
     }
-
 
     /**
      * @param jsonObject json对象
@@ -323,35 +329,67 @@ public class HomeActivity extends MyBaseCommonACActivity implements IAllView, Vi
     public void onResponse(JSONObject jsonObject, int flag) {
         try {
             final ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
-            switch (flag) {
-                case FLAG_GET_USER_INFO:
-                    if (resultInfo != null && resultInfo.getStatus() == 0) {
-                        UserInfo userInfo = JSON.parseObject(resultInfo.getData(), UserInfo.class);
-                        if (userInfo != null && HttpHelper.getmInstants(sysApplication).validateUserInfo(userInfo, sysApplication.getTidType())) {//用户信息合格
-                            userInfo.setId(1);
-                            userInfoDao.updateOrInsert(userInfo);
+            if (flag == FLAG_GET_USER_INFO) {
+                if (resultInfo != null && resultInfo.getStatus() == 0) {
+                    UserInfo userInfo = JSON.parseObject(resultInfo.getData(), UserInfo.class);
+                    if (userInfo != null && HttpHelper.getmInstants(sysApplication).validateUserInfo(userInfo, sysApplication.getTidType())) {//用户信息合格
+                        userInfo.setId(1);
+                        userInfoDao.updateOrInsert(userInfo);
 
-                            // 比对两次的信息是否一样
-                            UserInfo appInfo = sysApplication.getUserInfo();
-                            if (appInfo != null) {
-                                if (appInfo.getSellerid() != userInfo.getSellerid()) {
-                                    MyPreferenceUtils.getSp(context).edit().putBoolean(SP_IS_FIRST_INIT, true).apply();
-                                }
+                        // 比对两次的信息是否一样
+                        UserInfo appInfo = sysApplication.getUserInfo();
+                        if (appInfo != null) {
+                            if (appInfo.getSellerid() != userInfo.getSellerid()) {
+                                MyPreferenceUtils.getSp(context).edit().putBoolean(SP_IS_FIRST_INIT, true).apply();
                             }
-
-                            sysApplication.setUserInfo(userInfo);//保存信息
-                            isUserInfoAble = true;
-                            startLogin();
                         }
-                    } else {
-                        MyToast.toastLong(context, "未获取到秤的配置信息");
+
+                        sysApplication.setUserInfo(userInfo);//保存信息
+                        isUserInfoAble = true;
+                        startLogin();
                     }
-                    break;
-                default:
-                    break;
+                } else {
+                    MyToast.toastLong(context, "未获取到秤的配置信息");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    //按键监听：
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("RRR", "按键==" + keyCode);
+        switch (keyCode) {
+            case 22://向右
+            case 20://向下
+            case 19://向上
+            case 21://向左
+                btnLogin.setFocusable(true);
+                btnLogin.requestFocus();
+                btnLogin.setFocusableInTouchMode(true);
+                btnLogin.requestFocusFromTouch();
+                btnLogin.setHovered(true);
+                btnLogin.setPressed(true);
+//                btnLogin.setFocusableInTouchMode();
+                break;
+            case 131://退出键
+                onBackPressed();
+
+                break;
+            default:
+                break;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!finishAll()) {
+            MyToast.toastShort(this, "再次点击退出！");
         }
     }
 

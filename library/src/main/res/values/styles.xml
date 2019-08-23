@@ -1,0 +1,89 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- 尽量 让windowBackground  为null,以免进行了过度渲染 -->
+    <style name="MyAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+<!--        <item name="android:windowBackground">@null</item>-->
+    </style>
+
+    <!-- 转场动画-->
+    <style name="myWindowAnim">
+        <item name="android:activityOpenEnterAnimation">@anim/in_activity</item>
+        <item name="android:activityOpenExitAnimation">@anim/out_activity</item>
+        <item name="android:activityCloseEnterAnimation">@anim/in_activity_close</item>
+        <item name="android:activityCloseExitAnimation">@anim/out_activity_close</item>
+    </style>
+
+    <style name="layout_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/shape_bg</item>
+    </style>
+
+    <!-- 给Activity用的Dialog类型 -->
+    <style name="dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!--边框-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!--半透明-->
+        <item name="android:windowNoTitle">true</item>
+        <!--无标题-->
+        <item name="android:windowBackground">@color/gray_eee</item>
+        <!--背景透明-->
+        <item name="android:backgroundDimEnabled">true</item>
+   <!--     <item name="android:windowBackground">@null</item>-->
+        <!--模糊-->
+    </style>
+
+    <style name="dialog2" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/green_3CB371</item>
+        <item name="colorControlActivated">@color/green_3CB371</item>
+    </style>
+
+    <style name="MyDialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="Dialog123" parent="android:style/Theme.Dialog">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/holo_green_light</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!--<style name="Dialog123" parent="android:style/Theme.Dialog">-->
+    <!--<item name="android:background">@android:color/transparent</item>-->
+    <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--</style>-->
+
+
+</resources>

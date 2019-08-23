@@ -25,7 +25,6 @@ import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.R;
 import com.axecom.smartweight.activity.SecondScreen;
-import com.axecom.smartweight.activity.common.LockActivity;
 import com.axecom.smartweight.activity.common.SecondPresentation;
 import com.axecom.smartweight.activity.common.SettingsActivity;
 import com.axecom.smartweight.activity.common.mvvm.home.HomeActivity;
@@ -37,7 +36,6 @@ import com.axecom.smartweight.adapter.DigitalAdapter;
 import com.axecom.smartweight.adapter.GoodMenuAdapter;
 import com.axecom.smartweight.adapter.OrderAdapter;
 import com.axecom.smartweight.config.IEventBus;
-import com.axecom.smartweight.databinding.ActivityMainAxeBinding;
 import com.axecom.smartweight.databinding.ActivityMainSxBinding;
 import com.axecom.smartweight.entity.dao.HotGoodsDao;
 import com.axecom.smartweight.entity.dao.OrderBeanDao;
@@ -52,9 +50,6 @@ import com.axecom.smartweight.entity.project.OrderInfo;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
 import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.mvp.MainPresenter;
-import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
-import com.axecom.smartweight.mvvm.entity.RetrofitCallback;
-import com.axecom.smartweight.mvvm.retrofit.HttpRtHelper;
 import com.axecom.smartweight.mvvm.view.IAllView;
 import com.axecom.smartweight.rzl.utils.ApkUtils;
 import com.axecom.smartweight.rzl.utils.DownloadDialog;
@@ -242,15 +237,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
      * @param orderBean 详细订单  AN非正常。
      */
     public void sendOrder2AxeWeb(final OrderBean orderBean) {
-        if (!MyNetWorkUtils.isNetworkAvailable(context)) {
-            return;
-        }
-        if (!ableUpLoad()) {
-            return;
-        }
-        if (Float.valueOf(orderBean.getWeight()) <= 0.005) {
-            return;
-        }
+
 
         final OrderInfo orderInfo = new OrderInfo();
         List<OrderBean> orderlist = new ArrayList<>();
@@ -287,7 +274,8 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
     /**
      * OK 设置软件  背景色
      */
-    private void setBackground() {
+    @Override
+    protected void setBackground() {
         int index = MyPreferenceUtils.getSp(context).getInt("BACKGROUND_INDEX", 0);
         binding.llKey.setBackgroundResource(BackgroundData.getData().get(index));
         binding.llorder.setBackgroundResource(BackgroundData.getData().get(index));
@@ -344,16 +332,6 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
 
     }
 
-    /**
-     * VM
-     * 初始化 塑料袋 价格问题
-     */
-    private void initBaseData() {
-        mainBean.getPriceLarge().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_LARGE, 0.3f));
-        mainBean.getPriceMiddle().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_MIDDLE, 0.2f));
-        mainBean.getPriceSmall().set(MyPreferenceUtils.getSp(context).getFloat(PRICE_SMALL, 0.1f));
-        mainBean.getZeroWeight().set(MyPreferenceUtils.getSp(context).getFloat(ZERO_WEIGHT, 0.000f));
-    }
 
     /**
      * 初始化控件
@@ -397,7 +375,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
 
             initSecondScreen();
             askOrderState();
-            orderInfoDao = new OrderInfoDao(context);
+            orderInfoDao = new OrderInfoDao();
             orderBeanDao = new OrderBeanDao();
             judegIsLock();
             isInit = true;
@@ -405,16 +383,6 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         }
     }
 
-    /**
-     * 是否锁定
-     */
-    private void judegIsLock() {
-        boolean isLock = MyPreferenceUtils.getSp(context).getBoolean(LOCK_STATE, false);
-        if (isLock) {
-            Intent intent = new Intent(this, LockActivity.class);
-            startActivity(intent);
-        }
-    }
 
     private OrderInfoDao orderInfoDao;
     private OrderBeanDao orderBeanDao;
@@ -427,7 +395,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         new Thread(() -> {
             while (isAskOrdering) {
                 try {
-                    if (sysApplication.isConfigureEpayParams()) {//有配置才进行询问请求
+                    if (sysApplication.getUserInfo().isConfigureEpayParams()) {//有配置才进行询问请求
                         if (askInfos.size() > 0) {
                             handler.sendEmptyMessage(NOTIFY_MARQUEE);
                             for (int i = askInfos.size() - 1; i >= 0; i--) {
@@ -542,10 +510,8 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         });
     }
 
-    private void dealWeight(float weightFloat, int isNegativeFlag) {
-        boolean isNegative;
-
-        isNegative = isNegativeFlag != 0;
+    private void dealWeight(float weightFloat) {
+        boolean isNegative = weightBean.isNegative();
         try {
             if (weightFloat == 0.000f) {
                 binding.tvWeightTop.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
@@ -558,6 +524,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                 if (oldFloat > weightFloat) {
                     binding.etPrice.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
                     Selection.selectAll(binding.etPrice.getText());
+                    mainBean.setEtPriceSelect(true);
                     isEdSelect = true;
                 } else {
                     if (!isEdSelect) {
@@ -612,7 +579,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
 
         //价格按键被点击过，即价格变换了
         long currentTime = System.currentTimeMillis();
-        orderBeanTemp.setTime1(currentTime);
+
         if (isEdSelect) {
             binding.etPrice.getText().clear();
             isEdSelect = false;
@@ -633,8 +600,8 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                     mainBean.getHintPrice().set(binding.etPrice.getText().toString());
                 }
             } else {
-                if("0".equals(price)){
-                    price="";
+                if ("0".equals(price)) {
+                    price = "";
                 }
                 String priceNew = price + text;
                 binding.etPrice.setText(priceNew);
@@ -656,9 +623,6 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         binding.etPrice.setText("");
         mainBean.getHintPrice().set(selectedHotGood.getPrice());
 
-        //切换了商品，计算重量从0开始
-        orderBeanTemp.setWeight(null);
-        orderBeanTemp.setName(selectedHotGood.getName());
         BigDecimal bigPrice = new BigDecimal(selectedHotGood.getPrice());
         BigDecimal bigWeight = new BigDecimal(mainBean.getNetWeight().get());
         bigPrice = bigPrice.multiply(bigWeight).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -685,7 +649,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
      * 设置 价格
      */
     @SuppressLint("DefaultLocale")
-    public void setGrandTotalTxt() {
+    public void dealGrandMoney() {
         if ("0".equalsIgnoreCase(mainBean.getHintPrice().get()) && "0".equalsIgnoreCase(mainBean.getPrice().get())) {
             return;
         }
@@ -701,7 +665,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
 
     }
 
-    private void autoSendOrder(long currentTime) {
+   /* private void autoSendOrder(long currentTime) {
         if (!isSendOrder) {
             if (orderBeanTemp.getTime2() - orderBeanTemp.getTime1() >= 1000) {
                 if (Float.valueOf(orderBeanTemp.getWeight()) <= 0) {
@@ -724,13 +688,13 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                 kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
 
                 orderBeanTemp.setPrice(price);
-
                 orderBeanTemp.setWeight(orderBeanTemp.getWeight());
-                orderBeanTemp.setX0(zeroAd + "");
+
+                orderBeanTemp.setX0(String.valueOf(weightBean.getZeroAd()));
                 orderBeanTemp.setX1(sbZeroAd + "");
-                orderBeanTemp.setX2(tareWeight + "");
+                orderBeanTemp.setX2(String.valueOf(weightBean.getTareWeight()));
                 orderBeanTemp.setWeight0(sbAd + "");
-                orderBeanTemp.setXcur(currentAd + "");
+                orderBeanTemp.setXcur(String.valueOf(weightBean.getCurrentAd()));
                 orderBeanTemp.setK(kValue + "");
 
                 orderBeanTemp.setMoney(mainBean.getGrandMoney().get());
@@ -745,7 +709,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
 
             }
         }
-    }
+    }*/
 
 
     /**
@@ -756,13 +720,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
     @Override
     protected void onLiveEvent(String type) {
         if (EVENT_NET_WORK_AVAILABLE.equals(type)) {
-            if (MyNetWorkUtils.isNetworkAvailable(context)) {// 0 用流量  ，1  wifi
-                MyLog.i("44447777", "网络变好了可以使用");
-                if (orderInfoDao == null) {
-                    orderInfoDao = new OrderInfoDao(context.getApplicationContext());
-                }
-                HttpHelper.getmInstants(sysApplication).updateDataEx(orderInfoDao);
-            }
+            HttpHelper.getmInstants(sysApplication).updateDataEx();
         } else if (EVENT_TOKEN_REGET.equals(type)) {
             //TODO   重新获取 key
         } else if (NOTIFY_USERINFO.equals(type)) {
@@ -784,7 +742,6 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
     @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(BaseBusEvent event) {
-        float weightFloat;
         long currentTime;
 //        float weightFloatOld;
         switch (event.getEventType()) {
@@ -808,31 +765,24 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                 String zeroAdString = data.substring(12, 20);
                 int zeroAd = Integer.valueOf(zeroAdString, 16);
                 int currentAd = Integer.valueOf(currentAdString, 16);
-                currentWeight = (int) ((currentAd - zeroAd) * weighterKey - weighterConstants);
 
-                weightFloat = (float) currentWeight / 1000;
+                oldFloat = weightBean.getCurrentWeight();
+                float weightFloat = ((currentAd - zeroAd) * weighterKey - weighterConstants) / 1000;
+                weightBean.setCurrentWeight(weightFloat);
                 if (sysApplication.getTidType() == 4) {
                     weightFloat = weightFloat - mainBean.getZeroWeight().get();
                 }
 
-                dealWeight(weightFloat, isNegative);
+                dealWeight(weightFloat);
                 if (0.005 > weightFloat) {
                     isSendOrder = false;
                 }
 
                 currentTime = System.currentTimeMillis();
-                oldFloat = Float.parseFloat(orderBeanTemp.getWeight());
-                //稳定的
-                if (Math.abs(weightFloat - oldFloat) < 0.005) {
-                    orderBeanTemp.setTime2(currentTime);
-                } else {
-                    orderBeanTemp.setTime1(currentTime);
-                }
 
-                orderBeanTemp.setWeight(mainBean.getNetWeight().get());
-                setGrandTotalTxt();
+                dealGrandMoney();
                 if (weightFloat > 0.05) {//秤不一样处理方式不一样
-                    autoSendOrder(currentTime);
+                    autoSendOrder();
                 }
 
                 break;
@@ -889,7 +839,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
             banner = null;
         }
         super.onDestroy();
-        ActivityController.finishAll();
+        ActivityController.finishAll(true);
     }
 
     /**
@@ -922,6 +872,17 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
     }
 
     /**
+     * 设定点击按钮 置零
+     */
+    private void btnSetZero() {
+        if (oldFloat <= 1.2f) {
+            mainBean.getZeroWeight().set(weightBean.getCurrentWeight());
+            MyPreferenceUtils.getSp(context).edit().putFloat(ZERO_WEIGHT, weightBean.getCurrentWeight()).apply();
+            sysApplication.getMyBaseWeighter().sendZer();
+        }
+    }
+
+    /**
      * 点击
      *
      * @param v 控件
@@ -950,12 +911,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                 startActivityForResult(intent, 1111);
                 break;
             case R.id.btnSendZer:
-                if (oldFloat <= 1.2f) {
-                    float zeroWeigh = (float) currentWeight / 1000;
-                    mainBean.getZeroWeight().set(zeroWeigh);
-                    MyPreferenceUtils.getSp(context).edit().putFloat(ZERO_WEIGHT, zeroWeigh).apply();
-                    sysApplication.getMyBaseWeighter().sendZer();
-                }
+                btnSetZero();
                 break;
             case R.id.btnClearn:
                 clear();
@@ -1012,12 +968,13 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         mainBean.getTotalWeight().set(mainBean.getNetWeight().get());
         orderBean2.setWeight(mainBean.getNetWeight().get());
 
-        orderBean2.setX0(zeroAd + "");
+        orderBean2.setX0(String.valueOf(weightBean.getZeroAd()));
         orderBean2.setX1(sbZeroAd + "");
-        orderBean2.setX2(tareWeight + "");
+        orderBean2.setX2(String.valueOf(weightBean.getTareWeight()));
         orderBean2.setWeight0(sbAd + "");
-        orderBean2.setXcur(currentAd + "");
+        orderBean2.setXcur(String.valueOf(weightBean.getCurrentAd()));
         orderBean2.setK(kValue + "");
+
 
         mainBean.getTotalPrice().set(mainBean.getGrandMoney().get());
         orderBean2.setMoney(mainBean.getGrandMoney().get());
@@ -1080,11 +1037,11 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
         sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
         kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
 
-        orderBean.setX0(zeroAd + "");
+        orderBean.setX0(String.valueOf(weightBean.getZeroAd()));
         orderBean.setX1(sbZeroAd + "");
-        orderBean.setX2(tareWeight + "");
+        orderBean.setX2(String.valueOf(weightBean.getTareWeight()));
         orderBean.setWeight0(sbAd + "");
-        orderBean.setXcur(currentAd + "");
+        orderBean.setXcur(String.valueOf(weightBean.getCurrentAd()));
         orderBean.setK(kValue + "");
 
         orderBean.setItemno(String.valueOf(selectedHotGood.getCid()));
@@ -1144,12 +1101,14 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
             sbAd = MyPreferenceUtils.getString(context, VALUE_SB_AD, null);
             kValue = MyPreferenceUtils.getString(context, VALUE_K_WEIGHT, VALUE_K_DEFAULT);
 
-            orderBean.setX0(zeroAd + "");
+
+            orderBean.setX0(String.valueOf(weightBean.getZeroAd()));
             orderBean.setX1(sbZeroAd + "");
-            orderBean.setX2(tareWeight + "");
+            orderBean.setX2(String.valueOf(weightBean.getTareWeight()));
             orderBean.setWeight0(sbAd + "");
-            orderBean.setXcur(currentAd + "");
+            orderBean.setXcur(String.valueOf(weightBean.getCurrentAd()));
             orderBean.setK(kValue + "");
+
 
             orderBean.setItemno(DEFAULT_BAG_ITEM_NO);
             orderBean.setName(bagName);
@@ -1430,7 +1389,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
      */
     @Override
     public void onBackPressed() {
-        if (!mainVM.finishAll()) {
+        if (mainVM.finishAll()) {
             MyToast.toastShort(this, "再次点击退出！");
         }
     }
@@ -1482,12 +1441,7 @@ public class MainActivitySX extends MainBaseACActivity implements IAllView, IEve
                 startActivityForResult(intent, 1111);
                 break;
             case 133://置零
-                if (oldFloat <= 1.2f) {
-                    float zeroWeigh = (float) currentWeight / 1000;
-                    mainBean.getZeroWeight().set(zeroWeigh);
-                    MyPreferenceUtils.getSp(context).edit().putFloat(ZERO_WEIGHT, zeroWeigh).apply();
-                    sysApplication.getMyBaseWeighter().sendZer();
-                }
+                btnSetZero();
                 break;
             case 141://清除
                 clear();

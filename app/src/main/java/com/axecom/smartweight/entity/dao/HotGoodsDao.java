@@ -1,7 +1,6 @@
 package com.axecom.smartweight.entity.dao;
 
 
-import android.content.Context;
 import android.util.Log;
 
 import com.axecom.smartweight.entity.project.HotGood;

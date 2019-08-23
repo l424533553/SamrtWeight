@@ -15,11 +15,11 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.entity.netresult.ReportResultBean;
 import com.axecom.smartweight.adapter.DetailsAdapter;
-import com.axecom.smartweight.entity.project.OrderInfo;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.entity.dao.OrderInfoDao;
+import com.axecom.smartweight.entity.netresult.ReportResultBean;
+import com.axecom.smartweight.entity.project.OrderInfo;
 import com.axecom.smartweight.helper.printer.MyBasePrinter;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.utils.MyDateUtils;
@@ -80,7 +80,7 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
         context = getContext();
         if (inflater != null) {
             view = inflater.inflate(R.layout.fragment_details_summary, container, false);
-            orderInfoDao = new OrderInfoDao(context);
+            orderInfoDao = new OrderInfoDao();
             initView(view);
             initHandler();
             getData(true);
@@ -135,6 +135,8 @@ public class DetailsFragment extends Fragment implements View.OnClickListener, D
                 return true;  //返回true,表示不可点击
             }
         });
+
+
     }
 
     @Override

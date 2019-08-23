@@ -4,8 +4,7 @@ package com.axecom.smartweight.activity.main;
 import android.databinding.ObservableField;
 import android.databinding.ObservableFloat;
 import android.databinding.ObservableInt;
-
-import com.xuanyuan.library.MyPreferenceUtils;
+import android.text.TextUtils;
 
 /**
  * 作者：罗发新
@@ -17,7 +16,9 @@ public class MainObservableBean {
 
     private ObservableField<String> netWeight = new ObservableField<>("0.000");
     private ObservableField<String> carryWewight = new ObservableField<>("0.000");
+    // 真实的价格
     private ObservableField<String> price = new ObservableField<>("0.00");
+    // 隐藏的价格
     private ObservableField<String> hintPrice = new ObservableField<>("0.00");
     private ObservableField<String> goodName = new ObservableField<>();
     private ObservableField<String> grandMoney = new ObservableField<>("0.00");
@@ -28,10 +29,74 @@ public class MainObservableBean {
     private ObservableFloat priceLarge = new ObservableFloat(0.3f);
     private ObservableFloat priceMiddle = new ObservableFloat(0.2f);
     private ObservableFloat priceSmall = new ObservableFloat(0.1f);
-    //置零的 重量
+    //置零的 重量 ，主要用于SX秤 中使用
     private ObservableFloat zeroWeight = new ObservableFloat(0.000f);
-
     private ObservableInt backgroundRes = new ObservableInt();
+
+    /**
+     * etPrice控件被选中了
+     */
+    private boolean isEtPriceSelect;
+    private String batchCode;
+    // 产品id
+    private String cid;
+
+    // 前面成交的商品名
+    private String frontDealName;
+    // 前面成交价格
+    private float frontDealPrice;
+    private float frontDealWeight;
+
+    public boolean isEtPriceSelect() {
+        return isEtPriceSelect;
+    }
+
+    public void setEtPriceSelect(boolean etPriceSelect) {
+        isEtPriceSelect = etPriceSelect;
+    }
+
+    public String getFrontDealName() {
+        if (frontDealName == null) {
+            return "";
+        }
+        return frontDealName;
+    }
+
+    public float getFrontDealPrice() {
+        return frontDealPrice;
+    }
+
+    public void setFrontDealPrice(float frontDealPrice) {
+        this.frontDealPrice = frontDealPrice;
+    }
+
+    public void setFrontDealName(String frontDealName) {
+        this.frontDealName = frontDealName;
+    }
+
+    public float getFrontDealWeight() {
+        return frontDealWeight;
+    }
+
+    public void setFrontDealWeight(float frontDealWeight) {
+        this.frontDealWeight = frontDealWeight;
+    }
+
+    public String getBatchCode() {
+        return batchCode;
+    }
+
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
+    }
+
+    public String getCid() {
+        return cid;
+    }
+
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
 
     /**
      * 版本号
@@ -84,7 +149,7 @@ public class MainObservableBean {
 
     public String getGrandMoneyString() {
         String result = grandMoney.get();
-        if (result == null) {
+        if (TextUtils.isEmpty(result)) {
             return "0.00";
         } else {
             return result;
@@ -105,6 +170,36 @@ public class MainObservableBean {
 
     public ObservableField<String> getPrice() {
         return price;
+    }
+
+    /**
+     * @return 验证价格字段是否可用
+     */
+    private boolean verifyPriceAble(String price) {
+        if (TextUtils.isEmpty(price)) {
+            return false;
+        }
+        if (price != null) {
+            return Float.valueOf(price) > 0;
+        }
+        return false;
+    }
+
+    //获取真实的价格
+    public float getReallyPrice() {
+        String priceString = null;
+        if (!verifyPriceAble(getPrice().get())) {
+            if (verifyPriceAble(getHintPrice().get())) {
+                priceString = getHintPrice().get();
+            }
+        } else {
+            priceString = getPrice().get();
+        }
+
+        if (priceString != null) {
+            return Float.valueOf(priceString);
+        }
+        return 0.00f;
     }
 
     public void setPrice(ObservableField<String> price) {

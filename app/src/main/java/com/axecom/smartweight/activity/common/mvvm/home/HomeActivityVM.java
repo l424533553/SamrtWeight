@@ -2,7 +2,6 @@ package com.axecom.smartweight.activity.common.mvvm.home;
 
 import android.os.Build;
 
-import com.axecom.smartweight.adapter.GoodsTradeAdapter;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.entity.project.UserInfo;
 import com.axecom.smartweight.mvvm.view.IAllView;
@@ -10,7 +9,6 @@ import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.utils.LiveBus;
 
 import static com.axecom.smartweight.config.IConstants.SP_IS_FIRST_INIT;
-import static com.axecom.smartweight.config.IEventBus.EVENT_GET_USERINFO_OK_BY_NET;
 import static com.axecom.smartweight.config.IEventBus.EVENT_GET_USERINFO_VALIDATE_FINISH;
 import static com.xuanyuan.library.config.IConfig.EVENT_BUS_COMMON;
 

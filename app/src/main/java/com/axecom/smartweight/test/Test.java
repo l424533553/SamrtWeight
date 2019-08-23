@@ -1,19 +1,31 @@
 package com.axecom.smartweight.test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 作者：罗发新
  * 时间：2018/12/21 0021    16:23
  * 邮件：424533553@qq.com
- * 说明： 测试问题
+ * 说明： 测试问题，测试情况
  */
 public class Test {
 
     public static void main(String[] args) {
-        byte[] by1 = {0, 15, -24, -115};
-        String str = "000623F8";
+//        byte[] by1 = {0, 15, -24, -115};
+//        String str = "000623F8";
+//        Integer in = Integer.valueOf(str,16);
+//        System.out.println("数据"+in);
 
-        Integer in = Integer.valueOf(str,16);
-        System.out.println("数据"+in);
+        List<Student> list = new ArrayList<>();
+        Student stu1 = new Student("罗新", 18);
+        Student stu2 = stu1.clone();
+        list.add(stu2);
+        System.out.println(Arrays.toString(list.toArray()));
+        stu1.setName("小李");
+        stu1.setAge(15);
+        System.out.println(Arrays.toString(list.toArray()));
     }
 
     /**
@@ -30,13 +42,16 @@ public class Test {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param bytes  参数  数据组
+     */
     public static boolean isEmpty(byte[] bytes) {
         return bytes == null || bytes.length == 0;
     }
 
     /**
-     *
-     * @param bArray  数组对象
+     * @param bArray 数组对象
      */
     public static String bytesToHexString(byte[] bArray) {
         if (bArray == null) {
@@ -59,6 +74,7 @@ public class Test {
     /**
      * 将一个字节转成3个字节，使用结果。
      * 数据功能区
+     *
      * @param sum 校验
      */
     private static byte[] test11(int sum) {

@@ -7,17 +7,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- <uses-permission android:name="android.permission.GET_TASKS" /> -->
-
-
-    <!--系统权限 或者 需要系统签名-->
+    <!-- 系统权限 或者 需要系统签名 -->
     <uses-permission
         android:name="android.permission.MODIFY_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
+
     <permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 在sdcard中创建/删除文件的权限 -->
     <permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
@@ -27,25 +25,21 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 息屏不被锁死 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- 网络权限，非危险权限-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限，非危险权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
-
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
 
     <application
-        android:name="com.axecom.smartweight.base.SysApplication"
+        android:name=".base.SysApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/mybackupscheme"
         android:hardwareAccelerated="false"
@@ -55,32 +49,31 @@
         android:theme="@style/MyAppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon,android:theme">
-
         <activity
-            android:name="com.axecom.smartweight.activity.common.ScaleBDACActivity"
+            android:name=".activity.common.what.WhatActivity"
+            android:theme="@style/MyAppTheme" />
+        <activity android:name=".activity.setting.VideoActivity" />
+        <activity
+            android:name=".activity.common.ScaleBDACActivity"
             android:theme="@style/AppTheme" />
-
         <activity
-            android:name="com.axecom.smartweight.activity.common.DataFlushActivity"
-            android:theme="@style/dialog"
+            android:name=".activity.common.DataFlushActivity"
             android:screenOrientation="landscape"
+            android:theme="@style/dialog"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" /> <!-- tools:replace="android:icon, android:theme,android:allowBackup,android:label" -->
         <!-- android:name=".ui.activity.HomeActivity" -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
             android:exported="false"
-
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/mybackupscheme" />
-        </provider>
 
-
-        <!-- android:name=".my.activity.common.HomeActivity"-->
+        </provider> <!-- android:name=".my.activity.common.HomeActivity" -->
         <activity
-            android:name="com.axecom.smartweight.activity.common.mvvm.home.HomeActivity"
+            android:name=".activity.common.mvvm.home.HomeActivity"
             android:screenOrientation="landscape"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
@@ -91,20 +84,25 @@
                 <!-- <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" /> -->
             </intent-filter>
         </activity>
-
-
+        <!--  不同秤的主界面   Start *********************************************************   -->
         <activity
             android:name=".activity.main.view.MainActivity"
             android:screenOrientation="landscape"
             android:theme="@style/MyAppTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
 
+        <!--    <activity
+                android:name=".activity.main.view.MainActivityST"
+                android:screenOrientation="landscape"
+                android:theme="@style/MyAppTheme"
+                android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />-->
+
+
         <activity
             android:name=".activity.main.view.MainActivity8"
             android:screenOrientation="landscape"
             android:theme="@style/MyAppTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-
         <activity
             android:name=".activity.main.view.MainActivityAXE"
             android:screenOrientation="landscape"
@@ -115,31 +113,30 @@
             android:screenOrientation="landscape"
             android:theme="@style/MyAppTheme"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
+
+        <!--  不同秤的主界面   end *********************************************************   -->
+
         <!--
         <activity
                     android:name=".ui.activity.SimpleModeActivity"
                     android:hardwareAccelerated="false" />
         -->
-        <activity android:name="com.axecom.smartweight.activity.common.SettingsActivity" />
+        <activity android:name=".activity.common.SettingsActivity" />
         <activity
-            android:name="com.axecom.smartweight.activity.setting.ServerTestActivity"
+            android:name=".activity.setting.ServerTestActivity"
             android:theme="@style/dialog" />
         <activity
-            android:name="com.axecom.smartweight.activity.WifiSettingsActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.axecom.smartweight.activity.setting.GoodsSettingActivity"
+            android:name=".activity.setting.GoodsSettingActivity"
             android:theme="@style/MyAppTheme" /> <!-- <activity -->
         <!-- android:name=".ui.activity.ModityCommodityActivity" -->
         <!-- android:theme="@style/dialog" -->
         <!-- android:windowSoftInputMode="stateHidden|stateAlwaysHidden" /> -->
         <activity
-            android:name="com.axecom.smartweight.activity.setting.SystemLoginActivity"
+            android:name=".activity.setting.SystemLoginActivity"
             android:theme="@style/dialog"
             android:windowSoftInputMode="stateAlwaysHidden" /> <!-- <activity android:name=".ui.activity.LocalSettingsActivity" /> -->
-
         <activity
-            android:name="com.axecom.smartweight.activity.common.SystemSettingsActivity"
+            android:name=".activity.common.SystemSettingsActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
@@ -154,12 +151,13 @@
                 <!-- 注册开机广播地址 -->
                 <action android:name="com.axecom.destroy" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
                 <!--
               为android.net.conn.CONNECTIVITY_CHANGE声明广播接收器对于目标为N和更高的应用程序是不赞成的。一般来说，应用程序不应该依赖这个广播，而应该使用JobScheduler或GCMNetworkManager。更少…（CTRL+F1）
               此问题标记的代码要么*对电池寿命产生负面影响，要么*使用最近改变行为的API，以防止后台任务过度消耗内存和电池。一般来说，应该使用JOB调度程序或GCMNETWORKMAMER。
-            -->
+                -->
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -169,24 +167,22 @@
             android:name="com.xuanyuan.library.activity.LogActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.axecom.smartweight.test.TestActivity"
+            android:name=".test.TestActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.axecom.smartweight.activity.datasummary.SummaryActivity"
+            android:name=".activity.datasummary.SummaryActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.axecom.smartweight.activity.common.LockActivity"
+            android:name=".activity.common.LockActivity"
+            android:launchMode="singleTask"
             android:theme="@style/MyAppTheme" />
-
         <activity
-            android:name="com.axecom.smartweight.activity.setting.LocalSettingActivity"
+            android:name=".activity.setting.LocalSettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
-
-
         <activity
-            android:name="com.axecom.smartweight.activity.setting.ErrorLogActivity"
+            android:name=".activity.setting.ErrorLogActivity"
             android:theme="@style/AppTheme" />
         <!--
   <service
@@ -217,14 +213,14 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
         -->
         <activity
-            android:name="com.axecom.smartweight.activity.setting.HelpActivity"
+            android:name=".activity.setting.HelpActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.axecom.smartweight.activity.common.ApiTestActivity"
+            android:name=".activity.common.ApiTestActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.xuanyuan.library.activity.MyBuglyActivity"
-            android:theme="@style/AppTheme" /> <!-- bugly的基础Activity -->
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

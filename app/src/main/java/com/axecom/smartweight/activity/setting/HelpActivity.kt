@@ -6,9 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.webkit.WebSettings
 import android.webkit.WebView
 import com.axecom.smartweight.R
-import com.xuanyuan.library.utils.FileUtils
 import com.xuanyuan.library.MyPreferenceUtils
-
+import com.xuanyuan.library.utils.FileUtils
 import java.io.*
 
 class HelpActivity : AppCompatActivity() {
@@ -25,7 +24,7 @@ class HelpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_help)
         initHandler()
 
-        val isNotFirst = MyPreferenceUtils.getBoolean(this, "isNotFirst")
+        MyPreferenceUtils.getBoolean(this, "isNotFirst")
         name = docName.substring(0, docName.indexOf("."))
         savePath = FileUtils.getDownloadDir(this, FileUtils.DOWNLOAD_DIR)
 

@@ -3,20 +3,18 @@ package com.axecom.smartweight.mvvm.viewmodel;
 
 import android.databinding.ObservableField;
 
-import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.adapter.GoodsTradeAdapter;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.mvvm.model.DataModelImpl;
 import com.axecom.smartweight.mvvm.model.GoodsTradeBean;
 import com.axecom.smartweight.mvvm.model.IDataModel;
 import com.axecom.smartweight.mvvm.view.IAllView;
-import com.xuanyuan.library.utils.MyDateUtils;
 import com.xuanyuan.library.utils.LiveBus;
+import com.xuanyuan.library.utils.MyDateUtils;
 
-import java.util.Date;
 import java.util.List;
 
 import static com.axecom.smartweight.config.IConstants.LIVE_EVENT_NOTIFY_GOOD_TRADE;
-
 import static com.xuanyuan.library.config.IConfig.EVENT_BUS_COMMON;
 import static com.xuanyuan.library.config.IConfig.TIME;
 

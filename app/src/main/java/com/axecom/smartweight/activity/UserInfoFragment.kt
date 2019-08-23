@@ -13,9 +13,9 @@ import com.alibaba.fastjson.JSON
 import com.android.volley.VolleyError
 import com.axecom.smartweight.R
 import com.axecom.smartweight.base.SysApplication
+import com.axecom.smartweight.entity.dao.UserInfoDao
 import com.axecom.smartweight.entity.netresult.ResultInfo
 import com.axecom.smartweight.entity.project.UserInfo
-import com.axecom.smartweight.entity.dao.UserInfoDao
 import com.axecom.smartweight.helper.HttpHelper
 import com.xuanyuan.library.MyToast
 import com.xuanyuan.library.listener.VolleyListener

@@ -11,7 +11,6 @@ import android.text.TextPaint;
 
 import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
-
 import com.xuanyuan.library.help.qr.MyWHPrinterE39Helper;
 
 import java.io.UnsupportedEncodingException;
@@ -259,7 +258,6 @@ public class WHPrinterE39 extends MyBasePrinter {
                 printJumpLine((byte) 2);
                 printString(orderInfo.getMarketName() + ",欢迎你!\n");
 
-
                 alignment((byte) 0);
                 setLineSpacing((byte) 9);
                 StringBuilder sb1 = new StringBuilder();
@@ -279,7 +277,6 @@ public class WHPrinterE39 extends MyBasePrinter {
                     sb1.append("摊位号：").append(orderInfo.getStallNo()).append("\n");
                     setLineSpacing((byte) 9);
                     printSize += printString(sb1.toString());
-
 
                     printSize += write(cropByte("司磅员：" + orderInfo.getSeller(), 18, true));
                     printSize += write(cropByte("秤号：" + orderInfo.getTerid(), 12, true));
@@ -322,10 +319,9 @@ public class WHPrinterE39 extends MyBasePrinter {
                     e.printStackTrace();
                 }
 
-                if (!isNoQR) {
+                if (!isNoPrinterQR) {
                     String qrString = "http://data.axebao.com/smartsz/trace/?no=" + orderInfo.getBillcode();
                     printltString("扫一扫获取追溯信息：");
-//                    MyLog.myInfo(" 打印数据长度====" + printSize);
                     int time;
                     if (printSize < 300) {
                         time = 50;
@@ -483,7 +479,7 @@ public class WHPrinterE39 extends MyBasePrinter {
      * @param isInversion 是否倒置打印  true 15寸打法
      */
     private void printQR(String printMsg, int width, int height, int time, boolean isInversion) {
-        List<byte[]> data = createQRHHD(printMsg, width, height);
+        List<byte[]> data = createQRXS(printMsg, width, height);
 //        List<byte[]> data = createQR222(printMsg, width, height);
 //        MyLog.blue("二维码数据大小" + data.size());
         byte[] by0 = {27, 49, 0, 27, 51, 0};// 设置行距 0 像素
@@ -529,8 +525,6 @@ public class WHPrinterE39 extends MyBasePrinter {
     public static List<byte[]> createQRHHD(String contents1, int width, int height) {
         return MyWHPrinterE39Helper.createQRHHD(contents1, width, height);
     }
-
-
 
     /**
      * @param contents 二维码内容，可以是url网址，可以是普通字符串

@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="商品名"
         android:textColor="@color/black"
         android:textSize="@dimen/sp16" />
 
@@ -22,7 +21,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="0.000"
         android:textColor="@color/black"
         android:textSize="@dimen/sp16" />
 
@@ -32,7 +30,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="0.266"
         android:textColor="@color/black"
         android:textSize="@dimen/sp16" />
 
@@ -42,7 +39,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="15.64"
         android:textColor="@color/black"
         android:textSize="@dimen/sp16" />
 
@@ -52,11 +48,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="kg"
         android:textColor="@color/black"
-        android:textSize="@dimen/sp16"
-
-        />
+        android:textSize="@dimen/sp16" />
 
 </LinearLayout>
 

@@ -1,19 +1,11 @@
-include ':app'
+include ':app', ':library', ':weightst'
 //include ':MyLibraryProject'
 //project (':MyLibraryProject').projectDir = new File('../MyLibraryProject/')
 //include ':MyLibraryProject:mylibrary'
 
-include ':CommonLibrary'
-project(':CommonLibrary').projectDir = new File('../CommonLibrary/')
-include ':CommonLibrary:library'
-
-
-////include ':CommonLibrary'
+//include ':CommonLibrary'
+//project(':CommonLibrary').projectDir = new File('../CommonLibrary/')
 //include ':CommonLibrary:library'
-//project(':CommonLibrary:library').projectDir = new File('../CommonLibrary/library')
-////include ':CommonLibrary:library'
-
-//include ':CommonLibrary:myapp'
 
 
 

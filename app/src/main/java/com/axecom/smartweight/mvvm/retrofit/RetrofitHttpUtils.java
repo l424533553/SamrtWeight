@@ -1,8 +1,8 @@
 package com.axecom.smartweight.mvvm.retrofit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
-
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +34,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -142,6 +141,7 @@ public class RetrofitHttpUtils {
                 //证书中的公钥
                 final String PUB_KEY = "3082010a0282010100d52ff5dd432b3a05113ec1a7065fa5a80308810e4e181cf14f7598c8d553cccb7d5111fdcdb55f6ee84fc92cd594adc1245a9c4cd41cbe407a919c5b4d4a37a012f8834df8cfe947c490464602fc05c18960374198336ba1c2e56d2e984bdfb8683610520e417a1a9a5053a10457355cf45878612f04bb134e3d670cf96c6e598fd0c693308fe3d084a0a91692bbd9722f05852f507d910b782db4ab13a92a7df814ee4304dccdad1b766bb671b6f8de578b7f27e76a2000d8d9e6b429d4fef8ffaa4e8037e167a2ce48752f1435f08923ed7e2dafef52ff30fef9ab66fdb556a82b257443ba30a93fda7a0af20418aa0b45403a2f829ea6e4b8ddbb9987f1bf0203010001";
 
+                @SuppressLint("TrustAllX509TrustManager")
                 @Override
                 public void checkClientTrusted(
                         java.security.cert.X509Certificate[] chain,

@@ -15,17 +15,19 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.axecom.smartweight.R;
+import com.axecom.smartweight.activity.common.what.WhatActivity;
+import com.axecom.smartweight.activity.setting.ErrorLogActivity;
 import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.config.IConstants;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.axecom.smartweight.activity.setting.ErrorLogActivity;
-import com.xuanyuan.library.help.ActivityController;
-import com.xuanyuan.library.utils.FileUtils;
-import com.xuanyuan.library.utils.MyTextUtils;
 import com.xuanyuan.library.MyLog;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.PowerConsumptionRankingsBatteryView;
+import com.xuanyuan.library.base2.BuglyUPHelper;
+import com.xuanyuan.library.help.ActivityController;
+import com.xuanyuan.library.utils.FileUtils;
+import com.xuanyuan.library.utils.MyTextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,8 +37,11 @@ import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.axecom.smartweight.config.IEventBus.WEIGHT_ELECTRIC;
+import io.reactivex.annotations.Beta;
 
+import static com.axecom.smartweight.config.IEventBus.WEIGHT_ELECTRIC;
+import static com.axecom.smartweight.config.IIntent.INTENT_EXTRA_TYPE;
+import static com.axecom.smartweight.config.IIntent.INTENT_UP_DATA_TEMP_ACTIVITY;
 
 public class SystemSettingsActivity extends Activity implements IConstants, View.OnClickListener {
     //    private CheckedTextView notClearPriceCtv, saveWeightCtv, autoObtainCtv, cashEttlementCtv;
@@ -46,7 +51,6 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
     private Context context;
     private SysApplication sysApplication;
     private TextView tvHardwareInfo;
-
 
     /**
      * 电池控件
@@ -116,11 +120,13 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
         findViewById(R.id.btnCleanLog).setOnClickListener(this);
         findViewById(R.id.btnHardwareInfo).setOnClickListener(this);
         findViewById(R.id.btnStartBD).setOnClickListener(this);
+        findViewById(R.id.btnTempUpDate).setOnClickListener(this);
 
 
         findViewById(R.id.btnDeleteAdImage).setOnClickListener(this);
         findViewById(R.id.btnApiTest).setOnClickListener(this);
         findViewById(R.id.btnRemoveSign).setOnClickListener(this);
+        findViewById(R.id.btnCleanPatch).setOnClickListener(this);
 
 
 //        Button cashRoundingCtv = findViewById(R.id.btnLookLog);
@@ -158,7 +164,7 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 MyPreferenceUtils.getSp(context).edit().putBoolean(IS_NO_PRINT_QR, !isChecked).apply();
-                sysApplication.getPrint().setNoQR(!isChecked);
+                sysApplication.getPrint().isNoPrinterQR = !isChecked;
             }
         });
     }
@@ -236,7 +242,15 @@ public class SystemSettingsActivity extends Activity implements IConstants, View
             case R.id.btnApiTest://API调试测试
                 Intent intent2 = new Intent(SystemSettingsActivity.this, ApiTestActivity.class);
                 startActivity(intent2);
-
+                break;
+            case R.id.btnTempUpDate://API调试测试
+                Intent intent3 = new Intent(SystemSettingsActivity.this, WhatActivity.class);
+                intent3.putExtra(INTENT_EXTRA_TYPE, INTENT_UP_DATA_TEMP_ACTIVITY);
+                startActivity(intent3);
+                break;
+            case R.id.btnCleanPatch:
+                BuglyUPHelper buglyUPHelper = new BuglyUPHelper(this);
+                buglyUPHelper.cleanTinkerPatch();
                 break;
 //            case R.id.system_settings_save_weight_ctv:
 //                saveWeightCtv.setChecked(!saveWeightCtv.isChecked());

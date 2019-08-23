@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.axecom.smartweight.config.IEventBus;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.xuanyuan.library.MyLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -15,19 +14,15 @@ import java.util.Arrays;
  * 香山秤15.6 黑色屏
  */
 public class AXEWeighter extends MyBaseWeighter implements IEventBus {
-    private static AXEWeighter mInstance;
-
-    public static AXEWeighter getXSWeighter() {
-        return mInstance;
-    }
 
     public AXEWeighter() {
-        mInstance = this;
+
     }
 
     public static final String TAG = "XSWeighter15";
     private ReadThread readThread;
 
+    //
     /**
      * 打开串口,数据功能
      */
@@ -281,6 +276,9 @@ public class AXEWeighter extends MyBaseWeighter implements IEventBus {
             return 0;
         }
 
+        if(getSerialPort()==null){
+            return -1;
+        }
         int c = getSerialPort().getInputStream().read();
         if (c == -1) {
             return -1;

@@ -13,13 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.adapter.OrderAdapter;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
+import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.help.qr.QRHelper2;
 import com.xuanyuan.library.utils.text.StringUtils;
-import com.xuanyuan.library.MyToast;
 
 import java.util.List;
 
@@ -39,13 +39,13 @@ public class SecondPresentation extends Presentation {
     private final int SHOW_TIME = 20000;
     private final SysApplication sysApplication;
 
-    public  SecondPresentation(Context outerContext, Display display) {
+    public SecondPresentation(Context outerContext, Display display) {
         super(outerContext, display);
         this.context = outerContext;
         sysApplication = (SysApplication) context.getApplicationContext();
     }
 
- public    void notifyData(final OrderInfo data) {
+    public void notifyData(final OrderInfo data) {
         this.data = data;
         if (data == null || data.getOrderItem().size() == 0) {
             return;
@@ -169,7 +169,7 @@ public class SecondPresentation extends Presentation {
      * 设置订单类
      */
     @SuppressLint("SetTextI18n")
-   public void setOrderBean(List<OrderBean> data, String money) {
+    public void setOrderBean(List<OrderBean> data, String money) {
         indexCount++;
         show();
         adapter.setDatas(data);

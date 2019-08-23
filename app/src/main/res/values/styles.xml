@@ -15,6 +15,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@null</item>
+<!--        <item name="android:windowAnimationStyle">@style/myWindowAnim</item>-->
     </style>
 
     <style name="btnClick">
@@ -57,7 +58,7 @@
         <item name="android:windowBackground">@color/gray_eee</item>
         <!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item>
-   <!--     <item name="android:windowBackground">@null</item>-->
+        <!--     <item name="android:windowBackground">@null</item>-->
         <!--模糊-->
     </style>
 

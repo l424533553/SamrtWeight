@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
 
-    tools:ignore="HardcodedText"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
 
     <TextView
         android:id="@+id/textView2"
@@ -56,14 +56,14 @@
                 android:gravity="center"
                 android:text="服务器IP："
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/tvWebIP"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:autofillHints=""
                 android:background="@drawable/shape_white_btn_bg"
                 android:gravity="center_vertical"
                 android:hint="@string/baseUrl"
@@ -72,7 +72,6 @@
                 android:paddingEnd="5dp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:autofillHints=""
                 tools:ignore="UnusedAttribute" />
 
             <Button
@@ -213,7 +212,6 @@
         </LinearLayout>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -282,6 +280,7 @@
                 android:textColor="@color/selector_btn_text"
                 android:textSize="20sp"
                 tools:ignore="ButtonStyle" />
+
             <Button
                 android:id="@+id/btnStartBD"
                 android:layout_width="wrap_content"
@@ -293,6 +292,35 @@
                 android:textColor="@color/selector_btn_text"
                 android:textSize="20sp"
                 tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/btnTempUpDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:paddingStart="@dimen/y10"
+                android:paddingEnd="@dimen/y10"
+                android:text="临时上传统计"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/btnCleanPatch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/selector_btn_epay"
+                android:paddingStart="@dimen/y10"
+                android:paddingEnd="@dimen/y10"
+                android:text="撤回补丁包"
+                android:textColor="@color/selector_btn_text"
+                android:textSize="20sp"
+                tools:ignore="ButtonStyle" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -329,163 +357,163 @@
                 tools:ignore="UnusedAttribute" />
         </LinearLayout>
 
-     <!--   <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:visibility="gone">
+        <!--   <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1"
+               android:orientation="vertical"
+               android:visibility="gone">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="40dp"
-                android:gravity="center">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginLeft="40dp"
+                   android:layout_marginTop="30dp"
+                   android:layout_marginRight="40dp"
+                   android:gravity="center">
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_not_clear_price_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="保存后不清空价格"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_not_clear_price_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="保存后不清空价格"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_save_weight_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="重量稳定后才能确认保存"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_save_weight_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="重量稳定后才能确认保存"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_auto_obtain_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="默认自动获取买卖方"
-                    android:textColor="@color/gray_ccc"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_auto_obtain_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                       android:enabled="false"
+                       android:gravity="center"
+                       android:text="默认自动获取买卖方"
+                       android:textColor="@color/gray_ccc"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_cash_ettlement_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="联机结算(现金结算)"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                   <CheckedTextView
+                       android:id="@+id/system_settings_cash_ettlement_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableLeft="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="联机结算(现金结算)"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
+               </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
-                android:gravity="center">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="60dp"
+                   android:layout_marginLeft="40dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginRight="40dp"
+                   android:gravity="center">
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_ic_card_settlement_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:text="IC卡结算时再刷卡"
-                    android:textColor="@color/gray_ccc"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_ic_card_settlement_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:enabled="false"
+                       android:gravity="center"
+                       android:text="IC卡结算时再刷卡"
+                       android:textColor="@color/gray_ccc"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_stop_print_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="停用打印功能"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_stop_print_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="停用打印功能"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_no_patch_settlement_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="允许无批次结算"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_no_patch_settlement_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="允许无批次结算"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_auto_prev_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="自动取上一笔单价"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
+                   <CheckedTextView
+                       android:id="@+id/system_settings_auto_prev_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="自动取上一笔单价"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
+               </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="40dp"
-                android:gravity="center">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="60dp"
+                   android:layout_marginLeft="40dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginRight="40dp"
+                   android:gravity="center">
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_stop_cash_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="停用现金模式"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_stop_cash_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="停用现金模式"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_stop_alipay_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="停用支付宝模式"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
+                   <CheckedTextView
+                       android:id="@+id/system_settings_stop_alipay_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="停用支付宝模式"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
 
-                <CheckedTextView
-                    android:id="@+id/system_settings_stop_weichatpay_ctv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="?android:listChoiceIndicatorMultiple"
-                    android:gravity="center"
-                    android:text="停用微信模式"
-                    android:textColor="@color/black"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </LinearLayout>-->
+                   <CheckedTextView
+                       android:id="@+id/system_settings_stop_weichatpay_ctv"
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:drawableStart="?android:listChoiceIndicatorMultiple"
+                       android:gravity="center"
+                       android:text="停用微信模式"
+                       android:textColor="@color/black"
+                       android:textSize="16sp" />
+               </LinearLayout>
+           </LinearLayout>-->
 
     </LinearLayout>
 

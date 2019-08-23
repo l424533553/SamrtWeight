@@ -3,27 +3,17 @@ package com.axecom.smartweight.activity.common.mvvm.home;
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.entity.dao.OrderBeanDao;
 import com.axecom.smartweight.entity.dao.UserInfoDao;
 import com.axecom.smartweight.entity.netresult.ResultInfo;
-import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.UserInfo;
 import com.axecom.smartweight.helper.HttpHelper;
-import com.axecom.smartweight.mvvm.model.GoodsTradeBean;
-import com.axecom.smartweight.mvvm.viewmodel.DataListener;
-import com.xuanyuan.library.MyPreferenceUtils;
-import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.listener.VolleyListener;
 import com.xuanyuan.library.utils.LiveBus;
-import com.xuanyuan.library.utils.MyDateUtils;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.axecom.smartweight.config.IConstants.EVENT_NET_WORK_AVAILABLE;
 import static com.axecom.smartweight.config.IEventBus.EVENT_GET_USERINFO_ERR_BY_NET;
 import static com.axecom.smartweight.config.IEventBus.EVENT_GET_USERINFO_NOT_GET;
 import static com.axecom.smartweight.config.IEventBus.EVENT_GET_USERINFO_OK_BY_NET;

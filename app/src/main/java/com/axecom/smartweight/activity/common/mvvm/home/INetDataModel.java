@@ -2,10 +2,6 @@ package com.axecom.smartweight.activity.common.mvvm.home;
 
 
 import com.axecom.smartweight.entity.project.UserInfo;
-import com.axecom.smartweight.mvvm.model.GoodsTradeBean;
-import com.axecom.smartweight.mvvm.viewmodel.DataListener;
-
-import java.util.List;
 
 /**
  * 作者： 周旭 on 2017年10月18日 0018.

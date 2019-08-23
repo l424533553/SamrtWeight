@@ -4,13 +4,12 @@ package com.axecom.smartweight.config;
  * 作者：罗发新
  * 时间：2019/4/11 0011    星期四
  * 邮件：424533553@qq.com
- * 说明：
+ * 说明：香山按键 常量配置
  */
 public class DataConfig implements IConstants {
 
     //   除皮27  置零26   设置25   返回33
     //    //   现金17  扫码9    累计41   清除49
-
     public static String getKey(String key) {
         switch (key) {
             case "040":
@@ -21,7 +20,6 @@ public class DataConfig implements IConstants {
                 return MENU_3;
             case "030":
                 return MENU_4;
-
             case "024":
                 return MENU_5;
             case "023":
@@ -34,7 +32,6 @@ public class DataConfig implements IConstants {
                 return MENU_9;
             case "028":
                 return MENU_10;
-
             case "016":
                 return MENU_11;
             case "015":
@@ -84,8 +81,6 @@ public class DataConfig implements IConstants {
                 return MENU_33;
             case "052":
                 return MENU_34;
-
-
             case "003":
                 return NUM_1;
             case "043":
@@ -110,8 +105,6 @@ public class DataConfig implements IConstants {
                 return NUM_0;
             case "050":
                 return NUM_POT;
-
-
             case "027":
                 return FUNC_TARE;
             case "026":
@@ -135,10 +128,6 @@ public class DataConfig implements IConstants {
         }
     }
 }
-
-
-//   除皮27  置零26   设置25   返回33
-//    //   现金17  扫码9    累计41   清除49
 
 
 

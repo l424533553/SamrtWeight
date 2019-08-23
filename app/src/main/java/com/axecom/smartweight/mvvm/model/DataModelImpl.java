@@ -1,7 +1,7 @@
 package com.axecom.smartweight.mvvm.model;
 
-import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.dao.OrderBeanDao;
+import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.mvvm.viewmodel.DataListener;
 import com.xuanyuan.library.utils.MyDateUtils;
 

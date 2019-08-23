@@ -4,20 +4,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.entity.secondpresent.AdImageInfo;
-import com.axecom.smartweight.entity.secondpresent.AdUserBean;
+import com.axecom.smartweight.entity.netresult.TraceNoBean;
 import com.axecom.smartweight.entity.project.AllGoods;
 import com.axecom.smartweight.entity.project.GoodsType;
 import com.axecom.smartweight.entity.project.HotGood;
 import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
 import com.axecom.smartweight.entity.project.UserInfo;
-import com.axecom.smartweight.entity.netresult.TraceNoBean;
+import com.axecom.smartweight.entity.secondpresent.AdImageInfo;
+import com.axecom.smartweight.entity.secondpresent.AdUserBean;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.xuanyuan.library.entity.Deviceinfo;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override // 数据库版本更新时调用的方法
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        try {
+//        try {
 //            if (oldVersion < 2) {
 //                TableUtils.createTable(connectionSource, TraceNoBean.class);
 //            }
@@ -118,23 +117,22 @@ public class OrmliteBaseHelper extends OrmLiteSqliteOpenHelper {
 //                TableUtils.createTable(connectionSource, Deviceinfo.class);
 //            }
 
-            //删掉数据库然后从新建表
-            TableUtils.dropTable(connectionSource, HotGood.class, true);
-            TableUtils.dropTable(connectionSource, GoodsType.class, true);
-            TableUtils.dropTable(connectionSource, OrderBean.class, true);
-            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
-            TableUtils.dropTable(connectionSource, UserInfo.class, true);
+//            //删掉数据库然后从新建表
+//            TableUtils.dropTable(connectionSource, HotGood.class, true);
+//            TableUtils.dropTable(connectionSource, GoodsType.class, true);
+//            TableUtils.dropTable(connectionSource, OrderBean.class, true);
+//            TableUtils.dropTable(connectionSource, OrderInfo.class, true);
+//            TableUtils.dropTable(connectionSource, UserInfo.class, true);
+//
+//            TableUtils.dropTable(connectionSource, AllGoods.class, true);
+//            TableUtils.dropTable(connectionSource, TraceNoBean.class, true);
+//            TableUtils.dropTable(connectionSource, AdImageInfo.class, true);
+//            TableUtils.dropTable(connectionSource, AdUserBean.class, true);
+//            onCreate(database, connectionSource);
 
-            TableUtils.dropTable(connectionSource, AllGoods.class, true);
-            TableUtils.dropTable(connectionSource, TraceNoBean.class, true);
-            TableUtils.dropTable(connectionSource, AdImageInfo.class, true);
-            TableUtils.dropTable(connectionSource, AdUserBean.class, true);
-
-
-            onCreate(database, connectionSource);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         //  方案二:  将表都删除 ，然后在重新创建表  ，每个数据实体类 ，都需要一个无参构造函数
         //  TableUtils.dropTable(connectionSource, LogBean.class, true);

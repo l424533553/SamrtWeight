@@ -52,6 +52,8 @@
     <string name="str_state">状态：</string>
     <string name="kilogram">kg</string>
     <string name="Administrators_pwd">852640</string>
+    <string name="clean_cheat_pwd">987654</string>
+    <string name="packageTime">20190725</string>
     <string name="string_login_auto_txt">自动登录</string>
     <string name="Default_Initial_Price">0.00</string>
     <string name="btnSysSet">系统设置按钮</string>

@@ -3,29 +3,22 @@ package com.axecom.smartweight.base;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.axecom.smartweight.R;
-
 import com.xuanyuan.library.help.ActivityController;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

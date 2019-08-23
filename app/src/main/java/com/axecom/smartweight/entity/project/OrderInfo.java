@@ -36,6 +36,7 @@ public class OrderInfo implements Cloneable {
     private int id;
     @DatabaseField
     private String billcode;
+    // 0 支付完成 ， 1 待支付
     @DatabaseField
     private String billstatus;
     @DatabaseField
@@ -72,7 +73,7 @@ public class OrderInfo implements Cloneable {
 
     @JSONField(serialize = false)
     @DatabaseField
-    private int state;  // 0  未上传  ， 1 上传。
+    private int state;  //交易信息上传的状态   0  未上传  ， 1 上传。
     @JSONField(serialize = false)
     @DatabaseField
     private boolean fpsState;  // 是否上传成功了

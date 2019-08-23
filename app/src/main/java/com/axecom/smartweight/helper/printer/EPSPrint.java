@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.axecom.smartweight.entity.project.OrderBean;
 import com.axecom.smartweight.entity.project.OrderInfo;
-import com.xuanyuan.library.help.qr.QRHelper2;
 import com.xuanyuan.library.help.qr.MyEPSPrintHelper;
+import com.xuanyuan.library.help.qr.QRHelper2;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -426,7 +426,8 @@ public class EPSPrint extends MyBasePrinter {
 //                    epsPrint.PrintString(sb.toString());
 //                } else {
 
-                if (!isNoQR) {
+
+                if (!isNoPrinterQR) {
                     String qrString = "http://data.axebao.com/smartsz/trace/?no=" + orderInfo.getBillcode();
                     setLineSpacing((byte) 8);
                     printString("扫一扫获取溯源信息：\n");

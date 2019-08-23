@@ -2,11 +2,10 @@ package com.axecom.smartweight.mvvm.retrofit;
 
 import com.alibaba.fastjson.JSONObject;
 import com.axecom.smartweight.entity.project.UserInfo;
-import com.google.gson.JsonParseException;
 import com.axecom.smartweight.mvvm.entity.FamousInfo;
 import com.axecom.smartweight.mvvm.entity.FamousInfoReq;
 import com.axecom.smartweight.mvvm.entity.ResultRtInfo;
-
+import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
 

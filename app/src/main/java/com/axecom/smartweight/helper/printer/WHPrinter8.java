@@ -223,7 +223,7 @@ public class WHPrinter8 extends MyBasePrinter {
 
                 setLineSpacing((byte) 9);
                 alignment((byte) 0);
-                if (!isNoQR) {
+                if (!isNoPrinterQR) {
                     String qrString = "http://data.axebao.com/smartsz/trace/?no=" + orderInfo.getBillcode();
 //                    printQR(qrString, 24, 24, 50, false);
                     byte[] bytes = createPixelsQR(qrString, 24, 24);

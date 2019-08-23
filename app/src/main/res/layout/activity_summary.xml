@@ -79,7 +79,7 @@
                 android:drawableTop="@mipmap/week_form"
                 android:gravity="center"
                 android:padding="@dimen/x8"
-                android:text="商品明细"
+                android:text="商品统计"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/sp22" />
 

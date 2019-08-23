@@ -137,6 +137,7 @@ public class WHPrinterAXE extends MyBasePrinter {
     }
 
     /* 普通 功能方法 ****************************************************/
+
     /**
      * 跳行  n 空白
      *
@@ -249,7 +250,7 @@ public class WHPrinterAXE extends MyBasePrinter {
                     e.printStackTrace();
                 }
 
-                if (!isNoQR) {
+                if (!isNoPrinterQR) {
                     String qrString = "http://data.axebao.com/smartsz/trace/?no=" + orderInfo.getBillcode();
                     printltString("扫一扫获取追溯信息：");
                     MyLog.myInfo(" 打印数据长度====" + printSize);

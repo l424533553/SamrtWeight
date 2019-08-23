@@ -25,21 +25,21 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.axecom.smartweight.R;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.listener.ItemDragHelperCallback;
 import com.axecom.smartweight.adapter.GoodsTypeAdapter;
 import com.axecom.smartweight.adapter.HotGoodsAdapter;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.config.IConstants;
-import com.axecom.smartweight.entity.project.AllGoods;
-import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.axecom.smartweight.entity.project.GoodsType;
-import com.axecom.smartweight.entity.project.HotGood;
 import com.axecom.smartweight.entity.dao.AllGoodsDao;
 import com.axecom.smartweight.entity.dao.GoodsTypeDao;
 import com.axecom.smartweight.entity.dao.HotGoodsDao;
+import com.axecom.smartweight.entity.project.AllGoods;
+import com.axecom.smartweight.entity.project.GoodsType;
+import com.axecom.smartweight.entity.project.HotGood;
+import com.axecom.smartweight.entity.system.BaseBusEvent;
+import com.axecom.smartweight.listener.ItemDragHelperCallback;
 import com.axecom.smartweight.listener.MyOnItemClickListener2;
-import com.xuanyuan.library.help.ActivityController;
 import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.help.ActivityController;
 
 import org.greenrobot.eventbus.EventBus;
 

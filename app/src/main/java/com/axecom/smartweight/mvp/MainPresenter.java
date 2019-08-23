@@ -7,38 +7,41 @@ import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.android.volley.VolleyError;
-import com.axecom.smartweight.base.SysApplication;
-import com.axecom.smartweight.entity.fpms_chinaap.LoginFpmsInfo;
 import com.axecom.smartweight.activity.common.mvvm.home.HomeActivity;
+import com.axecom.smartweight.base.SysApplication;
 import com.axecom.smartweight.config.DataConfig;
 import com.axecom.smartweight.config.IConstants;
-import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.axecom.smartweight.entity.fpms_chinaap.FpsResultInfo;
-import com.axecom.smartweight.entity.project.HotGood;
-import com.axecom.smartweight.entity.project.OrderBean;
-import com.axecom.smartweight.entity.project.OrderInfo;
-import com.axecom.smartweight.entity.netresult.ResultInfo;
-import com.axecom.smartweight.entity.project.UserInfo;
 import com.axecom.smartweight.entity.dao.HotGoodsDao;
 import com.axecom.smartweight.entity.dao.OrderInfoDao;
 import com.axecom.smartweight.entity.dao.TraceNoDao;
+import com.axecom.smartweight.entity.fpms_chinaap.FpsResultInfo;
+import com.axecom.smartweight.entity.fpms_chinaap.LoginFpmsInfo;
+import com.axecom.smartweight.entity.fpms_chinaap.UpdateTempBean;
 import com.axecom.smartweight.entity.netresult.OrderResultBean;
+import com.axecom.smartweight.entity.netresult.ResultInfo;
 import com.axecom.smartweight.entity.netresult.TraceNoBean;
+import com.axecom.smartweight.entity.project.FpmOrderBean;
+import com.axecom.smartweight.entity.project.HotGood;
+import com.axecom.smartweight.entity.project.OrderBean;
+import com.axecom.smartweight.entity.project.OrderInfo;
+import com.axecom.smartweight.entity.project.UserInfo;
+import com.axecom.smartweight.entity.system.BaseBusEvent;
 import com.axecom.smartweight.helper.HttpHelper;
 import com.axecom.smartweight.utils.security.AESUtils;
-import com.xuanyuan.library.listener.OkHttpListener;
 import com.xuanyuan.library.MyLog;
 import com.xuanyuan.library.MyPreferenceUtils;
 import com.xuanyuan.library.MyToast;
+import com.xuanyuan.library.listener.OkHttpListener;
 import com.xuanyuan.library.listener.VolleyListener;
 import com.xuanyuan.library.listener.VolleyStringListener;
 import com.xuanyuan.library.mvp.MyBasePresenter;
-import com.xuanyuan.library.utils.net.MyNetWorkUtils;
+import com.xuanyuan.library.utils.system.SystemInfoUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -55,12 +58,16 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
     private final SysApplication myApplication;
     private final Context context;
     private OrderInfoDao orderInfoDao;
-    private TraceNoDao traceNoDao;//批次号Dao
     private HotGoodsDao hotGoodsDao;
+
     private List<HotGood> hotGoodList;
 
     public List<HotGood> getHotGoodList() {
         return hotGoodList;
+    }
+
+    public void setHotGoodList(List<HotGood> hotGoodList) {
+        this.hotGoodList = hotGoodList;
     }
 
     public MainPresenter(IMainView view) {
@@ -68,6 +75,20 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
         IMainContract.IModel model = new MainModel();
         myApplication = view.getMyAppliaction();
         context = view.getMyContext();
+    }
+
+    /**
+     * @param selectedHotGood 更新选中商品的价格
+     */
+    public void updateHotGoodPrice(HotGood selectedHotGood, float price) {
+        if (selectedHotGood == null) {
+            return;
+        }
+        selectedHotGood.setPrice(String.valueOf(price));
+        if (hotGoodsDao == null) {
+            hotGoodsDao = new HotGoodsDao();
+        }
+        hotGoodsDao.update(selectedHotGood);
     }
 
  /*   private void initGoodsList() {
@@ -108,7 +129,6 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
         if (userInfo == null) {
             MyToast.toastLong(view.getMyContext(), "未读取到用户基本信息!关闭软件");
             view.jumpActivity(HomeActivity.class, true);
-
             return null;
         } else {
             MyPreferenceUtils.getSp(view.getMyContext()).edit().putInt("shellerid", userInfo.getSellerid()).apply();
@@ -124,6 +144,15 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
             HttpHelper.getmInstants(myApplication).commitDDExVolley(orderInfo, MainPresenter.this);
         }
 
+        if (orderInfo != null && orderInfo.getOrderItem() != null) {
+            currentNoAxe = orderInfo.getBillcode();
+            UpdateTempBean updateTempBean = new UpdateTempBean();
+            for (OrderBean bean : orderInfo.getOrderItem()) {
+                updateTempBean.getOrderNames().add(bean.getName());
+            }
+            updateTempBean.setOrderNo(orderInfo.getBillcode());
+            myApplication.getUpdateBeanAxeList().add(updateTempBean);
+        }
     }
 
     @Override
@@ -131,15 +160,36 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
         HttpHelper.getmInstants(myApplication).getTraceNoEx(this, sellerid, IConstants.VOLLEY_FLAG_AXE_TRACRE_NO);
     }
 
+    //记录当前订单账号 Fpms
+    private String currentNoFpms;
+    //记录当前订单账号 Axe ，
+    private String currentNoAxe;
+    private long timeLong;//记录返回点击时间
 
     /**
-     * @param orderInfo 订单信息发送给计量院
+     * 当 返回键 按下
+     */
+    public boolean ableUpLoad() {
+        // 2s 内
+        if (System.currentTimeMillis() - timeLong > 1500L) {
+            timeLong = System.currentTimeMillis();
+            return true;
+//            Toast.makeText(this, "再按一次返回退出！", Toast.LENGTH_SHORT).show();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param orderInfo 订单信息发送给计量院  ,使用方便
      */
     @Override
     public void send2FpmsWebOrderInfo(final OrderInfo orderInfo) {
-        if (!MyNetWorkUtils.isNetworkAvailable(myApplication.getContext())) {
+
+        if (!ableUpLoad()) {
             return;
         }
+
         if (myApplication.getTidType() < 1) {//非香山秤，无ad值无法给计量院
             return;
         }
@@ -153,15 +203,90 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
         myApplication.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                String cmdECB = AESUtils.encryptDESedeECB("submitWeightInfo", dataKey);
+                int orderCount = orderInfo.getOrderItem().size();
+                currentNoFpms = orderInfo.getBillcode();
+                if (orderCount == 1) {
+                    sendOneOrder();
+                } else {
+                    sendMoreOrder();
+                }
+            }
+
+            /**
+             * 上传 多条订单信息一次。
+             */
+            private void sendMoreOrder() {
+                int canUpLoadCount = 0;
+                ArrayList<FpmOrderBean> list = new ArrayList<>();
+                UpdateTempBean updateTempBean = new UpdateTempBean();
+                updateTempBean.setOrderNo(orderInfo.getBillcode());
+
+                boolean isANOrder = false;
+                if (orderInfo.getBillcode().startsWith("AN")) {
+                    isANOrder = true;
+                }
+
                 for (OrderBean orderbean : orderInfo.getOrderItem()) {
+                    if ("0".equals(sbZeroAd) || "0".equals(orderbean.getX0()) || "0".equals(orderbean.getXcur())) {
+                        continue;
+                    }
+                    canUpLoadCount++;
+                    FpmOrderBean orderBean = new FpmOrderBean();
+                    orderBean.setDeviceNo(myApplication.getUserInfo().getSno());
+                    orderBean.setDeviceModel("ACS-30");
+                    orderBean.setFactoryName("广东香山衡器集团股份有限公司");
+                    orderBean.setProductionDate("2019-01-13");
+                    orderBean.setMacAddr(SystemInfoUtils.getMac(myApplication));
+                    orderBean.setOrderNo(orderInfo.getBillcode());
+                    orderBean.setGoodsCode(orderbean.getItemno());
+                    orderBean.setGoodsName(orderbean.getName());
+                    orderBean.setPrice(orderbean.getPrice());
+                    orderBean.setWeight(orderbean.getWeight());
+                    orderBean.setAmounts(orderbean.getMoney());
+
+                    orderBean.setInitAd(Integer.valueOf(sbZeroAd));
+                    orderBean.setZeroAd(Integer.valueOf(orderbean.getX0()));
+                    orderBean.setWeightAd(Integer.valueOf(orderbean.getXcur()));
+                    orderBean.setOrderTime(orderInfo.getTime());
+                    orderBean.setStallCode("");
+                    orderBean.setBusinessEntity("");
+                    orderBean.setCreditCode("");
+                    list.add(orderBean);
+                    updateTempBean.getOrderNames().add(orderbean.getName());
+                    if (isANOrder) {
+                        break;
+                    }
+                }
+                myApplication.getUpdateBeanFpmsList().add(updateTempBean);
+
+                if (canUpLoadCount > 0) {
+                    String infoItems = JSON.toJSONString(list);
+                    String cmdECB = AESUtils.encryptDESedeECB("submitBatchWeightInfo", dataKey);
+                    String sb = "service=deviceService&cmd=" + cmdECB + "&authenCode=" + authenCode +
+                            "&appCode=FPMSWS&infoItems=" + infoItems;
+                    sendFpsData = AESUtils.encryptDESedeECB(sb, MAIN_KEY);
+                    HttpHelper.getmInstants(myApplication).onFpmsLogin(MainPresenter.this, sendFpsData, VOLLEY_FLAG_FPMS_SUBMIT);
+                }
+            }
+
+            /**
+             * 上传单条信息
+             */
+            private void sendOneOrder() {
+                String cmdECB = AESUtils.encryptDESedeECB("submitWeightInfo", dataKey);
+                if (orderInfo.getOrderItem().size() > 0) {
+                    OrderBean orderbean = orderInfo.getOrderItem().get(0);
+                    if ("0".equals(sbZeroAd) || "0".equals(orderbean.getX0()) || "0".equals(orderbean.getXcur())) {
+                        return;
+                    }
+
                     String sb = "service=deviceService&cmd=" + cmdECB + "&authenCode=" + authenCode +
                             "&appCode=FPMSWS" +
                             "&deviceNo=" + myApplication.getUserInfo().getSno() +
                             "&deviceModel=ACS-30" +
                             "&factoryName=广东香山衡器集团股份有限公司" +
                             "&productionDate=2019-01-13" + "&macAddr=" +
-                            HttpHelper.getmInstants(myApplication).getMac() +
+                            SystemInfoUtils.getMac(myApplication) +
                             "&orderNo=" + orderInfo.getBillcode() +
                             "&goodsCode=" + orderbean.getItemno() +
                             "&goodsName=" + orderbean.getName() +
@@ -176,8 +301,12 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                             "&businessEntity=" +
                             "&creditCode=";
                     sendFpsData = AESUtils.encryptDESedeECB(sb, MAIN_KEY);
-                    MyLog.e("9999999999", "上传订单" + orderInfo.getTotalamount());
                     HttpHelper.getmInstants(myApplication).onFpmsLogin(MainPresenter.this, sendFpsData, VOLLEY_FLAG_FPMS_SUBMIT);
+
+                    UpdateTempBean updateTempBean = new UpdateTempBean();
+                    updateTempBean.setOrderNo(orderInfo.getBillcode());
+                    updateTempBean.getOrderNames().add(orderbean.getName());
+                    myApplication.getUpdateBeanFpmsList().add(updateTempBean);
                 }
             }
         });
@@ -189,6 +318,10 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
      * @param isReset 是否是datakey失效后重新发送获取的  true:此时可能要重新发送交易数据
      */
     public void send2FpmsSignIn(final boolean isReset) {
+        if (myApplication.getTidType() != 1) {//暂时非XS15 不用签到
+            return;
+        }
+
         //进行计量院登记信息记录
         myApplication.getThreadPool().execute(() -> {
             // 待加密数据源
@@ -228,12 +361,17 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                 String billcode = resultInfo.getData().getBillcode();//交易号
                 if (!TextUtils.isEmpty(billcode)) {
                     if (orderInfoDao == null) {
-                        orderInfoDao = new OrderInfoDao(context);
+                        orderInfoDao = new OrderInfoDao();
                     }
                     orderInfoDao.update(billcode);
                     int fpsCountERR = MyPreferenceUtils.getSp(myApplication).getInt(AXE_COUNT_OK, 0) + 1;
                     MyPreferenceUtils.getSp(myApplication).edit().putInt(AXE_COUNT_OK, fpsCountERR).apply();
 
+                    for (UpdateTempBean bean : myApplication.getUpdateBeanAxeList()) {
+                        if (billcode.equals(bean.getOrderNo())) {
+                            bean.setState(1);
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -248,6 +386,32 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                 MyLog.myInfo("订单信息上传计量院失败");
                 int fpsCountERR = MyPreferenceUtils.getSp(myApplication).getInt(FPS_COUNT_ERR, 0) + 1;
                 MyPreferenceUtils.getSp(myApplication).edit().putInt(FPS_COUNT_ERR, fpsCountERR).apply();
+
+//                String TAG = this.getClass().getName();
+//                //volley 有专门处理error的库，下面就是调用了其中的一些，可以方便调试的时候查找到错误
+//                Log.d(TAG, "Volley returned error________________:" + volleyError);
+//                Class klass = volleyError.getClass();
+//                if (klass == com.android.volley.AuthFailureError.class) {
+//
+//                    Toast.makeText(context, "未授权，请重新登录", Toast.LENGTH_LONG).show();
+//                } else if (klass == com.android.volley.NetworkError.class) {
+//                    Log.d(TAG, "NetworkError");
+//                    Toast.makeText(context, "网络连接错误，请重新登录", Toast.LENGTH_LONG).show();
+//                } else if (klass == com.android.volley.NoConnectionError.class) {
+//                    Log.d(TAG, "NoConnectionError");
+//                } else if (klass == com.android.volley.ServerError.class) {
+//                    Log.d(TAG, "ServerError");
+//                    Toast.makeText(context, "服务器未知错误，请重新登录", Toast.LENGTH_LONG).show();
+//                } else if (klass == com.android.volley.TimeoutError.class) {
+//                    Log.d(TAG, "TimeoutError");
+//                    Toast.makeText(context, "连接超时，请重新登录", Toast.LENGTH_LONG).show();
+//                } else if (klass == com.android.volley.ParseError.class) {
+//                    Log.d(TAG, "ParseError");
+//                } else if (klass == com.android.volley.VolleyError.class) {
+//                    Log.d(TAG, "General error");
+//                }
+//                Toast.makeText(context, "登录失败", Toast.LENGTH_LONG).show();
+
                 break;
             case 4:
                 break;
@@ -299,6 +463,15 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                             int fpsCountOK = MyPreferenceUtils.getSp(myApplication).getInt(FPS_COUNT_OK, 0) + 1;
                             MyPreferenceUtils.getSp(myApplication).edit().putInt(FPS_COUNT_OK, fpsCountOK).apply();
                             MyLog.myInfo("上传订单信息至计量院成功" + jsonObject.toString());
+
+                            if (currentNoFpms != null) {
+                                for (UpdateTempBean bean : myApplication.getUpdateBeanFpmsList()) {
+                                    if (currentNoFpms.equals(bean.getOrderNo())) {
+                                        bean.setState(1);
+                                        break;
+                                    }
+                                }
+                            }
                         } else {
                             if ("OT-DATAKEY".equals(resultBean.getCode())) {
                                 send2FpmsSignIn(true);
@@ -317,21 +490,18 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                 }
                 break;
             case VOLLEY_FLAG_AXE_TRACRE_NO://批次号有更新
-                myApplication.getThreadPool().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        ResultInfo resultInfo = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
-                        if (resultInfo != null) {
-                            if (resultInfo.getStatus() == 0) {
-                                List<TraceNoBean> goodsList = JSON.parseArray(resultInfo.getData(), TraceNoBean.class);
-                                if (goodsList != null && goodsList.size() > 0) {
-                                    TraceNoDao traceNoDao = new TraceNoDao(context);
-                                    traceNoDao.deleteTableData();
-                                    traceNoDao.insert(goodsList);
-                                    BaseBusEvent event = new BaseBusEvent();
-                                    event.setEventType(NOTIFY_HOT_GOOD_CHANGE);
-                                    EventBus.getDefault().post(event);
-                                }
+                myApplication.getThreadPool().execute(() -> {
+                    ResultInfo resultInfo1 = JSON.parseObject(jsonObject.toString(), ResultInfo.class);
+                    if (resultInfo1 != null) {
+                        if (resultInfo1.getStatus() == 0) {
+                            List<TraceNoBean> goodsList = JSON.parseArray(resultInfo1.getData(), TraceNoBean.class);
+                            if (goodsList != null && goodsList.size() > 0) {
+                                TraceNoDao traceNoDao = new TraceNoDao(context);
+                                traceNoDao.deleteTableData();
+                                traceNoDao.insert(goodsList);
+                                BaseBusEvent event = new BaseBusEvent();
+                                event.setEventType(NOTIFY_HOT_GOOD_CHANGE);
+                                EventBus.getDefault().post(event);
                             }
                         }
                     }
@@ -397,7 +567,7 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
                 String billcode = resultInfo.getData().getBillcode();//交易号
                 if (!TextUtils.isEmpty(billcode)) {
                     if (orderInfoDao == null) {
-                        orderInfoDao = new OrderInfoDao(context);
+                        orderInfoDao = new OrderInfoDao();
                     }
                     orderInfoDao.update(billcode);
                     int fpsCountERR = MyPreferenceUtils.getSp(myApplication).getInt(AXE_COUNT_OK, 0) + 1;
@@ -408,6 +578,19 @@ public class MainPresenter extends MyBasePresenter implements IMainContract.IPre
             e.printStackTrace();
         }
     }
-
-
 }
+
+
+/*
+[{"amounts":"5.13","businessEntity":"","creditCode":"",
+        "deviceModel":"ACS-30","deviceNo":"0000J5034784","factoryName":"广东香山衡器集团股份有限公司",
+        "goodsCode":"3561","goodsName":"清凉补","initAd":2104944,"macAddr":"28:ed:e0:ac:c5:a5",
+        "orderNo":"AX14507092019144840","orderTime":"2019-07-09 14:48:40","price":"25",
+        "productionDate":"2019-01-13","stallCode":"","weight":"0.205",
+        "weightAd":2116672,"zeroAd":2111320},
+
+        {"amounts":"3.08","businessEntity":"","creditCode":"","deviceModel":"ACS-30","deviceNo":"0000J5034784",
+        "factoryName":"广东香山衡器集团股份有限公司","goodsCode":"3573",
+        "goodsName":"鸭蛋","initAd":2104944,"macAddr":"28:ed:e0:ac:c5:a5","orderNo":"AX14507092019144840",
+        "orderTime":"2019-07-09 14:48:40","price":"15","productionDate":"2019-01-13","stallCode":"",
+        "weight":"0.205","weightAd":2116672,"zeroAd":2111320}]*/

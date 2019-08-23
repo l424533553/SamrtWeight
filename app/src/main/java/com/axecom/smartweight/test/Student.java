@@ -3,6 +3,8 @@ package com.axecom.smartweight.test;
 
 import android.support.annotation.NonNull;
 
+import com.axecom.smartweight.entity.project.OrderBean;
+
 import java.util.Objects;
 
 /**
@@ -11,9 +13,21 @@ import java.util.Objects;
  * 邮件：424533553@qq.com
  * 说明：
  */
-public class Student {
+public class Student implements Cloneable {
     private String name;
     private int age;
+
+    @Override
+    public Student clone() {
+        Student stu = null;
+        try {
+            stu = (Student) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return stu;
+    }
+
 
     public Student(String name, int age) {
         this.name = name;

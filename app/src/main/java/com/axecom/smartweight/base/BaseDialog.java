@@ -3,8 +3,6 @@ package com.axecom.smartweight.base;
 import android.content.Context;
 import android.graphics.Color;
 
-import com.axecom.smartweight.base.SysApplication;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**

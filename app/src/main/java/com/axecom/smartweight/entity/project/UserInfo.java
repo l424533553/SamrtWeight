@@ -4,10 +4,10 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.text.TextUtils;
 
-
 import com.axecom.smartweight.BR;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.xuanyuan.library.utils.text.StringUtils;
 
 /**
  * author: luofaxin
@@ -67,6 +67,13 @@ public class UserInfo extends BaseObservable {
     private String outtime;
 
     public UserInfo() {
+    }
+
+    /**
+     * @return 是否配置了电子支付的参数，如果没有配置，那么无法使用电子支付
+     */
+    public boolean isConfigureEpayParams() {
+        return !StringUtils.isEmpty(getMchid()) && !StringUtils.isEmpty(getKey());
     }
 
     public String getSno() {

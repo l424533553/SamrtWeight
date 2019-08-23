@@ -18,6 +18,9 @@
         <variable
             name="onClickListener"
             type="android.view.View.OnClickListener" />
+        <variable
+            name="longClickListener"
+            type="android.view.View.OnLongClickListener" />
     </data>
 
     <LinearLayout
@@ -604,6 +607,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/y20"
                         android:drawableStart="@mipmap/tidno"
+                        android:onClick="@{onClickListener}"
                         android:gravity="center_vertical"
                         android:text="@{String.valueOf(userInfo.tid)}"
                         android:textColor="@color/white"
