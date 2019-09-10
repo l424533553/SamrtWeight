@@ -11,7 +11,7 @@ def bakPath = file("${buildDir}/bakApk/")
 
 //def baseApkDir = "app-0725-16-43-55"
 //def baseApkDir = "app-0820-16-37-17"
-def baseApkDir = "app-0820-09-33-55"
+def baseApkDir = "app-0823-10-50-54"
 
 //def baseApkDir = "app-0718-13-43-04"
 
@@ -48,7 +48,7 @@ tinkerSupport {
     // 打补丁包时 记得放开，随意定一个唯一的id名
 //    tinkerId = "base-201907016.4.006.15"
 //    tinkerId = "patch-20190719.4.004.13"
-      tinkerId = "patch_20190824.4.010.19.SX15A"
+      tinkerId = "patch_20190906.4.011.20.SX15C"
 //    tinkerId = "patch-20190719.4.005.14"
 
     // 构建多渠道补丁时使用

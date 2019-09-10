@@ -113,7 +113,6 @@ dependencies {
 
 
     /* 网络通信 框架 */
-
     implementation 'org.greenrobot:eventbus:3.1.1'
     /*  微信 生成二维码  jar包 */
 //    implementation 'com.google.zxing:core:3.3.3'

@@ -43,6 +43,8 @@ public class MainObservableBean {
 
     // 前面成交的商品名
     private String frontDealName;
+    //前面成交了的订单号
+    private String frontOrderNo;
     // 前面成交价格
     private float frontDealPrice;
     private float frontDealWeight;
@@ -60,6 +62,14 @@ public class MainObservableBean {
             return "";
         }
         return frontDealName;
+    }
+
+    public String getFrontOrderNo() {
+        return frontOrderNo;
+    }
+
+    public void setFrontOrderNo(String frontOrderNo) {
+        this.frontOrderNo = frontOrderNo;
     }
 
     public float getFrontDealPrice() {

@@ -1,4 +1,4 @@
-package com.axecom.smartweight.listener;
+package com.xuanyuan.library.help;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -6,10 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-
 /**
  * ItemDragHelperCallback
- * Created by YoKeyword on 15/12/29.
+ * RecyclerView 被拖动后的监听回调
  */
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
 
@@ -78,4 +77,30 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
         // 不支持滑动功能
         return false;
     }
+
+    /**
+     * ViewHolder 被选中 以及 拖拽释放 触发监听器
+     * Created by YoKeyword on 15/12/29.
+     */
+    public interface OnDragVHListener {
+        /**
+         * Item被选中时触发
+         */
+        void onItemSelected();
+
+
+        /**
+         * Item在拖拽结束/滑动结束后触发
+         */
+        void onItemFinish();
+    }
+
+    /**
+     * Item移动后 触发
+     * Created by YoKeyword on 15/12/28.
+     */
+    public interface OnItemMoveListener {
+        void onItemMove(int fromPosition, int toPosition);
+    }
+
 }

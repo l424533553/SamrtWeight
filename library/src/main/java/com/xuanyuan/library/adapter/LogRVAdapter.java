@@ -19,7 +19,6 @@ import java.util.List;
  * describe:
  */
 public class LogRVAdapter extends RecyclerView.Adapter<LogRVAdapter.ViewHolder> {
-
     private List<LogBean> data;
 
     public void setData(List<LogBean> data) {

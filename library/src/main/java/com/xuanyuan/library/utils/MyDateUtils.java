@@ -67,8 +67,11 @@ public class MyDateUtils {
         return formatter.format(date);
     }
 
-    //获取系统当前是星期几
-    public static String getCurrentWeekDay(int type) {
+    /**
+     * 获取系统当前是星期几
+     * 有英文和中文
+     */
+    public String getCurrentWeekDay(int type) {
         String week = "";
         Calendar c1 = Calendar.getInstance();
         int day = c1.get(Calendar.DAY_OF_WEEK);

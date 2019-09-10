@@ -36,10 +36,10 @@ import com.axecom.smartweight.entity.project.AllGoods;
 import com.axecom.smartweight.entity.project.GoodsType;
 import com.axecom.smartweight.entity.project.HotGood;
 import com.axecom.smartweight.entity.system.BaseBusEvent;
-import com.axecom.smartweight.listener.ItemDragHelperCallback;
 import com.axecom.smartweight.listener.MyOnItemClickListener2;
 import com.xuanyuan.library.MyToast;
 import com.xuanyuan.library.help.ActivityController;
+import com.xuanyuan.library.help.ItemDragHelperCallback;
 
 import org.greenrobot.eventbus.EventBus;
 

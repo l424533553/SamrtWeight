@@ -57,6 +57,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
+import static com.xuanyuan.library.config.IConfig.STABLE_MIN_TIME;
 import static com.xuanyuan.library.config.IConfig.STABLE_TIME;
 
 /**
@@ -221,6 +222,10 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
      * 自动发送订单，上传规则 大于5毛  ，大于50g才上传数据
      */
     protected void autoSendOrder() {
+        if (!MyNetWorkUtils.isConnected(context)) {
+            return;
+        }
+
         //通过了初级检查
         int tidType = sysApplication.getTidType();
         switch (tidType) {
@@ -233,6 +238,9 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
                 if (weightBean.getIsStable() != 1) {
                     return;
                 }
+                if (weightBean.getCurrentTime() - weightBean.getFrontTime() < STABLE_MIN_TIME) {
+                    return;
+                }
                 break;
             default:
                 break;
@@ -242,38 +250,36 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
             return;
         }
 
-        // 3500ms内不可上传两条数据
-        long currentLongTime = System.currentTimeMillis();
-        if (currentLongTime - orderSendTime < 2500) {
-            return;
-        }
-        orderSendTime = currentLongTime;
 
-//        //菜单列表点击 复位
-//        if (isFromPressMenu) {
-//            isFromPressMenu = false;
-//            return;
-//        }
-
-        if (mainBean.getFrontDealName().equals(mainBean.getGoodName().get())) {
-            if (mainBean.getFrontDealPrice() == mainBean.getReallyPrice()) {
-                // 两次上传重量太小了
-                if (Math.abs(weightBean.getCurrentWeight() - mainBean.getFrontDealWeight()) < 0.015) {
-                    return;
+        synchronized (object) {
+            if (mainBean.getFrontDealName().equals(mainBean.getGoodName().get())) {
+                if (mainBean.getFrontDealPrice() == mainBean.getReallyPrice()) {
+                    // 两次上传重量太小了
+                    if (Math.abs(weightBean.getCurrentWeight() - mainBean.getFrontDealWeight()) < 0.015) {
+                        return;
+                    }
                 }
             }
-        }
 
-        mainBean.setFrontDealName(mainBean.getGoodName().get());
-        mainBean.setFrontDealPrice(mainBean.getReallyPrice());
-        mainBean.setFrontDealWeight(weightBean.getCurrentWeight());
+            mainBean.setFrontDealName(mainBean.getGoodName().get());
+            mainBean.setFrontDealPrice(mainBean.getReallyPrice());
+            mainBean.setFrontDealWeight(weightBean.getCurrentWeight());
 
-        OrderBean orderBean = createOrderBean(currentLongTime);
-        List<OrderBean> orderlist = new ArrayList<>();
-        orderlist.add(orderBean);
-        UserInfo userInfo = presenter.detectionUserInfo();
-        if (userInfo != null) {
-            sendOrder2AxeAndFmps(orderlist, userInfo, true, 0);
+
+            // 3500ms内不可上传两条数据
+            long currentLongTime = System.currentTimeMillis();
+            if (currentLongTime - orderSendTime < 4500) {
+                return;
+            }
+            orderSendTime = currentLongTime;
+
+            OrderBean orderBean = createOrderBean(currentLongTime);
+            List<OrderBean> orderlist = new ArrayList<>();
+            orderlist.add(orderBean);
+            UserInfo userInfo = presenter.detectionUserInfo();
+            if (userInfo != null) {
+                sendOrder2AxeAndFmps(orderlist, userInfo, true, 0);
+            }
         }
     }
 
@@ -347,7 +353,6 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
         }
     }
 
-
     /**
      * VM
      * 清除按钮  功能, 清除了所有
@@ -396,6 +401,8 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
         mainBean.getTotalPrice().set(priceFormat.format(priceTotal));
     }
 
+    private final static Object object = new Object();
+
     /**
      * 上传订单信息
      *
@@ -405,6 +412,18 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
      * @param payType    0:現金支付   1：扫码支付
      */
     protected synchronized OrderInfo sendOrder2AxeAndFmps(List<OrderBean> orderlist, UserInfo userInfo, boolean isAutoSend, int payType) {
+        String billcode;
+        Date date = new Date();
+        if (isAutoSend) {
+            billcode = "AN" + userInfo.getTid() + MyDateUtils.getSampleNo(date);
+        } else {
+            billcode = "AX" + userInfo.getTid() + MyDateUtils.getSampleNo(date);
+        }
+        if (billcode.equals(mainBean.getFrontOrderNo())) {
+            return null;
+        }
+        mainBean.setFrontOrderNo(billcode);
+
         float totalMoney = 0;
         float totalWeight = 0;
         for (int i = orderlist.size() - 1; i >= 0; i--) {
@@ -422,16 +441,8 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
         }
 
         OrderInfo orderInfo = new OrderInfo();
-        Date date = new Date();
         String currentTime = MyDateUtils.getYY_TO_ss(date);
         orderInfo.setOrderItem(orderlist);
-
-        String billcode;
-        if (isAutoSend) {
-            billcode = "AN" + userInfo.getTid() + MyDateUtils.getSampleNo(date);
-        } else {
-            billcode = "AX" + userInfo.getTid() + MyDateUtils.getSampleNo(date);
-        }
 
         String hourTime = MyDateUtils.getHH(date);
         String dayTime = MyDateUtils.getDD(date);
@@ -449,7 +460,6 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
 
         orderInfo.setTotalamount(priceFormat.format(totalMoney));
         orderInfo.setTotalweight(weightFormat.format(totalWeight));
-
         orderInfo.setMarketid(userInfo.getMarketid());
         orderInfo.setTime(currentTime);
         orderInfo.setTimestamp(Timestamp.valueOf(currentTime));
@@ -461,7 +471,6 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
 
         presenter.send2AxeWebOrderInfo(orderInfo);
         presenter.send2FpmsWebOrderInfo(orderInfo);
-
         return orderInfo;
     }
 
@@ -516,18 +525,17 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
         BigDecimal bigWeight = new BigDecimal(weightBean.getCurrentWeight());
         bigPrice = bigPrice.multiply(bigWeight).setScale(2, BigDecimal.ROUND_HALF_UP);
         mainBean.getGrandMoney().set(bigPrice.toPlainString());
-//        binding.mainGrandtotalTv.setText(mainBean.getGrandMoneyString());
+//      binding.mainGrandtotalTv.setText(mainBean.getGrandMoneyString());
     }
-
 
     /**
      * 验证数据是否非法    true:非法   第一步普通验证
      */
     protected boolean verifySendDataIllegal(boolean isNotBtnAdd) {
         //  验证重量
-        if(isNotBtnAdd){
+        if (isNotBtnAdd) {
             if (weightBean.getCurrentWeight() <= 0.1f) {
-                if(weightBean.getCurrentWeight() <= 0.0f){
+                if (weightBean.getCurrentWeight() <= 0.0f) {
                     mainBean.setFrontDealName("");
                 }
                 return true;
@@ -540,8 +548,7 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
             }
         }
 
-
-        if(weightBean.isNegative()){
+        if (weightBean.isNegative()) {
             return true;
         }
 
@@ -550,9 +557,10 @@ public abstract class MainBaseACActivity extends MyBaseCommonACActivity implemen
             return true;
         }
 
-        if (!MyNetWorkUtils.isConnected(context)) {
-            return true;
-        }
+//        if (!MyNetWorkUtils.isConnected(context)) {
+//            return true;
+//        }
+
         return "0.00".equals(mainBean.getGrandMoneyString());
     }
 

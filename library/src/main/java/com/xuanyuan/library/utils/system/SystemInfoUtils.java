@@ -2,6 +2,7 @@ package com.xuanyuan.library.utils.system;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -15,6 +16,7 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.xuanyuan.library.entity.DeviceInfoDao;
 import com.xuanyuan.library.entity.Deviceinfo;
@@ -35,7 +37,6 @@ import java.util.List;
  * 说明：用于获取系统信息 的工具类
  */
 public class SystemInfoUtils {
-
     /**
      * @return 返回系统的 网络mac 地址， "" 或不可用
      */
@@ -91,7 +92,6 @@ public class SystemInfoUtils {
         return null;
     }
 
-
     /**
      * @return 根据串口名获取  USB设备
      */
@@ -100,7 +100,6 @@ public class SystemInfoUtils {
         HashMap<String, UsbDevice> usbDeviceList = usbManager.getDeviceList();
         return usbDeviceList.get(usbName);
     }
-
 
     /**
      * @return 获取包信息的Code
@@ -116,6 +115,17 @@ public class SystemInfoUtils {
                 return pi.versionCode;
             }
         }
+    }
+
+    /**
+     * VM 隐藏状态栏  和  底部导航栏
+     */
+    private void hideState(Activity activity) {
+        int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN //hide statusBar
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; //hide navigationBar
+        activity.getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }
 
     /**
@@ -226,4 +236,5 @@ public class SystemInfoUtils {
         }
         return false;
     }
+
 }

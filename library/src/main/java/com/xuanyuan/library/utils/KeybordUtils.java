@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import java.lang.reflect.Method;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 /**
  * 说明：软键盘的关闭打开
  * 作者：User_luo on 2018/7/9 17:02
@@ -25,7 +27,7 @@ public class KeybordUtils {
      */
     public static void openKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                .getSystemService(INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.showSoftInput(mEditText, InputMethodManager.RESULT_SHOWN);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,
@@ -41,7 +43,7 @@ public class KeybordUtils {
      */
     public static void closeKeybord(EditText mEditText, Context mContext) {
         InputMethodManager imm = (InputMethodManager) mContext
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                .getSystemService(INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
         }
@@ -60,12 +62,11 @@ public class KeybordUtils {
         if (view != null) {
             // 隐藏虚拟键盘
             InputMethodManager inputmanger = (InputMethodManager) activity
-                    .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    .getSystemService(INPUT_METHOD_SERVICE);
 //       inputmanger.hideSoftInputFromWindow(view.getWindowToken(),0);
             if (inputmanger != null) {
                 return inputmanger.isActive() && activity.getWindow().getCurrentFocus() != null;
             }
-
         }
         return false;
     }
@@ -73,7 +74,8 @@ public class KeybordUtils {
 
     /**
      * 设置后，点击 EditText 将不会再弹出软件盘
-     * @param editText  控件
+     *
+     * @param editText 控件
      */
     public void disableShowInput(final EditText editText) {
         Class<EditText> cls = EditText.class;
@@ -101,6 +103,29 @@ public class KeybordUtils {
                 editText.setSelection(editText.length());
             }
         });
+    }
+
+    // 显示软键盘
+    public void showSoftInput(EditText editText) {
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        InputMethodManager inputManager = (InputMethodManager) editText.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        inputManager.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+    }
+
+    // 隐藏软键盘
+    public void hideSoftInput(Context context) {
+        InputMethodManager m = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+        if (m.isActive()) {
+            m.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    /**
+     * @param et 显示软键盘
+     */
+    public void Showkeyboard(EditText et, Context context) {
+        ((InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(et, 0);
     }
 
 }

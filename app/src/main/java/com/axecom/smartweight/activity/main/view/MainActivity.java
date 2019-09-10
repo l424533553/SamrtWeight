@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.Selection;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -233,7 +234,7 @@ public class MainActivity extends MainBaseACActivity implements IAllView, IEvent
         });
     }
 
-    private void dealWeight() {
+    private void dealWeight(float lastWeight) {
 //        if (weightBean.getCurrentWeight() <= 0) {
 //            if (oldFloat > weightBean.getCurrentWeight()) {
 //                binding.etPrice.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
@@ -248,10 +249,12 @@ public class MainActivity extends MainBaseACActivity implements IAllView, IEvent
 
         //TODO 测试
         if (weightBean.getCurrentWeight() <= 0) {
-            if (!mainBean.isEtPriceSelect()) {
-                binding.etPrice.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
-                Selection.selectAll(binding.etPrice.getText());
-                mainBean.setEtPriceSelect(true);
+            if (lastWeight > weightBean.getCurrentWeight()) {
+                if (!mainBean.isEtPriceSelect()) {
+                    binding.etPrice.setTextColor(context.getResources().getColor(R.color.color_carsh_pay));
+                    Selection.selectAll(binding.etPrice.getText());
+                    mainBean.setEtPriceSelect(true);
+                }
             }
         } else {
             binding.etPrice.setTextColor(context.getResources().getColor(R.color.black));
@@ -410,7 +413,7 @@ public class MainActivity extends MainBaseACActivity implements IAllView, IEvent
         float lastWeight = weightBean.getCurrentWeight();
         if (adapterFactory.parseWeightData(event, weightBean)) {
 //            if (Math.abs(lastWeight - weightBean.getCurrentWeight()) != 0) {
-            dealWeight();
+            dealWeight(lastWeight);
             dealGrandMoney();
 //            }
             autoSendOrder();

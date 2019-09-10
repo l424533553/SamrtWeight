@@ -150,6 +150,7 @@
 
                 <!-- 注册开机广播地址 -->
                 <action android:name="com.axecom.destroy" />
+
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"

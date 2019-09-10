@@ -223,7 +223,6 @@ public class DataFlushActivity extends MyBaseCommonActivity implements IEventBus
                 upHotGood();
             }
         }
-
     }
 
     @Override

@@ -17,14 +17,26 @@ import com.axecom.smartweight.R;
 /**
  * Created by C.Shawn on 2017/3/23 0023.
  *
- * @author C.Shawn
+ * @author C.Shawn 圆角控件  颜色自己填充
+ * 使用：roundedCornerImageView.setBackgroundColor(context.getResources().getColor(item.getColor()));
+ *
+ *        <com.axecom.smartweight.service.RoundedCornerImageView
+ *               android:src="@mipmap/tid"
+ *               app:round_radius="@dimen/x45" />
+ *
+ *
+ *     <declare-styleable name="RoundedCornerImageView">
+ *         <attr name="round_radius" format="dimension" />
+ *          <attr name="round_color" format="color" />
+ *         <!--    <attr name="text_color" format="color" />
+ *           <attr name="text_size" format="dimension" />-->
+ *     </declare-styleable>
  */
 
 public class RoundedCornerImageView extends android.support.v7.widget.AppCompatImageView {
 
-//    ImageView
-
-    private final float density = getContext().getResources().getDisplayMetrics().density;
+    // 像素点
+    // private final float density = getContext().getResources().getDisplayMetrics().density;
     private final float roundness;
     private static final int DEFAULT_RECT_ROUND_RADIUS = 0;
 
@@ -45,7 +57,7 @@ public class RoundedCornerImageView extends android.support.v7.widget.AppCompatI
         //获取attr文件下，名为RoundedCornerImageView
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RoundedCornerImageView, defStyle, 0);
         //获取值
-        roundness = ta.getDimensionPixelSize(R.styleable.RoundedCornerImageView_round_radius, dip2px(DEFAULT_RECT_ROUND_RADIUS));
+        roundness = ta.getDimensionPixelSize(R.styleable.RoundedCornerImageView_round_radius, dip2px());
         ta.recycle();
 
         //  init();
@@ -107,8 +119,8 @@ public class RoundedCornerImageView extends android.support.v7.widget.AppCompatI
 //        setRoundness(5);
 //    }
     //dp转px
-    private int dip2px(int dipVal) {
+    private int dip2px() {
         float scale = getResources().getDisplayMetrics().density;
-        return (int) (dipVal * scale + 0.5f);
+        return (int) (DEFAULT_RECT_ROUND_RADIUS * scale + 0.5f);
     }
 }

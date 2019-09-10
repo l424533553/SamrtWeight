@@ -89,9 +89,9 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
             info.clear();
         }
         List<AdImageInfo> list = imageDao.queryAll();
-        List<AdImageInfo> photos = imageDao.queryPhoto();
         List<AdUserBean> userBeans = adUserDao.queryAll();
 
+        List<AdImageInfo> photos = imageDao.queryPhoto();
         if (photos != null && photos.size() > 0) {
             String photo = photos.get(0).getNetPath();
             RequestOptions requestOptions = new RequestOptions();
@@ -196,8 +196,6 @@ public class SecondScreen extends Presentation implements IConstants, OnBannerLi
             Glide.with(context.getApplicationContext()).load(path).into(imageView);
 //            //Glide 加载图片简单用法
 //            Glide.with(context).load(path).into(imageView);
-
-
         }
     }
 
